@@ -1,5 +1,14 @@
 # Notes
 
+Some green subjects who supposedly have at least 1 PRL don't have PRl files (check errors.log in test_train0)
+
+## PRL Notes
+
+- Why does 1044 have a PRL label that elongates with the lesion?
+
+
+---
+
 Email from Chris about the PRL labels (5/27/2025)
 
 > Hey so I’ve uploaded some PRL labels to the server and attaching a sheet with the assessments (same password).
