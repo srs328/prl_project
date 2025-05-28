@@ -1,0 +1,60 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"python.terminal.activateEnvironment": true,
+		"python.defaultInterpreterPath": "/home/srs-9/.virtualenvs/monai/bin/python",
+		"editor.fontFamily": "'CaskaydiaCove Nerd Font Mono', 'JetBrainsMono Nerd Font Medium', 'MesloLGLDZ Nerd Font Mono', Mononoki Nerd Font Mono, 'Droid Sans Mono', Consolas, 'Courier New'",
+		"editor.fontSize": 14,
+		"terminal.integrated.fontFamily": "Agave Nerd Font Mono, MesloLGM Nerd Font, BlexMono Nerd Font, SauceCodePro Nerd Font Mono, JetBrainsMono Nerd Font",
+		"terminal.integrated.fontSize": 18,
+		// "workbench.colorCustomizations": {
+		// 	"editor.background": "#FFFBEB",
+		// 	"sideBar.background" "#E7EBF2"
+		// }
+
+		"markdown-preview-enhanced.previewTheme": "github-dark.css",
+
+		// Python Settings
+		"[python]": {
+			"editor.formatOnSave": false,
+			"editor.defaultFormatter": "charliermarsh.ruff"
+		},
+		"notebook.formatOnSave.enabled": false,
+		"ruff.lint.ignore": [
+			"E402",
+			"Q000"
+		],
+		"ruff.configuration": ".vscode/ruff.toml",
+
+		"todo-tree.highlights.customHighlight": {
+			"TODO": {
+				"icon": "check",
+				"type": "tag",
+				"foreground": "#585858",
+				"background": "#d3d3d3",
+				"iconColour": "#FF8C00",
+				"opacity": 100,
+				"gutterIcon": true
+			},
+			"FIXME": {
+				"foreground": "#585858",
+				"background": "#d3d3d3",
+				"iconColour": "#c13535",
+				"opacity": 100,
+				"gutterIcon": true
+			}
+		},
+
+		"files.associations": {
+     		"*.Rmd": "rmd"
+  		},
+
+		"mypy-type-checker.args": [
+			"--no-strict-optional"
+		]
+	}
+}
