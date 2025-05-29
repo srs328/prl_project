@@ -1,0 +1,370 @@
+{
+    "testing": [
+        {
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1183/ses-20170328/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1183/ses-20170328/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1281/ses-20180705/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1281/ses-20180705/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms2115/ses-20180530/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms2115/ses-20180530/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1136/ses-20171109/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1136/ses-20171109/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1523/ses-20170422/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1523/ses-20170422/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1274/ses-20180504/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1274/ses-20180504/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms2131/ses-20190117/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms2131/ses-20190117/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1152/ses-20170529/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1152/ses-20170529/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms2207/ses-20180717/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms2207/ses-20180717/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1124/ses-20160929/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1124/ses-20160929/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1044/ses-20170317/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1044/ses-20170317/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1316/ses-20180810/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1316/ses-20180810/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1033/ses-20171117/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1033/ses-20171117/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1131/ses-20161209/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1131/ses-20161209/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms2060/ses-20170608/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms2060/ses-20170608/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1156/ses-20170404/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1156/ses-20170404/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        }
+    ],
+    "training": [
+        {
+            "fold": 0,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms2122/ses-20181103/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms2122/ses-20181103/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 1,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1133/ses-20170308/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1133/ses-20170308/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 2,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms2003/ses-20170221/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms2003/ses-20170221/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 3,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1178/ses-20191023/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1178/ses-20191023/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 4,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1186/ses-20170517/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1186/ses-20170517/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 0,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1327/ses-20170426/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1327/ses-20170426/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 1,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms2011/ses-20160926/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms2011/ses-20160926/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 2,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1546/ses-20180205/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1546/ses-20180205/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 3,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1010/ses-20180208/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1010/ses-20180208/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 4,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1497/ses-20170831/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1497/ses-20170831/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 0,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1239/ses-20170113/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1239/ses-20170113/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 1,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1265/ses-20180127/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1265/ses-20180127/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 2,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1508/ses-20170719/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1508/ses-20170719/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 3,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1165/ses-20160910/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1165/ses-20160910/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 4,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1101/ses-20170827/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1101/ses-20170827/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 0,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1118/ses-20181217/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1118/ses-20181217/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 1,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1453/ses-20160916/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1453/ses-20160916/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 2,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1126/ses-20170609/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1126/ses-20170609/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 3,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1292/ses-20170509/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1292/ses-20170509/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 4,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1529/ses-20170119/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1529/ses-20170119/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 0,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1234/ses-20180214/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1234/ses-20180214/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 1,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1164/ses-20190709/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1164/ses-20190709/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 2,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms2098/ses-20180515/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms2098/ses-20180515/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 3,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1293/ses-20161129/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1293/ses-20161129/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 4,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1282/ses-20161113/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1282/ses-20161113/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 0,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1130/ses-20180902/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1130/ses-20180902/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 1,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1050/ses-20170624/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1050/ses-20170624/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 2,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1011/ses-20180911/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1011/ses-20180911/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 3,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1076/ses-20170912/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1076/ses-20170912/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 4,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1209/ses-20170711/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1209/ses-20170711/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 0,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1078/ses-20180412/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1078/ses-20180412/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 1,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1257/ses-20161208/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1257/ses-20161208/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 2,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1262/ses-20170402/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1262/ses-20170402/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 3,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1395/ses-20180810/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1395/ses-20180810/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 4,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1201/ses-20161021/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1201/ses-20161021/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 0,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1296/ses-20180427/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1296/ses-20180427/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 1,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms2086/ses-20180630/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms2086/ses-20180630/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 2,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms2041/ses-20170515/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms2041/ses-20170515/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 3,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms2017/ses-20170118/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms2017/ses-20170118/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 4,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1038/ses-20161031/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1038/ses-20161031/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 0,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1177/ses-20180813/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1177/ses-20180813/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 1,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms2087/ses-20171027/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms2087/ses-20171027/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 2,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1358/ses-20170311/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1358/ses-20170311/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 3,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1215/ses-20180429/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1215/ses-20180429/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 4,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1348/ses-20181009/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1348/ses-20181009/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 0,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1074/ses-20190518/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1074/ses-20190518/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 1,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1376/ses-20161214/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1376/ses-20161214/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 2,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms2168/ses-20180530/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms2168/ses-20180530/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 3,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1082/ses-20161218/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1082/ses-20161218/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 4,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1080/ses-20180416/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1080/ses-20180416/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 0,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms2135/ses-20180113/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms2135/ses-20180113/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 1,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1248/ses-20160922/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1248/ses-20160922/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 2,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1537/ses-20161203/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1537/ses-20161203/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 3,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1396/ses-20170126/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1396/ses-20170126/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 4,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms2095/ses-20171207/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms2095/ses-20171207/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 0,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1298/ses-20190506/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1298/ses-20190506/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 1,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1125/ses-20160919/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1125/ses-20160919/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 2,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1353/ses-20170518/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1353/ses-20170518/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 3,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms2026/ses-20160917/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms2026/ses-20160917/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "fold": 4,
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1252/ses-20180920/flair.phase.nii.gz",
+            "label": "/media/smbshare/3Tpioneer_bids/sub-ms1252/ses-20180920/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        }
+    ]
+}

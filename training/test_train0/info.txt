@@ -1,0 +1,2 @@
+Train with flair, phase, and t1 images
+Labels created by combining definite and probably PRLs and adding those to the original LST lesion segmentations
