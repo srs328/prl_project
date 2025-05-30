@@ -1,0 +1,16 @@
+/media/smbshare/3Tpioneer_bids/sub-ms1183/ses-20170328/flair.phase.t1.nii.gz
+/media/smbshare/3Tpioneer_bids/sub-ms1281/ses-20180705/flair.phase.t1.nii.gz
+/media/smbshare/3Tpioneer_bids/sub-ms2115/ses-20180530/flair.phase.t1.nii.gz
+/media/smbshare/3Tpioneer_bids/sub-ms1136/ses-20171109/flair.phase.t1.nii.gz
+/media/smbshare/3Tpioneer_bids/sub-ms1523/ses-20170422/flair.phase.t1.nii.gz
+/media/smbshare/3Tpioneer_bids/sub-ms1274/ses-20180504/flair.phase.t1.nii.gz
+/media/smbshare/3Tpioneer_bids/sub-ms2131/ses-20190117/flair.phase.t1.nii.gz
+/media/smbshare/3Tpioneer_bids/sub-ms1152/ses-20170529/flair.phase.t1.nii.gz
+/media/smbshare/3Tpioneer_bids/sub-ms2207/ses-20180717/flair.phase.t1.nii.gz
+/media/smbshare/3Tpioneer_bids/sub-ms1124/ses-20160929/flair.phase.t1.nii.gz
+/media/smbshare/3Tpioneer_bids/sub-ms1044/ses-20170317/flair.phase.t1.nii.gz
+/media/smbshare/3Tpioneer_bids/sub-ms1316/ses-20180810/flair.phase.t1.nii.gz
+/media/smbshare/3Tpioneer_bids/sub-ms1033/ses-20171117/flair.phase.t1.nii.gz
+/media/smbshare/3Tpioneer_bids/sub-ms1131/ses-20161209/flair.phase.t1.nii.gz
+/media/smbshare/3Tpioneer_bids/sub-ms2060/ses-20170608/flair.phase.t1.nii.gz
+/media/smbshare/3Tpioneer_bids/sub-ms1156/ses-20170404/flair.phase.t1.nii.gz
