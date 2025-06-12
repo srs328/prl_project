@@ -1,0 +1,7 @@
+###########################
+
+Thank you for using LST-AI. If you publish your results, please cite our paper:
+Wiltgen T, McGinnis J, Schlaeger S, Kofler F, Voon C, Berthele A, Bischl D, Grundl L, Will N, Metz M, Schinz D, Sepp D, Prucker P, Schmitz-Koep B, Zimmer C, Menze B, Rueckert D, Hemmer B, Kirschke J, Mühlau M, Wiestler B. LST-AI: A Deep Learning Ensemble for Accurate MS Lesion Segmentation. NeuroImage: Clinical, Volume 42, 2024. https://doi.org/10.1016/j.nicl.2024.103611.
+###########################
+
+Looking for model weights in /home/srs-9/git-repos/LST-AI/LST_AI.
