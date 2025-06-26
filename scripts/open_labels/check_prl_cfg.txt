@@ -1,0 +1,5 @@
+lesion.t3m20/prl_labels_definite.nii.gz
+lesion.t3m20/prl_labels_probable.nii.gz
+lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz
+
+lst-ai/space-flair_seg-lst.nii.gz
