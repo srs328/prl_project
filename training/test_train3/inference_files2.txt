@@ -1,0 +1,1 @@
+/media/smbshare/srs-9/prl_project/training/test_train3/imagesTs/sub1215.nii.gz
