@@ -1,10 +1,12 @@
 #!/bin/bash
 
-root="/media/smbshare" # edit this to be your smbshare root (whatever the parent of 3Tpioneer_bids is)
+root="/mnt/h" # edit this to be your smbshare root (whatever the parent of 3Tpioneer_bids is)
 # root="/mnt/h"
 train_folder=test_train0_segresnet
 open_inf=0
 training_work_home="/home/srs-9/Projects/prl_project/training_work_dirs"
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 # -------------------------------------
 
@@ -76,9 +78,11 @@ segmentations=()
 while IFS= read -r line || [[ -n "$line" ]]; do
   if [[ -n $line ]]; then
     seg_path="$scan_path/$line"
-    segmentations+=("$seg_path")
+    if [[ -f $seg_path ]]; then
+        segmentations+=("$seg_path")
+    fi
   fi
-done < "check_prl_cfg.txt"
+done < "$SCRIPT_DIR/check_prl_cfg.txt"
 
 
 labels_to_show=("$(basename ${segmentations[0]})")

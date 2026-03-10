@@ -1,6 +1,6 @@
 #!/bin/bash
 
-root="/media/smbshare" # edit this to be your smbshare root (whatever the parent of 3Tpioneer_bids is)
+root="/mnt/h" # edit this to be your smbshare root (whatever the parent of 3Tpioneer_bids is)
 # root="/mnt/h"
 train_folder=test_train0_segresnet
 open_inf=0
@@ -76,7 +76,9 @@ segmentations=()
 while IFS= read -r line || [[ -n "$line" ]]; do
   if [[ -n $line ]]; then
     seg_path="$scan_path/$line"
-    segmentations+=("$seg_path")
+    if [[ -f $seg_path ]]; then
+        segmentations+=("$seg_path")
+    fi
   fi
 done < "check_prl_cfg.txt"
 
