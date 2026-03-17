@@ -1,13 +1,6 @@
-# Notes
+# Specs
 
-3-9-2026
-
-- Need to separate each lst-ai segmentation into a lesion index
-  - `c3d space-flair_seg-lst.nii.gz -comp -o lstai_lesion_index.nii.gz`
-- Then I need to update all the PRL indices with the new lst-ai index
-
-
-## Specs
+## Context
 
 Goal: train a deep learning model to segment PRL rims from lesion cores using flair and phase (possibly T1 too) images. 
 
@@ -21,30 +14,6 @@ The manual PRL segmentations have the lesion (core) labeled with 1 and the rim l
 
 I think the easiest way to train the model will be to make an ROI bounding each lesion and just crop that out. That will also serve to increase the training set since there will be multiple ROI's per subejct. 
 
+## Workflow
 
-
-
-```
-#Loop through each lesion in $lesionmap first
-
-#extract bounding box for this PRL label from $lesionmap file and write to file
-temp_BBox=$(fslstats "$lesionmap" \
--l $(bc <<< "${lesion_label} - 0.5") \
--u $(bc <<< "${lesion_label} + 0.5") \
--w | sed 's/ 1 /\n/g' | awk '/./')
-
-#temp_bbox means temporary bounding box, which here I write to a text file to pull later, but you could just use the coordinates after expansion (below) to create the ROI.
-
-echo "$lesion_label $temp_BBox" >> $SUBJECTDIR/prlmontage/PRL_bounding_boxes.txt
-
-#Expansion of bounding box parameters: "xy" will expand by the specified number of voxels on each side in the axial plane
-expand_xy=20 #determines how much to expand in axial plane
-expand_z=2 #if you want to expand above or below the PRL, can increase this
-echo "will expand xy dimension of PRL by $expand_xy"
-roi_boundaries=$(echo "$temp_BBox" | awk -v expand_xy="$expand_xy" -v expand_z="$expand_z" '{
-printf "%d %d %d %d %d %d\n", $1-expand_xy, $2+2*expand_xy, $3-expand_xy, $4+2*expand_xy, $5-expand_z, $6+2*expand_z
-}')
-
-#Then run this command to extract the actual ROI, here I name it phase.box because it was extracted from the phase image initially
-fslroi [INPUT_IMAGE] $SUBJECTDIR/prlmontage/$sessionDate/prl${lesion_label}.phase.box.nii.gz ${roi_boundaries}"
-```
+Right now each subject's folder is called `sub{subid}-{date_mri}` where subid is the 4 digit number from subid column and date_mri is the 8 digit number from the date_mri column of the PRL spreadsheet. There's also an `lstai_lesion_index.nii.gz` and the binary lesion mask which is called `space-flair_seg-lst.nii.gz`. The segmentations will be there too as well as flair.nii.gz, phase.nii.gz, and t1.nii.gz files. 

@@ -10,7 +10,7 @@
 		"editor.fontFamily": "'CaskaydiaCove Nerd Font Mono', 'JetBrainsMono Nerd Font Medium', 'MesloLGLDZ Nerd Font Mono', Mononoki Nerd Font Mono, 'Droid Sans Mono', Consolas, 'Courier New'",
 		"editor.fontSize": 14,
 		"terminal.integrated.fontFamily": "Agave Nerd Font Mono, MesloLGM Nerd Font, BlexMono Nerd Font, SauceCodePro Nerd Font Mono, JetBrainsMono Nerd Font",
-		"terminal.integrated.fontSize": 18,
+		"terminal.integrated.fontSize": 14,
 		// "workbench.colorCustomizations": {
 		// 	"editor.background": "#FFFBEB",
 		// 	"sideBar.background" "#E7EBF2"
