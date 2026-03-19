@@ -85,7 +85,7 @@ def prepare_rois(subid):
 
         
     prl_labels = [int(prl_df.loc[subid, f"PRL{i}_label"]) for i in range(1,21) 
-                if prl_df.loc[subid,confidence_label(i)] in ["definite", "probable"]]
+                if prl_df.loc[subid, f"confidence.{i-1}"] in ["definite", "probable"]]
 
     # %%
 

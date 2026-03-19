@@ -6,10 +6,10 @@ import os
 
 from functools import partial
 
-def command(cmd, debug=False, suppress=False, verbose=False, env=None):
-    if (debug or verbose):
+def command(cmd, dry_run=False, suppress=False, verbose=False, env=None):
+    if (dry_run or verbose):
         print('Executing: %s' % cmd)
-        if debug:
+        if dry_run:
             return 0
     if suppress:
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True, env=env)
@@ -20,6 +20,12 @@ def command(cmd, debug=False, suppress=False, verbose=False, env=None):
     # sp_cmd = cmd.split(' ')
     # return subprocess.call(sp_cmd)
     return subprocess.run(cmd, shell=True, env=env, check=True, capture_output=True, text=True)
+
+
+def run_if_missing(file, cmd, dry_run=False, suppress=False, verbose=False, env=None, bypass=False):
+    if not file.exists() or bypass:
+        return command(cmd, dry_run=False, suppress=False, verbose=False, env=None)
+    
 
 
 def convert_to_winroot(path: Path):

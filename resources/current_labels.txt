@@ -28,4 +28,3 @@ sub-ms1076/ses-20170912/lesion.t3m20/prl_mask_def_prob_CH.nii.gz
 sub-ms1078/ses-20180412/lesion.t3m20/prl_mask_def_prob_CH.nii.gz
 sub-ms1125/ses-20160919/lesion.t3m20/prl_mask_def_prob_CH.nii.gz
 sub-ms1136/ses-20171109/lesion.t3m20/prl_mask_def_prob_CH.nii.gz
-sub-ms2041/ses-20170515/lesion.t3m20/prl_mask_def_prob_CH.nii.gz

@@ -1,7 +1,15 @@
 {
 	"folders": [
 		{
-			"path": "."
+			"path": ".",
+		},
+		{
+			"name": "training_work_dirs",
+			"path": "/media/smbshare/srs-9/prl_project/training"
+		},
+		{
+			"name": "dataroot",
+			"path": "/media/smbshare/srs-9/prl_project/data"
 		}
 	],
 	"settings": {

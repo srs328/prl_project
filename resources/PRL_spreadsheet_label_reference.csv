@@ -1,4 +1,4 @@
-subid,date_mri,Total PRL,PRL1_label,PRL2_label,PRL3_label,PRL4_label,PRL5_label,PRL6_label,PRL7_label,PRL8_label,PRL9_label,PRL10_label,PRL11_label,PRL12_label,PRL13_label,PRL14_label,PRL15_label,PRL16_label,PRL17_label,PRL18_label,PRL19_label,PRL20_label,confidence,confidence.1,confidence.2,confidence.3,confidence.4,confidence.5,confidence.6,confidence.7,confidence.8,confidence.9,confidence.10,confidence.11,confidence.12,confidence.13,confidence.14,confidence.15,confidence.16,confidence.17,confidence.18,confidence.19
+subid,date_mri,Total PRL,PRL1_label,PRL2_label,PRL3_label,PRL4_label,PRL5_label,PRL6_label,PRL7_label,PRL8_label,PRL9_label,PRL10_label,PRL11_label,PRL12_label,PRL13_label,PRL14_label,PRL15_label,PRL16_label,PRL17_label,PRL18_label,PRL19_label,PRL20_label,confidence.0,confidence.1,confidence.2,confidence.3,confidence.4,confidence.5,confidence.6,confidence.7,confidence.8,confidence.9,confidence.10,confidence.11,confidence.12,confidence.13,confidence.14,confidence.15,confidence.16,confidence.17,confidence.18,confidence.19
 1010,20180208,3,26,25.0,58.0,19.0,,,,,,,,,,,,,,,,,definite,definite,probable,possible,,,,,,,,,,,,,,,,
 1011,20180911,6,34,37.0,38.0,40.0,42.0,27.0,,,,,,,,,,,,,,,definite,definite,definite,probable,probable,probable,,,,,,,,,,,,,,
 1033,20171117,1,10,11.0,,,,,,,,,,,,,,,,,,,definite,possible,,,,,,,,,,,,,,,,,,
@@ -63,7 +63,7 @@ subid,date_mri,Total PRL,PRL1_label,PRL2_label,PRL3_label,PRL4_label,PRL5_label,
 2011,20160926,1,41,,,,,,,,,,,,,,,,,,,,definite,,,,,,,,,,,,,,,,,,,
 2017,20170118,2,58,49.0,59.0,,,,,,,,,,,,,,,,,,definite,possible,probable,,,,,,,,,,,,,,,,,
 2026,20160917,2,33,36.0,37.0,,,,,,,,,,,,,,,,,,probable,definite,possible,,,,,,,,,,,,,,,,,
-2041,20170515,3,23,24.0,58.0,,,,,,,,,,,,,,,,,,definite,definite,definite,,,,,,,,,,,,,,,,,
+2041,20170515,5,23,24.0,58.0,34.0,59.0,,,,,,,,,,,,,,,,definite,definite,definite,probable,probable,,,,,,,,,,,,,,,
 2060,20170608,2,56,53.0,,,,,,,,,,,,,,,,,,,probable,definite,,,,,,,,,,,,,,,,,,
 2086,20180630,1,34,,,,,,,,,,,,,,,,,,,,probable,,,,,,,,,,,,,,,,,,,
 2087,20171027,2,30,31.0,29.0,,,,,,,,,,,,,,,,,,definite,probable,possible,,,,,,,,,,,,,,,,,

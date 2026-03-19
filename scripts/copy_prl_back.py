@@ -4,7 +4,7 @@ import shutil
 import pandas as pd
 import subprocess
 
-subject_sessions = pd.read_csv("/home/srs-9/Projects/prl_project/data/subject-sessions.csv",
+subject_sessions = pd.read_csv("/home/srs-9/Projects/prl_project/resources/subject-sessions.csv",
                                index_col="sub")
 
 new_index_df = pd.read_csv("/home/srs-9/Projects/prl_project/PRL_spreadsheet-lstai_update_label_reference.csv",

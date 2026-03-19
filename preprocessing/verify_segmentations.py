@@ -12,6 +12,8 @@ def fslstats_verify(seg):
 
 
 def verify_prl(path):
+    if not path.exists():
+        return False
     result = command(
         f"fslstats {path} -R"
     ).stdout

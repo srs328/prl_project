@@ -1,0 +1,86 @@
+prl_project
+├── activate_fsl.py
+├── create_subject_lists.ipynb
+├── current_labels.txt
+├── data
+│   ├── PRL_labels.csv
+│   ├── PRL_labels.xlsx
+│   ├── subject-sessions.csv
+│   └── subject-sessions-longit.json
+├── helpers
+│   ├── parallel.py
+│   ├── __pycache__
+│   └── shell_interface.py
+├── labels_to_use.csv
+├── notes.md
+├── parse_PRL_sheet.ipynb
+├── preprocessing
+│   ├── concatImages.sh
+│   ├── convert_lesion_index.py
+│   ├── copy_files.py
+│   ├── create_datalist.py
+│   ├── create_lstai_lesion_index.sh
+│   ├── create_rois.py
+│   ├── create_rois_v1.py
+│   ├── define_bounding_boxes.sh
+│   ├── Notes.md
+│   ├── prepare_training_data.py
+│   ├── __pycache__
+│   ├── Specs.md
+│   ├── tmp
+│   └── verify_segmentations.py
+├── prl_project.code-workspace
+├── PRL_spreadsheet.csv
+├── PRL_spreadsheet_label_reference.csv
+├── PRL_spreadsheet-lstai_update.csv
+├── PRL_spreadsheet-lstai_update_label_reference.csv
+├── PRL_spreadsheet.xlsx
+├── project_structure.txt
+├── run_lst_ai.log
+├── scratch.ipynb
+├── scripts
+│   ├── check_prl_cfg.txt
+│   ├── check_prl_seg.py
+│   ├── check_prl_seg.sh
+│   ├── concat_images.py
+│   ├── concatImages.sh
+│   ├── copy_commands.sh
+│   ├── copy_prl_back.py
+│   ├── create_labels1
+│   ├── create_labels2
+│   ├── errors.log
+│   ├── lst-ai.log
+│   ├── open_labels
+│   ├── run_lst_ai.log
+│   ├── run_lst_ai.py
+│   └── run_lst_ai.sh
+├── share_folder
+│   ├── open_labels
+│   └── template
+├── subject_lists
+│   ├── green_subjects.txt
+│   ├── green_subjects_wo_prl_labels.txt
+│   └── green_subjects_w_prl_labels.txt
+├── subjects.txt
+├── training
+│   ├── check_train_data.ipynb
+│   ├── copy_cmds.sh
+│   ├── README.md
+│   ├── roi_train1
+│   ├── roi_train2
+│   ├── template
+│   ├── test_train0
+│   ├── test_train1
+│   ├── test_train2
+│   └── test_train3
+└── training_work_dirs
+    ├── README.md
+    ├── roi_train1_segresnet
+    ├── test_train0_segresnet
+    ├── test_train0_swinunet
+    ├── test_train1_segresnet
+    ├── test_train1_swinunet
+    ├── test_train2_segresnet
+    └── test_train3_segresnet
+
+31 directories, 53 files
