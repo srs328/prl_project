@@ -1,0 +1,13 @@
+#!/bin/bash
+# Setup environment variables for local PRL pipeline execution
+# Source this before running any pipeline scripts:
+#   source setup_env.sh
+
+export PRL_PROJECT_ROOT="/home/srs-9/Projects/prl_project"
+export PRL_DATA_ROOT="/media/smbshare/srs-9/prl_project/data"
+export PRL_TRAIN_ROOT="/media/smbshare/srs-9/prl_project/training"
+
+echo "PRL Pipeline environment configured:"
+echo "  PRL_PROJECT_ROOT=$PRL_PROJECT_ROOT"
+echo "  PRL_DATA_ROOT=$PRL_DATA_ROOT"
+echo "  PRL_TRAIN_ROOT=$PRL_TRAIN_ROOT"

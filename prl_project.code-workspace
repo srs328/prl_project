@@ -34,7 +34,8 @@
 		"notebook.formatOnSave.enabled": false,
 		"ruff.lint.ignore": [
 			"E402",
-			"Q000"
+			"Q000",
+			"F541"
 		],
 		"ruff.configuration": ".vscode/ruff.toml",
 

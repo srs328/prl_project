@@ -1,11 +1,10 @@
 {
-    "dataroot": "/media/smbshare/srs-9/prl_project/data",
-    "train_home": "/home/srs-9/Projects/prl_project/training/roi_train2",
-    "prl_df": "/home/srs-9/Projects/prl_project/resources/PRL_spreadsheet-lstai_update_label_reference.csv",
-    "subjects": "/home/srs-9/Projects/prl_project/training/roi_train2/subjects.txt",
-    "suffix_to_use": "/home/srs-9/Projects/prl_project/training/roi_train2/labels_to_use.csv",
+    "dataroot": "${DATA_ROOT}",
+    "train_home": "${PROJECT_ROOT}/training/roi_train2",
+    "prl_df": "${PROJECT_ROOT}/resources/PRL_spreadsheet-lstai_update_label_reference.csv",
+    "subjects": "${PROJECT_ROOT}/training/roi_train2/subjects.txt",
+    "suffix_to_use": "${PROJECT_ROOT}/training/roi_train2/labels_to_use.csv",
     "expand_xy": 20,
     "expand_z": 2,
     "images": ["flair", "phase"]
-
 }

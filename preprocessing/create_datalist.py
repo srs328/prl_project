@@ -7,6 +7,7 @@ import pandas as pd
 from pathlib import Path
 import re
 from math import floor
+from helpers.paths import load_config
     
     
 def make_argument_parser(argv):
@@ -32,14 +33,12 @@ def main(argv=None):
         argv = sys.argv
     parser = make_argument_parser(argv)
     args, _ = parser.parse_known_args()
-    
-    with open(args.monai_config, "r") as f:
-        monai_config = json.load(f)
+
+    monai_config = load_config(args.monai_config)
     N_FOLDS = monai_config['N_FOLDS']
     TEST_SPLIT = monai_config['TEST_SPLIT']
-        
-    with open(args.label_config, "r") as f:
-        label_config = json.load(f)
+
+    label_config = load_config(args.label_config)
         
     train_home = Path(label_config['train_home'])
     datalist_template_path = train_home/"datalist_template.json"

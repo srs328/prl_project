@@ -1,13 +1,13 @@
 from pathlib import Path
 import shutil
 import pandas as pd
+from helpers.paths import load_config, PROJECT_ROOT, DATA_ROOT
 
-
-new_index_df = pd.read_csv("/home/srs-9/Projects/prl_project/PRL_spreadsheet-lstai_update_label_reference.csv",
-                        index_col="subid")
+label_config = load_config(PROJECT_ROOT / "training/roi_train2/label_config.json")
+new_index_df = pd.read_csv(label_config["prl_df"], index_col="subid")
 
 src_root = Path("/media/smbshare/3Tpioneer_bids")
-dst_root = Path("/media/smbshare/srs-9/prl_project/data")
+dst_root = DATA_ROOT
 
 # TODO update this to look for anything matching a pattern like r"lesion.t3m20/prl_mask_def_prob_([A-Z]+_?)+.nii.gz"
 files_to_copy = [
@@ -22,7 +22,7 @@ files_to_copy = [
     "lesion.t3m20/prl_mask_def_prob_SRS_CH.nii.gz",
 ]
 
-with open("/home/srs-9/Projects/prl_project/subjects.txt", "r") as f:
+with open(label_config["subjects"], "r") as f:
     subjects = [int(line.strip()) for line in f.readlines()]
 
 # for subid, row in new_index_df.iterrows():

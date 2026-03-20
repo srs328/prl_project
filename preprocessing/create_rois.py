@@ -10,13 +10,12 @@ import pandas as pd
 from pathlib import Path
 from tqdm import tqdm
 import argparse
-import json
 from functools import partial
-from tqdm import tqdm
 
 sys.path.append("/home/srs-9/Projects/prl_project")
 from helpers.shell_interface import command, run_if_missing
 from helpers.parallel import BetterPool
+from helpers.paths import load_config
 from preprocessing.verify_segmentations import verify_prl, verify_lesion
 
 curr_dir = Path(__file__).parent
@@ -190,8 +189,7 @@ def main(argv=None):
         argv = sys.argv
     parser = make_argument_parser(argv)
     args, _ = parser.parse_known_args()
-    with open(args.label_config, "r") as f:
-        label_config = json.load(f)
+    label_config = load_config(args.label_config)
 
     prl_df = pd.read_csv(label_config["prl_df"], index_col="subid")
 

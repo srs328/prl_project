@@ -50,17 +50,23 @@ echo "Working in ${work_dir}"
 cd "$work_dir" || exit 1
 
 
-n_lesions=$(fslstats lstai_lesion_index.nii.gz -R | awk '{printf "%d\n", $2}')
-echo "Found ${n_lesions} lesions"
 bounding_boxes=lstai_bounding_boxes.txt
-> "$bounding_boxes"   # create empty or wipe existing
-for lesion_label in $(seq 1 "$n_lesions"); do
-    temp_BBox=$(fslstats lstai_lesion_index.nii.gz \
-        -l $(bc <<< "${lesion_label} - 0.5") \
-        -u $(bc <<< "${lesion_label} + 0.5") \
-        -w)
-    echo "$lesion_label $temp_BBox" >> "$bounding_boxes"
-done
+
+# Only generate if it doesn't exist
+if [ ! -f "$bounding_boxes" ]; then
+    n_lesions=$(fslstats lstai_lesion_index.nii.gz -R | awk '{printf "%d\n", $2}')
+    echo "Found ${n_lesions} lesions"
+    > "$bounding_boxes"   # create empty
+    for lesion_label in $(seq 1 "$n_lesions"); do
+        temp_BBox=$(fslstats lstai_lesion_index.nii.gz \
+            -l $(bc <<< "${lesion_label} - 0.5") \
+            -u $(bc <<< "${lesion_label} + 0.5") \
+            -w)
+        echo "$lesion_label $temp_BBox" >> "$bounding_boxes"
+    done
+else
+    echo "Using cached $bounding_boxes"
+fi
 
 echo "will expand xy dimension of PRL by $expand_xy"
 expanded_boxes="lstai_bounding_boxes_xy${expand_xy}_z${expand_z}.txt"

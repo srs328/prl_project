@@ -224,3 +224,20 @@ python training/roi_train2/train.py
 
 
 
+
+## Scratch 
+
+great it works. I just had to fix a small error, which was to add "run" right after infer: 
+
+cmd = [
+            sys.executable,
+            str(infer_script),
+            "run",
+            f"--config_file={config_file}",
+            f"--infer#output_path={fold_output_dir}",
+            f"--data_list_file_path={temp_datalist}",
+        ]
+
+One more thing to make my life easier as I try to inspect the fold labels visually. I already wrote this script to create commands to open itksnap to view images and labels. Im working through a vscode tunnel, so I cant directly open GUI's, so I just have it output a list of all the commands I could want, then I can just copy and paste them. 
+
+This current file just has 

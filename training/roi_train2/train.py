@@ -1,51 +1,39 @@
 # %%
 import os
+import sys
+import argparse
 from pathlib import Path
 from monai.apps.auto3dseg import AutoRunner
 from monai.config import print_config
 import shutil
 import json
 
+sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+from helpers.paths import load_config
+
 print_config()
 
 # %%
-dataroot = Path("/media/smbshare/srs-9/prl_project/data")
+def make_argument_parser(argv):
+    parser = argparse.ArgumentParser(
+        description="Train MONAI Auto3DSeg model"
+    )
+    parser.add_argument(
+        "--run-dir",
+        type=str,
+        default=None,
+        help="Path to run directory. If not provided, auto-increments to next available run<N>"
+    )
+    return parser
 
-"""label_config.json
-{
-    "dataroot": "/media/smbshare/srs-9/prl_project/data",
-    "train_home": "/home/srs-9/Projects/prl_project/training/roi_train2",
-    "prl_df": "/home/srs-9/Projects/prl_project/PRL_spreadsheet-lstai_update_label_reference.csv",
-    "subjects": "/home/srs-9/Projects/prl_project/training/roi_train2/subjects.txt",
-    "suffix_to_use": "/home/srs-9/Projects/prl_project/training/roi_train2/labels_to_use.csv",
-    "expand_xy": 20,
-    "expand_z": 2,
-    "images": ["flair", "phase"]
+# %%
+label_config = load_config("label_config.json")
+monai_config = load_config("monai_config.json")
 
-}
-"""
-with open("label_config.json", 'r') as f:
-    label_config = json.load(f)
-    
-    
-"""monai_config.json
-{
-    "training_work_dir": "/media/smbshare/srs-9/prl_project/training/roi_train2",
-    "N_FOLDS": 5,
-    "TEST_SPLIT": 0.2,
-    "train_param": {
-        "algos": ["segresnet"],
-        "learning_rate": 0.0002,          
-        "num_images_per_batch": 1,       
-        "num_epochs": 250,                
-        "num_warmup_epochs": 1,          
-        "num_epochs_per_validation": 1
-    }
-
-}
-"""
-with open("monai_config.json", 'r') as f:
-    monai_config = json.load(f)
+# %%
+# Parse command-line arguments
+parser = make_argument_parser(sys.argv)
+args = parser.parse_args()
 
 dataroot = label_config['dataroot']
 train_home = Path(label_config['train_home'])
@@ -53,15 +41,26 @@ expand_xy = label_config['expand_xy']
 expand_z = label_config['expand_z']
 
 training_work_home = Path(monai_config['training_work_home'])
-work_dir = training_work_home / "run2" #! edit this
+
+# Determine work_dir: either from --run-dir arg or auto-increment
+if args.run_dir:
+    work_dir = Path(args.run_dir)
+else:
+    # Auto-increment to next available run<N>
+    run_num = 1
+    while (training_work_home / f"run{run_num}").exists():
+        run_num += 1
+    work_dir = training_work_home / f"run{run_num}"
+
 datalist_file_src = train_home / f"datalist_xy{expand_xy}_z{expand_z}.json"
 datalist_file = work_dir / f"datalist_xy{expand_xy}_z{expand_z}.json"
 
 train_param = monai_config['train_param']
 algos = train_param["algos"]
 
-
-description = """Info
+description = f"""Training run
+expand_xy={expand_xy}, expand_z={expand_z}
+work_dir={work_dir}
 """
 
 # %%
@@ -91,6 +90,10 @@ with open(work_dir / "info.txt", 'w') as f:
 print("work_dir is: ", work_dir)
 
 # %%
+# Set up MLflow for unified cross-fold tracking
+mlflow_tracking_uri = str(work_dir / "mlruns")
+mlflow_experiment_name = f"run{work_dir.name[3:]}" if work_dir.name.startswith("run") else work_dir.name
+
 runner = AutoRunner(
     work_dir=work_dir,
     algos=algos,
@@ -99,6 +102,8 @@ runner = AutoRunner(
         "datalist": str(datalist_file),
         "dataroot": str(dataroot),
     },
+    mlflow_tracking_uri=mlflow_tracking_uri,
+    mlflow_experiment_name=mlflow_experiment_name,
 )
 runner.set_training_params(train_param)
 

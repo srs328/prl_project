@@ -3,10 +3,11 @@ import os
 from pathlib import Path
 from tqdm import tqdm
 import argparse
-import json
+import json  # needed for json.dump below
 
 sys.path.append("/home/srs-9/Projects/prl_project")
 from helpers.shell_interface import run_if_missing
+from helpers.paths import load_config
 
 
 curr_dir = Path(__file__).parent
@@ -48,8 +49,7 @@ def main(argv=None):
         argv = sys.argv
     parser = make_argument_parser(argv)
     args, _ = parser.parse_known_args()
-    with open(args.config, "r") as f:
-        config = json.load(f)
+    config = load_config(args.config)
 
 
     train_home = Path(config['train_home'])
