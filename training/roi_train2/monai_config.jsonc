@@ -9,6 +9,9 @@
         "num_epochs": 500,
         "num_warmup_epochs": 1,
         "num_epochs_per_validation": 1,
-        "roi_size": [44, 44, 8]
+        "roi_size": [44, 44, 8],
+        // crop_ratios: per-class sampling weights for RandCropByLabelClassesd [bg, lesion, rim]
+        // null = equal probability across classes. e.g. [1, 1, 4] = 4x rim oversampling
+        "crop_ratios": null
     }
 }

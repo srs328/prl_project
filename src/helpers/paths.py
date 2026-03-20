@@ -39,10 +39,34 @@ def expand_tokens(value):
         return value
 
 
+def strip_json_comments(text):
+    """Strip // line comments from JSONC text. Does not strip inside strings."""
+    result = []
+    for line in text.splitlines():
+        # Find // that is not inside a string
+        in_string = False
+        escape = False
+        for i, ch in enumerate(line):
+            if escape:
+                escape = False
+                continue
+            if ch == '\\' and in_string:
+                escape = True
+                continue
+            if ch == '"':
+                in_string = not in_string
+            if ch == '/' and not in_string and i + 1 < len(line) and line[i + 1] == '/':
+                line = line[:i]
+                break
+        result.append(line)
+    return '\n'.join(result)
+
+
 def load_config(config_path):
     """
-    Load a JSON config file and expand all ${VAR} tokens.
+    Load a JSON/JSONC config file and expand all ${VAR} tokens.
 
+    Supports .jsonc files with // line comments.
     Paths are resolved relative to os.cwd() if relative.
     """
     config_path = Path(config_path)
@@ -51,6 +75,10 @@ def load_config(config_path):
         config_path = curr_dir / config_path
         print(config_path)
     with open(config_path) as f:
-        config = json.load(f)
+        text = f.read()
 
+    if config_path.suffix == '.jsonc':
+        text = strip_json_comments(text)
+
+    config = json.loads(text)
     return expand_tokens(config)

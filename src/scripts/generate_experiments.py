@@ -42,6 +42,20 @@ def get_nested_value(obj, key_path):
     return current
 
 
+def delete_nested_key(obj, key_path):
+    """
+    Delete a key from a nested dict using dot notation.
+    If the key doesn't exist, do nothing.
+    """
+    keys = key_path.split('.')
+    current = obj
+    for key in keys[:-1]:
+        if key not in current:
+            return
+        current = current[key]
+    current.pop(keys[-1], None)
+
+
 def make_argument_parser(argv):
     parser = argparse.ArgumentParser(
         prog=argv[0],
@@ -79,8 +93,8 @@ def main(argv=None):
     base_label_config = load_config(exp_config["base_label_config"])
     base_monai_config = load_config(exp_config["base_monai_config"])
 
-    # Get training_work_home
-    training_work_home = Path(base_monai_config["training_work_home"])
+    # Put experiment runs in a subdirectory named after the experiment
+    training_work_home = Path(base_monai_config["training_work_home"]) / exp_name
 
     # Build parameter combinations
     label_params = param_grid.get("label", {})
@@ -112,11 +126,20 @@ def main(argv=None):
             # Create customized configs
             label_cfg = deepcopy(base_label_config)
             for param_key, param_val in label_params_dict.items():
-                label_cfg[param_key] = param_val
+                if param_val is None:
+                    label_cfg.pop(param_key, None)
+                else:
+                    label_cfg[param_key] = param_val
 
             monai_cfg = deepcopy(base_monai_config)
+            # Point training_work_home to the experiment subdirectory
+            monai_cfg["training_work_home"] = str(training_work_home)
             for param_key, param_val in monai_params_dict.items():
-                set_nested_value(monai_cfg, param_key, param_val)
+                if param_val is None:
+                    # Remove the key so the downstream default is used
+                    delete_nested_key(monai_cfg, param_key)
+                else:
+                    set_nested_value(monai_cfg, param_key, param_val)
 
             # Record in manifest
             runs_manifest[run_name] = {

@@ -94,21 +94,27 @@ def launch_local(manifest_dict, dry_run=False, processes=1):
 
 
 def generate_lsf_array_script(training_work_home, manifest_dict, output_script):
-    """Generate an LSF job array submission script."""
+    """Generate an LSF job array submission script for UMass Chan SCI Cluster."""
     runs = list(manifest_dict.values())
 
     script_content = f"""#!/bin/bash
 #BSUB -J "prl_hpo[1-{len(runs)}]"
 #BSUB -n 1
-#BSUB -R "select[gpu]"
 #BSUB -q gpu
+#BSUB -gpu "num=1"
+#BSUB -R "rusage[mem=32G]"
+#BSUB -W 24:00
 #BSUB -o {training_work_home}/logs/run_%J_%I.log
 #BSUB -e {training_work_home}/logs/run_%J_%I.err
 
 # Source HPC environment setup
 source {PROJECT_ROOT}/hpc/setup_env_hpc.sh
 
-# Get the run directory from the array index
+echo "Host: $(hostname)"
+echo "GPU: $(nvidia-smi --query-gpu=name --format=csv,noheader 2>/dev/null || echo 'N/A')"
+echo "Array index: $LSB_JOBINDEX"
+
+# Map array index to run directory
 runs=(
 """
     for run_info in runs:
@@ -121,7 +127,7 @@ run_dir=${{runs[$LSB_JOBINDEX - 1]}}
 echo "Starting training in $run_dir"
 cd "$run_dir"
 python {PROJECT_ROOT}/training/roi_train2/train.py --run-dir "$run_dir"
-echo "Training in $run_dir completed"
+echo "Training in $run_dir completed with exit code $?"
 """
 
     with open(output_script, "w") as f:

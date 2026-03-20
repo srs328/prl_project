@@ -375,8 +375,10 @@ def main():
         save_path = args.save_path
         if not save_path.is_absolute():
             save_path = train_dir / save_path
-        save_data = {"testing": inf_data, "validation": val_data}
-        save_json(save_data, save_path)
+    else:
+        save_path = train_dir / f"datalist_{expand_suffix}_final.json"
+    save_data = {"testing": inf_data, "validation": val_data}
+    save_json(save_data, save_path)
 
     return 0
 
