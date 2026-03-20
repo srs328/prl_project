@@ -5,7 +5,6 @@ from tqdm import tqdm
 import argparse
 import json  # needed for json.dump below
 
-sys.path.append("/home/srs-9/Projects/prl_project")
 from helpers.shell_interface import run_if_missing
 from helpers.paths import load_config
 

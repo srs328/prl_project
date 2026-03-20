@@ -15,7 +15,6 @@ import subprocess
 from pathlib import Path
 from tqdm import tqdm
 
-sys.path.insert(0, str(Path(__file__).parent.parent))
 from helpers.paths import load_config, PROJECT_ROOT
 from helpers.parallel import BetterPool
 

@@ -20,7 +20,6 @@ from typing import Dict, List, Optional
 import subprocess
 import shutil
 
-sys.path.insert(0, str(Path(__file__).parent.parent))
 from helpers.paths import load_config
 
 

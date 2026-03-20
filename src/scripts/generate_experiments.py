@@ -17,7 +17,6 @@ from itertools import product
 import subprocess
 from copy import deepcopy
 
-sys.path.insert(0, str(Path(__file__).parent.parent))
 from helpers.paths import load_config, PROJECT_ROOT
 
 

@@ -1,10 +1,8 @@
 # %%
-import sys
 import os
 import pandas as pd
 from pathlib import Path
 
-sys.path.append("/home/srs-9/Projects/prl_project")
 from helpers.shell_interface import command
 
 def fslstats_verify(seg):

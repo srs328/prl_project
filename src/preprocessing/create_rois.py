@@ -12,7 +12,6 @@ from tqdm import tqdm
 import argparse
 from functools import partial
 
-sys.path.append("/home/srs-9/Projects/prl_project")
 from helpers.shell_interface import command, run_if_missing
 from helpers.parallel import BetterPool
 from helpers.paths import load_config
