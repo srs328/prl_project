@@ -6,7 +6,7 @@
         "algos": ["segresnet"],
         "learning_rate": 0.0002,
         "num_images_per_batch": 1,
-        "num_epochs": 250,
+        "num_epochs": 500,
         "num_warmup_epochs": 1,
         "num_epochs_per_validation": 1,
         "roi_size": [44, 44, 8]

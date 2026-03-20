@@ -19,6 +19,7 @@ from typing import Dict, Tuple, List
 from collections import defaultdict
 import numpy as np
 import pandas as pd
+from my_python_utils import save_json
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from helpers.paths import load_config
@@ -312,6 +313,7 @@ def main():
     parser.add_argument("train_dir", type=Path, help="Path to training home")
     parser.add_argument("--test-only", action="store_true", help="Only analyze test set")
     parser.add_argument("--output-csv", type=Path, help="Save results to CSV")
+    parser.add_argument("--save-path", type=Path, help="Save image and label paths for all cases")
     parser.add_argument("--print-results", action="store_true", help="Whether to print results to console")
 
     args = parser.parse_args()
@@ -369,6 +371,13 @@ def main():
             df = pd.DataFrame(all_cases)
             df.to_csv(args.output_csv, index=False)
             print(f"\n\nResults saved to: {args.output_csv}")
+    
+    if args.save_path:
+        save_path = args.save_path
+        if not save_path.is_absolute():
+            save_path = train_dir / save_path
+        save_data = {"testing": inf_data, "validation": val_data}
+        save_json(save_data, save_path)
 
     return 0
 

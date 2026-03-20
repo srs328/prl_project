@@ -43,12 +43,13 @@ def load_config(config_path):
     """
     Load a JSON config file and expand all ${VAR} tokens.
 
-    Paths are resolved relative to PROJECT_ROOT if relative.
+    Paths are resolved relative to os.cwd() if relative.
     """
     config_path = Path(config_path)
     if not config_path.is_absolute():
-        config_path = PROJECT_ROOT / config_path
-
+        curr_dir = Path(os.getcwd())
+        config_path = curr_dir / config_path
+        print(config_path)
     with open(config_path) as f:
         config = json.load(f)
 

@@ -69,13 +69,15 @@ def load_metrics_from_file(metrics_dir: Path) -> Dict[str, List[Tuple[float, int
     return metrics
 
 
-def analyze_distributed_mlruns(run_dir: Path) -> Dict[int, Dict]:
+def analyze_distributed_mlruns(run_dir: Path, which_folds=None) -> Dict[int, Dict]:
     """Analyze distributed setup where each fold has its own mlruns directory."""
     fold_data = {}
 
     # Find all segresnet_<fold> directories
     for fold_dir in sorted(run_dir.glob("segresnet_*")):
         fold_num = int(fold_dir.name.split("_")[1])
+        if which_folds and fold_num not in which_folds:
+            continue
         mlruns_dir = fold_dir / "model" / "mlruns"
 
         if not mlruns_dir.exists():
@@ -396,6 +398,7 @@ def main():
     parser.add_argument("--plot", action="store_true",
                        help="Generate plots (requires matplotlib)")
     parser.add_argument("--outfile", type=Path, default=None, help="Save output to file instead of printing to console")
+    parser.add_argument("-f", "--fold", action="extend", default=None, help="Folds to analyze")
     args = parser.parse_args()
 
     if not args.run_dir.exists():
@@ -403,11 +406,15 @@ def main():
         return 1
 
     print(f"Analyzing run: {args.run_dir}")
+    
+    which_folds = args.fold
+    if which_folds is not None:
+        which_folds = [int(f) for f in which_folds]
 
     # Load metrics
     if args.distributed:
         print("Using distributed analysis...")
-        fold_data = analyze_distributed_mlruns(args.run_dir)
+        fold_data = analyze_distributed_mlruns(args.run_dir, which_folds=which_folds)
     else:
         print("Using unified analysis...")
         fold_data = analyze_unified_mlruns(args.run_dir)
@@ -442,3 +449,5 @@ def main():
 
 if __name__ == "__main__":
     exit(main())
+
+# python scripts/analyze_mlflow_runs.py /media/smbshare/srs-9/prl_project/training/roi_train2/run3 --distributed --plot --outfile $PRL_PROJECT_ROOT/scratch/roi_train2_run3_mlflow.txt -f 0 -f 1 -f 2
