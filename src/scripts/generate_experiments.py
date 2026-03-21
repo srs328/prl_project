@@ -84,14 +84,16 @@ def main(argv=None):
     parser = make_argument_parser(argv)
     args = parser.parse_args()
 
+    train_home = Path(args.experiment_config).parent
+
     # Load experiment config
     exp_config = load_config(args.experiment_config)
     exp_name = exp_config.get("experiment_name", "hpo_experiment")
     param_grid = exp_config["param_grid"]
 
     # Load base configs
-    base_label_config = load_config(exp_config["base_label_config"])
-    base_monai_config = load_config(exp_config["base_monai_config"])
+    base_label_config = load_config(train_home/exp_config["base_label_config"])
+    base_monai_config = load_config(train_home/exp_config["base_monai_config"])
 
     # Put experiment runs in a subdirectory named after the experiment
     training_work_home = Path(base_monai_config["training_work_home"]) / exp_name

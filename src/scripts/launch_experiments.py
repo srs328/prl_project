@@ -47,6 +47,12 @@ def make_argument_parser(argv):
         default=False,
         help="Print commands without executing"
     )
+    parser.add_argument(
+        "--run-key",
+        default=None,
+        type=str,
+        help="Specify just a single run to execute"
+    )
     return parser
 
 
@@ -71,9 +77,12 @@ def launch_run_local(run_info, dry_run=False):
             raise
 
 
-def launch_local(manifest_dict, dry_run=False, processes=1):
+def launch_local(manifest_dict, dry_run=False, processes=1, run_key=None):
     """Launch all runs locally."""
-    runs = list(manifest_dict.values())
+    if run_key is None:
+        runs = list(manifest_dict.values())
+    else:
+        runs = [manifest_dict[run_key]]
 
     if processes == 1:
         # Sequential execution
@@ -171,10 +180,13 @@ def main(argv=None):
     parser = make_argument_parser(argv)
     args = parser.parse_args()
 
+    run_home = Path(args.experiment_config).parent
+
     # Load experiment config to find manifest
     exp_config = load_config(args.experiment_config)
-    base_monai_config = load_config(exp_config["base_monai_config"])
-    training_work_home = Path(base_monai_config["training_work_home"])
+    exp_name = exp_config.get("experiment_name", "hpo_experiment")
+    base_monai_config = load_config(run_home/exp_config["base_monai_config"])
+    training_work_home = Path(base_monai_config["training_work_home"]) / exp_name
     manifest_path = training_work_home / "runs_manifest.json"
 
     if not manifest_path.exists():
@@ -190,7 +202,7 @@ def main(argv=None):
     if args.hpc:
         submit_to_hpc(manifest_path, dry_run=args.dry_run)
     else:
-        launch_local(manifest_dict, dry_run=args.dry_run, processes=args.processes)
+        launch_local(manifest_dict, dry_run=args.dry_run, processes=args.processes, run_key=args.run_key)
 
     print("Done!")
 
