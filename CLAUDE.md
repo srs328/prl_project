@@ -10,46 +10,66 @@ PRL (Perilesional Rim Lesion) detection pipeline for 3D medical image segmentati
 
 ```bash
 source setup_env.sh  # Sets PRL_PROJECT_ROOT, PRL_DATA_ROOT, PRL_TRAIN_ROOT
+pip install -e .     # Installs `prl` CLI entry point
 ```
 
 Python environment: `~/.virtualenvs/monai/bin/python`
 
-Key dependencies: MONAI (Auto3DSeg), nibabel, pandas, MLflow, numpy, PyYAML. External tools: FSL (fslroi, fslmaths, fslstats), C3D.
+Key dependencies: MONAI (Auto3DSeg), nibabel, pandas, MLflow, numpy, PyYAML, attrs, click, loguru. External tools: FSL (fslroi, fslmaths, fslstats), C3D.
 
-## Path Configuration System
+## Architecture
 
-All paths flow through `src/helpers/paths.py`. JSON configs use `${PROJECT_ROOT}`, `${DATA_ROOT}`, `${TRAIN_ROOT}` tokens that are expanded at load time by `load_config()`. Always use `load_config()` instead of raw `json.load()`.
+### Core Classes (`src/core/`)
+
+- **`Dataset`** (`dataset.py`) — Represents a named dataset (e.g., "roi_train2"). Owns subject lists, fold assignments, and preprocessing pipeline methods. Loads from `training/{name}/dataset.yaml`.
+- **`Experiment`** (`experiment.py`) — A single training run. Handles setup (config generation), training (AutoRunner), prediction, and evaluation.
+- **`ExperimentGrid`** (`grid.py`) — HPO management. Generates Cartesian product of parameters, creates run directories, launches locally or on HPC. Automatically calls `create_rois()` when expansion params are swept.
+- **`PreprocessingConfig`** / **`TrainingConfig`** (`configs.py`) — Attrs dataclasses for pipeline configuration. Frozen/hashable (PreprocessingConfig) for dedup in grids. Use `attrs.evolve()` to create variants.
+
+### Configuration System
+
+**Single source of truth:** Each dataset has one `dataset.yaml` in `training/{name}/`. All paths, fold params, and defaults are defined there. No more `train_home` duplication across configs.
+
+**Path derivation:**
+- `source_home` = `PROJECT_ROOT / "training" / name` (templates, dataset.yaml)
+- `work_home` = `TRAIN_ROOT / name` (run directories with model outputs)
+- `data_root` = `DATA_ROOT` (subject imaging data)
+
+**Token expansion:** JSON/JSONC/YAML configs use `${PROJECT_ROOT}`, `${DATA_ROOT}`, `${TRAIN_ROOT}` tokens expanded at load time by `load_config()`. Always use `load_config()` instead of raw `json.load()`.
 
 Three roots (set via env vars with defaults):
 - `PRL_PROJECT_ROOT` → source code, configs (`/home/srs-9/Projects/prl_project`)
 - `PRL_DATA_ROOT` → subject imaging data (`/media/smbshare/srs-9/prl_project/data`)
 - `PRL_TRAIN_ROOT` → training outputs (`/media/smbshare/srs-9/prl_project/training`)
 
-THE IMPORTANT SOURCE CODE IS NOW IN `$PRL_PROJECT_ROOT/src`. I think I updated everything below to reflect this
+## CLI (`prl`)
+
+```bash
+prl preprocess roi_train2 [--expand-xy 20] [--expand-z 2] [--processes 12]
+prl train roi_train2 [--run-dir PATH] [--epochs 500] [--lr 0.0002]
+prl grid roi_train2 experiment.yaml [--dry-run] [--launch] [--hpc]
+prl predict /path/to/run_dir [--fold N]
+prl metrics /path/to/run_dir [--test-only] [--output-csv PATH] [--print]
+```
 
 ## Pipeline Stages
 
-Each training experiment has two config files in its training directory: `label_config.json` (ROI parameters) and `monai_config.json` (training hyperparameters).
-
-1. **Copy raw data** — `src/preprocessing/copy_files.py`
-2. **Create ROIs** — `src/preprocessing/create_rois.py label_config.json --processes N`
-   Crops lesion bounding boxes with configurable expansion (expand_xy, expand_z)
-3. **Create datalist** — `src/preprocessing/create_datalist.py label_config.json monai_config.json`
-   Stratified split of PRL vs lesion-only cases across 5 folds + test set
-4. **Prepare training data** — `src/preprocessing/prepare_training_data.py label_config.json`
-   Stacks multi-channel images, outputs `datalist_xy{expand_xy}_z{expand_z}.json`
-5. **Train** — `training/roi_train2/train.py [--run-dir RUN_DIR]`
-   MONAI AutoRunner with SegResNet, 5-fold CV. Auto-increments run directories.
-6. **Generate predictions** — `src/scripts/generate_fold_predictions.py run_dir`
-7. **Compute metrics** — `src/scripts/compute_performance_metrics.py run_dir`
+1. **Preprocess** — `prl preprocess roi_train2`
+   - `create_rois`: Crops lesion ROIs with FSL using expand_xy/expand_z
+   - `create_datalist`: Stratified fold split (creates datalist_template.json once)
+   - `prepare_data`: Stacks channels, produces datalist_xy{X}_z{Z}.json
+2. **Train** — `prl train roi_train2` or `python training/roi_train2/train.py --run-dir PATH`
+   - MONAI AutoRunner with SegResNet, 5-fold CV
+3. **Predict** — `prl predict /path/to/run_dir`
+4. **Evaluate** — `prl metrics /path/to/run_dir`
 
 ## CLI Design Convention
 
-Scripts take a single positional `run_dir` (or config path) argument and derive everything else from configs inside that directory. Do not add separate `--datalist`, `--dataroot` flags.
+Scripts take a single positional `run_dir` (or dataset name) argument and derive everything else from configs. Do not add separate `--datalist`, `--dataroot` flags.
 
 ## Key Helpers
 
-- `src/helpers/paths.py` — `load_config()`, centralized path constants
+- `src/helpers/paths.py` — `load_config()`, `load_dataset_config()`, centralized path constants
 - `src/helpers/shell_interface.py` — `command()`, `run_if_missing()` for shell execution with dry-run support
 - `src/helpers/parallel.py` — `BetterPool` for graceful multiprocessing
 - `my_python_utils` — User's personal utility package (located at ~/python/my_python_utils.py; it's on my PYTHONPATH)
@@ -62,7 +82,7 @@ Subject folders: `$DATA_ROOT/sub{id}-{session}/` containing NIfTI images and per
 
 ```
 $TRAIN_ROOT/roi_train2/run2/
-├── label_config.json, monai_config.json    # Copied configs
+├── label_config.json, monai_config.json    # Auto-generated by Experiment.setup()
 ├── datalist_xy20_z2.json                   # Named with expansion params
 ├── datastats_by_case.yaml                  # Per-case MONAI statistics
 ├── mlruns/                                 # MLflow tracking
@@ -72,9 +92,41 @@ $TRAIN_ROOT/roi_train2/run2/
 └── performance_metrics.csv                 # Per-case metrics
 ```
 
-## HPO Infrastructure
+## Directory Layout
 
-I have not tested any of this yet. Also all of this was produced awhile ago by Haiku when i first started the project, and there have been substantial improvements and changes since. So any of the HPO scripts can be reworked as much as needed (i.e from the ground up, or from what already exists if it's good). One thing that's missing is that there's no logic to call preprocessing/create_rois.py if the files for new expansion parameters don't already exist.
+```
+src/
+├── cli.py                    # Click CLI entry point
+├── core/
+│   ├── configs.py            # PreprocessingConfig, TrainingConfig (attrs)
+│   ├── dataset.py            # Dataset class
+│   ├── experiment.py         # Experiment class
+│   └── grid.py               # ExperimentGrid class
+├── helpers/                  # paths.py, shell_interface.py, parallel.py, utils.py
+├── preprocessing/            # create_rois.py, create_datalist.py, prepare_training_data.py
+└── scripts/                  # Analysis: compute_performance_metrics, generate_fold_predictions, etc.
 
-`src/scripts/generate_experiments.py` reads an `experiment_config.json` with `param_grid`, generates run directories. `src/scripts/launch_experiments.py` launches locally or via IBM LSF job arrays (HPC scaffolding in `src/hpc/`).
+training/roi_train2/
+├── dataset.yaml              # Single source of truth for dataset config
+├── datalist_template.json    # Fold assignments (created once, never modified)
+├── algorithm_templates/      # MONAI Auto3DSeg templates
+└── train.py                  # Thin wrapper → Experiment.train()
+```
 
+## HPO
+
+`ExperimentGrid` in `src/core/grid.py` handles HPO. Define an experiment YAML:
+
+```yaml
+dataset: roi_train2
+experiment_name: my_sweep
+param_grid:
+  training:
+    learning_rate: [0.0001, 0.0002]
+    crop_ratios: [null, [1, 1, 4]]
+  # preprocessing params can also be swept:
+  # preprocessing:
+  #   expand_xy: [10, 20]
+```
+
+Then: `prl grid roi_train2 experiment.yaml --launch`
