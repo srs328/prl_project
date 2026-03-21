@@ -180,10 +180,10 @@ def main(argv=None):
     parser = make_argument_parser(argv)
     args = parser.parse_args()
 
-    run_home = Path(args.experiment_config).parent
 
     # Load experiment config to find manifest
     exp_config = load_config(args.experiment_config)
+    run_home = Path(exp_config['train_home'])
     exp_name = exp_config.get("experiment_name", "hpo_experiment")
     base_monai_config = load_config(run_home/exp_config["base_monai_config"])
     training_work_home = Path(base_monai_config["training_work_home"]) / exp_name
