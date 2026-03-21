@@ -273,6 +273,8 @@ class Experiment:
         from core.configs import PreprocessingConfig, TrainingConfig
 
         run_dir = Path(run_dir)
+        if not run_dir.is_absolute():
+            run_dir = dataset.work_home / run_dir
         label_config = load_config(run_dir / "label_config.json")
         monai_config = load_config(run_dir / "monai_config.json")
 
