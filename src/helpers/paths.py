@@ -16,6 +16,7 @@ from pathlib import Path
 PROJECT_ROOT = Path(os.environ.get('PRL_PROJECT_ROOT', Path(__file__).parent.parent))
 DATA_ROOT = Path(os.environ.get('PRL_DATA_ROOT', '/media/smbshare/srs-9/prl_project/data'))
 TRAIN_ROOT = Path(os.environ.get('PRL_TRAIN_ROOT', '/media/smbshare/srs-9/prl_project/training'))
+TRAIN_HOME = Path(os.environ.get('PRL_TRAIN_ROOT', '/media/smbshare/srs-9/prl_project/training'))
 
 # Token replacements
 TOKEN_MAP = {

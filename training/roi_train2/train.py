@@ -56,7 +56,7 @@ datalist_file_src = train_home / f"datalist_xy{expand_xy}_z{expand_z}.json"
 datalist_file = work_dir / f"datalist_xy{expand_xy}_z{expand_z}.json"
 
 train_param = monai_config['train_param']
-algos = train_param["algos"]
+algos = train_param.pop("algos")
 
 description = f"""Training run
 expand_xy={expand_xy}, expand_z={expand_z}
@@ -79,9 +79,9 @@ if not work_dir.exists():
     print(f"Creating {str(work_dir)}")
     os.makedirs(work_dir)
 
-shutil.copyfile(datalist_file_src, datalist_file)
-shutil.copyfile("monai_config.json", work_dir/"monai_config.json")
-shutil.copyfile("label_config.json", work_dir/"label_config.json")
+# shutil.copyfile(datalist_file_src, datalist_file)
+# shutil.copyfile("monai_config.json", work_dir/"monai_config.json")
+# shutil.copyfile("label_config.json", work_dir/"label_config.json")
 
 
 with open(work_dir / "info.txt", 'w') as f:
@@ -94,14 +94,23 @@ print("work_dir is: ", work_dir)
 mlflow_tracking_uri = str(work_dir / "mlruns")
 mlflow_experiment_name = f"run{work_dir.name[3:]}" if work_dir.name.startswith("run") else work_dir.name
 
+# List-valued params in train_param get mangled by BundleAlgo.train()'s CLI
+# conversion (Fire interprets '1,1,4' as a string, not [1,1,4]). Moving them
+# to the input dict ensures they flow through fill_template_config into
+# hyper_parameters.yaml correctly without a CLI override step.
+input_dict = {
+    "modality": "MRI",
+    "datalist": str(datalist_file),
+    "dataroot": str(dataroot),
+}
+for key in list(train_param):
+    if isinstance(train_param[key], list):
+        input_dict[key] = train_param.pop(key)
+
 runner = AutoRunner(
     work_dir=work_dir,
     algos=algos,
-    input={
-        "modality": "MRI",
-        "datalist": str(datalist_file),
-        "dataroot": str(dataroot),
-    },
+    input=input_dict,
     mlflow_tracking_uri=mlflow_tracking_uri,
     mlflow_experiment_name=mlflow_experiment_name,
 )
