@@ -84,10 +84,10 @@ def main(argv=None):
     parser = make_argument_parser(argv)
     args = parser.parse_args()
 
-    train_home = Path(args.experiment_config).parent
 
     # Load experiment config
     exp_config = load_config(args.experiment_config)
+    train_home = Path(exp_config['train_home'])
     exp_name = exp_config.get("experiment_name", "hpo_experiment")
     param_grid = exp_config["param_grid"]
 
@@ -184,7 +184,7 @@ def main(argv=None):
                     print(f"  Preparing training data...")
                     prepare_cmd = [
                         sys.executable,
-                        str(PROJECT_ROOT / "preprocessing" / "prepare_training_data.py"),
+                        str(PROJECT_ROOT / "src/preprocessing" / "prepare_training_data.py"),
                         str(run_dir / "label_config.json"),
                     ]
                     try:
