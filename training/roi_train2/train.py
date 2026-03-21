@@ -7,6 +7,7 @@ from monai.apps.auto3dseg import AutoRunner
 from monai.config import print_config
 import shutil
 import json
+import pickle
 import logging
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
@@ -128,6 +129,21 @@ for key in list(train_param):
     if isinstance(train_param[key], list):
         input_dict[key] = train_param.pop(key)
         logger.info(f"{key}: {input_dict[key]}")
+
+# Clean up incomplete folds so AutoRunner doesn't skip them.
+# When a job is killed mid-training, algo_object.pkl exists (from algo_gen) with
+# best_metric=None, but progress.yaml has scores from incremental logging. AutoRunner's
+# fallback reads progress.yaml and thinks the fold is complete. Removing progress.yaml
+# for these folds forces AutoRunner to retrain them.
+for fold_dir in sorted(work_dir.glob("segresnet_*")):
+    pkl_path = fold_dir / "algo_object.pkl"
+    progress_path = fold_dir / "model" / "progress.yaml"
+    if pkl_path.exists() and progress_path.exists():
+        with open(pkl_path, "rb") as f:
+            pkl_data = pickle.load(f)
+        if pkl_data.get("best_metric") is None:
+            logger.info(f"Incomplete fold detected: {fold_dir.name} — removing progress.yaml")
+            progress_path.unlink()
 
 runner = AutoRunner(
     work_dir=work_dir,
