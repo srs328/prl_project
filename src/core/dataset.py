@@ -106,6 +106,10 @@ class Dataset:
 
         Idempotent unless rebuild=True. Returns path to the template, or
         None if it already exists and rebuild is False.
+        TODO: feature to create templates for new image stacks: 
+            If I want to vary the input image stack as a hyperparameter (ie add t1), I need a
+            way of producing another datalist template with the same partitioning of cases but with
+            flair.phase.t1_ as the "image" value, and it should play well with grid
         """
         return create_datalist_template(
             subjects=self.subjects,

@@ -26,7 +26,7 @@ def cli():
 @click.option("--expand-z", type=int, default=None, help="Z expansion (overrides dataset default)")
 @click.option("--processes", type=int, default=None, help="Parallel processes (default: sequential)")
 @click.option("--dry-run", is_flag=True, help="Print commands without executing")
-@click.option("--rebuild-datalist", is_flag=True, help="Rebuild datalist_template.json")
+@click.option("--rebuild-datalist", is_flag=True, default=False, help="Rebuild datalist_template.json")
 def preprocess(dataset_name, expand_xy, expand_z, processes, dry_run, rebuild_datalist):
     """Run full preprocessing pipeline for a dataset.
 

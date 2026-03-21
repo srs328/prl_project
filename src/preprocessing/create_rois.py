@@ -170,6 +170,7 @@ def create_rois_for_subjects(subjects, suffix_to_use, prl_df, data_root,
             task = {"subid": subid, "suffix": suffix_to_use[subid], **const_args}
             _prepare_roi_wrapper(task)
     else:
+        logger.info(f"Starting {len(subjects)} tasks with {processes} processes")
         tasks = [
             {"subid": subid, "suffix": suffix_to_use[subid], **const_args}
             for subid in subjects
