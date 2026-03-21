@@ -38,19 +38,24 @@ def prepare_training_data(datalist_template_path, data_root, images,
     Returns:
         Path to the written datalist file.
     """
+    data_root = Path(data_root)
     with open(datalist_template_path, "r") as f:
         datalist = json.load(f)
 
     image_basenames = [im.removesuffix(".nii.gz") for im in sorted(images)]
-    image_names = [f"{im}_xy{expand_xy}_z{expand_z}.nii.gz" for im in image_basenames]
-
+    bbox_suffix = f"xy{expand_xy}_z{expand_z}"
+    image_names = [f"{im}_{bbox_suffix}.nii.gz" for im in image_basenames]
+    logger.info(
+        f"Ensuring [{', '.join(images)}] stack and adding \"{bbox_suffix}\" suffix "
+        f"to {len(datalist['training'])} training cases and {len(datalist['testing'])} testing cases"
+    )
     for subset in ["training", "testing"]:
         for a_case in tqdm(datalist[subset], total=len(datalist[subset])):
-            image_stack_prefix = Path(a_case["image"])
+            image_stack_prefix = data_root / a_case["image"]
             folder = image_stack_prefix.parent
 
             image_stack = folder / (
-                image_stack_prefix.name + f"xy{expand_xy}_z{expand_z}.nii.gz"
+                image_stack_prefix.name + f"{bbox_suffix}.nii.gz"
             )
             input_images = [str(folder / im) for im in image_names]
             input_images_arg = " ".join(input_images)
@@ -59,7 +64,10 @@ def prepare_training_data(datalist_template_path, data_root, images,
                 f"bash {CONCAT_SH} {image_stack} {input_images_arg}",
             )
             a_case["image"] = str(image_stack)
-            a_case["label"] = a_case["label"] + f"xy{expand_xy}_z{expand_z}.nii.gz"
+            a_case["label"] = os.path.join(
+                data_root,
+                a_case["label"] + f"{bbox_suffix}.nii.gz"
+            )
 
             if not os.path.exists(a_case["label"]):
                 raise FileNotFoundError(f"Label not found: {a_case['label']}")
