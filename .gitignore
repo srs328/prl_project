@@ -14,6 +14,7 @@ scratch.py
 *cp_work_dir
 .*
 !.gitignore
+setup_env.sh
 
 fsf
 src/mri_data/new_files.log

@@ -21,14 +21,11 @@ import numpy as np
 import pandas as pd
 from my_python_utils import save_json
 
-from helpers.paths import load_config
+import nibabel as nib
+from nibabel.spatialimages import SpatialImage
 
-try:
-    import nibabel as nib
-    HAS_NIBABEL = True
-except ImportError:
-    HAS_NIBABEL = False
-    print("Warning: nibabel not installed")
+from helpers.paths import load_config
+from helpers.utils import dice_score
 
 
 def get_test_inference(test_data, dataroot, inf_root, suffix) -> list[dict]:
@@ -55,7 +52,7 @@ def get_validation_inference(train_data, dataroot, val_root, suffix):
     return validation_data
 
 
-def get_confusion_matrix(lab_path: Path, inf_path: Path) -> Tuple[int, int, int, int]:
+def get_confusion_matrix(lab: SpatialImage, inf: SpatialImage) -> Tuple[int, int, int, int]:
     """
     Compute confusion matrix from label and inference images.
 
@@ -66,17 +63,14 @@ def get_confusion_matrix(lab_path: Path, inf_path: Path) -> Tuple[int, int, int,
     Returns:
         TP, FP, TN, FN
     """
-    if not HAS_NIBABEL:
-        return 0, 0, 0, 0
-
+    lab_path = lab.get_filename
+    lab_data = lab.get_fdata()
+    inf_data = inf.get_fdata()
     try:
-        lab = nib.load(lab_path).get_fdata()
-        inf = nib.load(inf_path).get_fdata()
-
-        TP = np.sum((lab == 2) & (inf == 2))
-        FP = np.sum((lab == 1) & (inf == 2))
-        TN = np.sum((lab == 1) & (inf == 1))
-        FN = np.sum((lab == 2) & (inf == 1))
+        TP = np.sum((lab_data == 2) & (inf_data == 2))
+        FP = np.sum((lab_data == 1) & (inf_data == 2))
+        TN = np.sum((lab_data == 1) & (inf_data == 1))
+        FN = np.sum((lab_data == 2) & (inf_data == 1))
 
         return int(TP), int(FP), int(TN), int(FN)
     except Exception as e:
@@ -179,8 +173,12 @@ def analyze_dataset(data, split: str = "testing") -> Dict:
         lab_path = Path(item['label'])
         inf_path = Path(item['inference'])
 
+        lab = nib.load(lab_path)
+        inf = nib.load(inf_path)
+        prl_dice = dice_score(lab.get_fdata(), inf.get_fdata(), seg1_val=2, seg2_val=2)
+        lesion_dice = dice_score(lab.get_fdata(), inf.get_fdata(), seg1_val=1, seg2_val=1)
         # Compute confusion matrix
-        tp, fp, tn, fn = get_confusion_matrix(lab_path, inf_path)
+        tp, fp, tn, fn = get_confusion_matrix(lab, inf)
 
 
         # Compute metrics for this case
@@ -190,6 +188,8 @@ def analyze_dataset(data, split: str = "testing") -> Dict:
             'split': split,
             'case_type': item.get('case_type'),
             # 'fold': item.get('fold', "NA"),
+            'lesion_dice': lesion_dice,
+            'prl_dice': prl_dice,
             'tp': tp,
             'fp': fp,
             'tn': tn,
