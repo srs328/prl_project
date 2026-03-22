@@ -1,8 +1,10 @@
-"""Dataset class — owns data identity and preprocessing pipeline.
+"""Dataset class — owns data identity and fold assignments.
 
 A Dataset is identified by name (e.g. "roi_train2"). All paths, configs,
-and defaults are derived from that name. The preprocessing pipeline
-(create ROIs, create datalist, prepare training data) is exposed as methods.
+and defaults are derived from that name. The only pipeline method it owns
+is create_datalist() (fold assignment), since folds are a property of
+the dataset itself. ROI creation and data preparation are per-experiment
+and live in Experiment.
 """
 
 from __future__ import annotations
@@ -16,9 +18,7 @@ from helpers.paths import (
     load_dataset_config,
 )
 from core.configs import PreprocessingConfig, TrainingConfig
-from preprocessing.create_rois import create_rois_for_subjects
 from preprocessing.create_datalist import create_datalist_template
-from preprocessing.prepare_training_data import prepare_training_data
 
 
 class Dataset:
@@ -39,7 +39,6 @@ class Dataset:
         config = load_dataset_config(name)
         self._config = config
 
-        self.images = config["images"]
         self.n_folds = config["n_folds"]
         self.test_split = config["test_split"]
         self.prl_df_path = Path(config["prl_df"])
@@ -49,6 +48,7 @@ class Dataset:
         # Parse defaults
         defaults = config.get("defaults", {})
         self.default_preprocess = PreprocessingConfig(
+            images=defaults.get("images", ["flair", "phase"]),
             expand_xy=defaults.get("expand_xy", 20),
             expand_z=defaults.get("expand_z", 2),
         )
@@ -78,79 +78,23 @@ class Dataset:
     def datalist_template_path(self) -> Path:
         return self.source_home / "datalist_template.json"
 
-    def datalist_path(self, config: PreprocessingConfig | None = None) -> Path:
-        """Path to the final datalist for given expansion parameters."""
-        if config is None:
-            config = self.default_preprocess
-        return self.source_home / f"datalist_{config.suffix}.json"
-
-    # --- Preprocessing pipeline ---
-
-    def create_rois(self, config: PreprocessingConfig | None = None) -> None:
-        """Crop ROIs for all subjects at given expand_xy/expand_z."""
-        if config is None:
-            config = self.default_preprocess
-        create_rois_for_subjects(
-            subjects=self.subjects,
-            suffix_to_use=self.suffix_to_use,
-            prl_df=self.prl_df,
-            data_root=self.data_root,
-            expand_xy=config.expand_xy,
-            expand_z=config.expand_z,
-            processes=config.processes,
-            dry_run=config.dry_run,
-        )
-
     def create_datalist(self, rebuild: bool = False) -> Path | None:
-        """Create datalist_template.json with fold assignments.
+        """Create datalist_template.json with stratified fold assignments.
 
-        Idempotent unless rebuild=True. Returns path to the template, or
-        None if it already exists and rebuild is False.
-        TODO: feature to create templates for new image stacks: 
-            If I want to vary the input image stack as a hyperparameter (ie add t1), I need a
-            way of producing another datalist template with the same partitioning of cases but with
-            flair.phase.t1_ as the "image" value, and it should play well with grid
+        Idempotent unless rebuild=True. The template is image-agnostic —
+        it stores directory paths, not stacked-image prefixes. Image stack
+        composition is determined later by Experiment.prepare_data().
         """
         return create_datalist_template(
             subjects=self.subjects,
             suffix_to_use=self.suffix_to_use,
             prl_df=self.prl_df,
             data_root=self.data_root,
-            images=self.images,
             n_folds=self.n_folds,
             test_split=self.test_split,
             output_path=self.datalist_template_path,
             rebuild=rebuild,
         )
 
-    def prepare_data(self, config: PreprocessingConfig | None = None) -> Path:
-        """Stack channels and produce datalist_xy{X}_z{Z}.json."""
-        if config is None:
-            config = self.default_preprocess
-        return prepare_training_data(
-            datalist_template_path=self.datalist_template_path,
-            data_root=self.data_root,
-            images=self.images,
-            expand_xy=config.expand_xy,
-            expand_z=config.expand_z,
-            output_path=self.datalist_path(config),
-        )
-
-    def preprocess(self, config: PreprocessingConfig | None = None,
-                   rebuild_datalist: bool = False) -> Path:
-        """Full pipeline: create_rois -> create_datalist -> prepare_data.
-
-        Returns path to the final datalist file.
-        """
-        if config is None:
-            config = self.default_preprocess
-        self.create_rois(config)
-        self.create_datalist(rebuild=rebuild_datalist)
-        return self.prepare_data(config)
-
     def __repr__(self) -> str:
         return f"Dataset('{self.name}')"
-
-
-class DataList:
-    pass

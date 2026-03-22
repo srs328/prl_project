@@ -19,19 +19,21 @@ from loguru import logger
 from helpers.paths import load_config
 
 
-def create_datalist_template(subjects, suffix_to_use, prl_df, data_root, images,
+def create_datalist_template(subjects, suffix_to_use, prl_df, data_root,
                               n_folds, test_split, output_path, rebuild=False):
     """Create datalist_template.json with stratified fold assignments.
 
-    This is the primary API for Dataset.create_datalist_template(). All
-    parameters are explicit — no globals.
+    This is the primary API for Dataset.create_datalist(). All
+    parameters are explicit — no globals. The template is image-agnostic:
+    "image" stores the case directory (relative to data_root), not a
+    stacked-image prefix. The image stack is determined later by
+    Experiment.prepare_data().
 
     Args:
         subjects: List of subject IDs.
         suffix_to_use: Dict mapping subid → annotator suffix.
         prl_df: PRL spreadsheet DataFrame indexed by subid.
         data_root: Root data directory containing subject folders.
-        images: List of image names (e.g. ["flair", "phase"]).
         n_folds: Number of cross-validation folds.
         test_split: Fraction of data for test set.
         output_path: Path to write datalist_template.json.
@@ -47,8 +49,7 @@ def create_datalist_template(subjects, suffix_to_use, prl_df, data_root, images,
         logger.info(f"{output_path} exists; use rebuild=True to replace it")
         return None
 
-    image_basenames = [im.removesuffix(".nii.gz") for im in sorted(images)]
-    stacked_image_prefix = ".".join(image_basenames) + "_"
+    data_root = Path(data_root)
 
     prl_folders = []
     lesion_folders = []
@@ -75,6 +76,19 @@ def create_datalist_template(subjects, suffix_to_use, prl_df, data_root, images,
             else:
                 lesion_folders.append((folder, subid, index))
 
+    def _make_entry(folder, subid, index, case_type, suffix=None):
+        rel = str(folder.relative_to(data_root))
+        if case_type == "PRL":
+            label = f"{rel}/prl_label_{suffix}_"
+        else:
+            label = f"{rel}/lesion_"
+        return {
+            "subid": subid, "lesion_index": index,
+            "image": f"{rel}/",
+            "label": label,
+            "case_type": case_type,
+        }
+
     datalist = {"training": [], "testing": []}
 
     # PRL cases
@@ -84,23 +98,15 @@ def create_datalist_template(subjects, suffix_to_use, prl_df, data_root, images,
     for i in range(test_end_ind):
         ind = inds[i]
         folder, subid, index = prl_folders[ind]
-        suffix = suffix_to_use[subid]
-        datalist["testing"].append({
-            "subid": subid, "lesion_index": index,
-            "image": str(folder / stacked_image_prefix),
-            "label": str(folder / f"prl_label_{suffix}_"),
-        })
+        entry = _make_entry(folder, subid, index, "PRL", suffix_to_use[subid])
+        datalist["testing"].append(entry)
     for i in range(test_end_ind, len(inds)):
         fold = i % n_folds
         ind = inds[i]
         folder, subid, index = prl_folders[ind]
-        suffix = suffix_to_use[subid]
-        datalist["training"].append({
-            "subid": subid, "lesion_index": index,
-            "fold": fold,
-            "image": str(folder / stacked_image_prefix),
-            "label": str(folder / f"prl_label_{suffix}_"),
-        })
+        entry = _make_entry(folder, subid, index, "PRL", suffix_to_use[subid])
+        entry["fold"] = fold
+        datalist["training"].append(entry)
 
     # Lesion-only cases
     inds = list(range(len(lesion_folders)))
@@ -109,21 +115,15 @@ def create_datalist_template(subjects, suffix_to_use, prl_df, data_root, images,
     for i in range(test_end_ind):
         ind = inds[i]
         folder, subid, index = lesion_folders[ind]
-        datalist["testing"].append({
-            "subid": subid, "lesion_index": index,
-            "image": str(folder / stacked_image_prefix),
-            "label": str(folder / "lesion_"),
-        })
+        entry = _make_entry(folder, subid, index, "Lesion")
+        datalist["testing"].append(entry)
     for i in range(test_end_ind, len(inds)):
         fold = i % n_folds
         ind = inds[i]
         folder, subid, index = lesion_folders[ind]
-        datalist["training"].append({
-            "subid": subid, "lesion_index": index,
-            "fold": fold,
-            "image": str(folder / stacked_image_prefix),
-            "label": str(folder / "lesion_"),
-        })
+        entry = _make_entry(folder, subid, index, "Lesion")
+        entry["fold"] = fold
+        datalist["training"].append(entry)
 
     with open(output_path, "w") as f:
         json.dump(datalist, f, indent=4)
@@ -187,7 +187,6 @@ def main(argv=None):
         suffix_to_use=suffix_to_use,
         prl_df=prl_df,
         data_root=data_root,
-        images=label_config["images"],
         n_folds=monai_config["N_FOLDS"],
         test_split=monai_config["TEST_SPLIT"],
         output_path=train_home / "datalist_template.json",

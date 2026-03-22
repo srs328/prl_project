@@ -53,9 +53,9 @@ class ExperimentGrid:
     def generate(self, dry_run: bool = False, prepare_data: bool = True) -> list[Experiment]:
         """Generate all experiment run directories from param grid.
 
-        Returns a list of Experiment objects. If expand_xy/expand_z are
-        in the grid, calls dataset.create_rois() + dataset.prepare_data()
-        for each unique (expand_xy, expand_z) combination.
+        Returns a list of Experiment objects. If expand_xy/expand_z/images
+        are in the grid, creates ROIs and prepares data for each unique
+        preprocessing config via a temporary Experiment.
         """
         preprocess_params = self.param_grid.get("preprocessing", {})
         training_params = self.param_grid.get("training", {})
@@ -69,7 +69,7 @@ class ExperimentGrid:
         tr_values = [training_params[k] for k in tr_keys]
         tr_combos = list(product(*tr_values)) if tr_keys else [()]
 
-        # Pre-create ROIs for all unique preprocessing configs
+        # Pre-create ROIs and datalists for all unique preprocessing configs
         if prepare_data and not dry_run:
             unique_pp_configs = set()
             for pp_combo in pp_combos:
@@ -78,14 +78,20 @@ class ExperimentGrid:
                 unique_pp_configs.add(pp_config)
 
             for pp_config in unique_pp_configs:
-                datalist_path = self.dataset.datalist_path(pp_config)
+                datalist_path = self.dataset.source_home / f"datalist_{pp_config.datalist_suffix}.json"
                 if not datalist_path.exists():
                     logger.info(
-                        f"Preparing data for {pp_config.suffix}..."
+                        f"Preparing data for {pp_config.datalist_suffix}..."
                     )
-                    self.dataset.create_rois(pp_config)
+                    tmp_exp = Experiment(
+                        dataset=self.dataset,
+                        preprocess_config=pp_config,
+                        training_config=self.base_training,
+                        run_dir=Path("."),  # placeholder, not used
+                    )
+                    tmp_exp.create_rois()
                     self.dataset.create_datalist()
-                    self.dataset.prepare_data(pp_config)
+                    tmp_exp.prepare_data()
 
         experiments = []
         manifest = {}

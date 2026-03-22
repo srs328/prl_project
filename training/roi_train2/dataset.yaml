@@ -4,14 +4,13 @@ name: roi_train2
 subjects: subjects.txt
 suffix_to_use: labels_to_use.csv
 prl_df: ${PROJECT_ROOT}/src/resources/PRL_spreadsheet-lstai_update_label_reference.csv
-images: [flair, phase]
-
 # Fold/split config (used once to create datalist_template.json)
 n_folds: 5
 test_split: 0.2
 
 # Preprocessing defaults (overridable by ExperimentGrid)
 defaults:
+  images: [flair, phase]
   expand_xy: 20
   expand_z: 2
 

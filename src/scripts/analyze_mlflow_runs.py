@@ -158,9 +158,29 @@ def analyze_unified_mlruns(run_dir: Path) -> Dict[int, Dict]:
             metrics_dir = run_path / "metrics"
             metrics = load_metrics_from_file(metrics_dir)
 
+            # Handle duplicates that occur if I had to rerun a job on the cluster that failed
+            if fold_num in fold_data.keys():
+                old_metrics = fold_data[fold_num]["metrics"]
+                old_metric_dir = fold_data[fold_num]['metrics_dir']
+                try:
+                    n_epochs_old = len(old_metrics['train/loss'])
+                except Exception:
+                    print(f"Duplicate fold {fold_num} and problem in {old_metric_dir}")
+                    n_epochs_old = 0
+                try:
+                    n_epochs_new = len(metrics['train/loss'])
+                except Exception:
+                    print(f"Duplicate fold {fold_num} and problem in {metrics_dir}")
+                    continue
+                
+                # assume whichever one has the most epochs is the one that is correct
+                if n_epochs_old > n_epochs_new:
+                    continue
+            
             fold_data[fold_num] = {
                 "metrics": metrics,
                 "path": str(run_path),
+                "metrics_dir": str(metrics_dir)
             }
 
     return fold_data
@@ -206,6 +226,10 @@ def aggregate_metrics(fold_data: Dict[int, Dict]) -> Dict[str, Dict]:
             }
 
     return aggregated
+
+
+def create_summary(fold_data: Dict[int, Dict], aggregated: Dict[str, Dict], fp=None):
+    pass
 
 
 def print_summary(fold_data: Dict[int, Dict], aggregated: Dict[str, Dict], fp=None):

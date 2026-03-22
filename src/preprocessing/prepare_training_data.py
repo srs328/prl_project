@@ -24,12 +24,14 @@ def prepare_training_data(datalist_template_path, data_root, images,
                            expand_xy, expand_z, output_path):
     """Stack channels and produce the final datalist with full paths.
 
-    This is the primary API for Dataset.prepare_training_data(). All
-    parameters are explicit — no globals.
+    The template stores image-agnostic directory paths (e.g.
+    "sub1038-20161031/1/"). This function computes the stacked image
+    prefix from ``images`` and appends the expansion suffix to produce
+    complete paths.
 
     Args:
         datalist_template_path: Path to datalist_template.json.
-        data_root: Root data directory (unused directly but validates label paths).
+        data_root: Root data directory.
         images: List of image names (e.g. ["flair", "phase"]).
         expand_xy: X/Y expansion parameter.
         expand_z: Z expansion parameter.
@@ -43,6 +45,7 @@ def prepare_training_data(datalist_template_path, data_root, images,
         datalist = json.load(f)
 
     image_basenames = [im.removesuffix(".nii.gz") for im in sorted(images)]
+    image_prefix = ".".join(image_basenames) + "_"
     bbox_suffix = f"xy{expand_xy}_z{expand_z}"
     image_names = [f"{im}_{bbox_suffix}.nii.gz" for im in image_basenames]
     logger.info(
@@ -51,22 +54,19 @@ def prepare_training_data(datalist_template_path, data_root, images,
     )
     for subset in ["training", "testing"]:
         for a_case in tqdm(datalist[subset], total=len(datalist[subset])):
-            image_stack_prefix = data_root / a_case["image"]
-            folder = image_stack_prefix.parent
+            # "image" is a directory path relative to data_root, e.g. "sub1038-20161031/1/"
+            case_dir = data_root / a_case["image"]
 
-            image_stack = folder / (
-                image_stack_prefix.name + f"{bbox_suffix}.nii.gz"
-            )
-            input_images = [str(folder / im) for im in image_names]
+            image_stack = case_dir / f"{image_prefix}{bbox_suffix}.nii.gz"
+            input_images = [str(case_dir / im) for im in image_names]
             input_images_arg = " ".join(input_images)
             run_if_missing(
                 image_stack,
                 f"bash {CONCAT_SH} {image_stack} {input_images_arg}",
             )
             a_case["image"] = str(image_stack)
-            a_case["label"] = os.path.join(
-                data_root,
-                a_case["label"] + f"{bbox_suffix}.nii.gz"
+            a_case["label"] = str(
+                data_root / (a_case["label"] + f"{bbox_suffix}.nii.gz")
             )
 
             if not os.path.exists(a_case["label"]):

@@ -1,7 +1,9 @@
 """Experiment class — a single training run.
 
 Encapsulates setup, training (via MONAI AutoRunner), prediction, and
-evaluation for a single set of hyperparameters.
+evaluation for a single set of hyperparameters. Also owns ROI creation
+and data preparation, since these depend on per-experiment parameters
+(expand_xy, expand_z, images).
 """
 
 from __future__ import annotations
@@ -11,6 +13,7 @@ import os
 import sys
 import subprocess
 import tempfile
+from collections import defaultdict
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -35,27 +38,152 @@ class Experiment:
         self.preprocess_config = preprocess_config
         self.training_config = training_config
         self.run_dir = Path(run_dir)
+        if not self.run_dir.is_absolute():
+            self.run_dir = dataset.work_home / self.run_dir
+        self._cases: list[dict] | None = None
 
     @property
     def datalist_name(self) -> str:
-        return f"datalist_{self.preprocess_config.suffix}.json"
+        return f"datalist_{self.preprocess_config.datalist_suffix}.json"
 
     @property
     def datalist_src(self) -> Path:
         """Path to the datalist in the dataset's source_home."""
-        return self.dataset.datalist_path(self.preprocess_config)
+        return self.dataset.source_home / self.datalist_name
 
     @property
     def datalist_dst(self) -> Path:
         """Path to the datalist copy in the run directory."""
         return self.run_dir / self.datalist_name
 
-    def setup(self) -> None:
-        """Create run directory and write configs + datalist into it.
+    # --- Preprocessing (moved from Dataset) ---
 
-        Replaces the manual config copying in the old train.py.
+    def create_rois(self) -> None:
+        """Crop ROIs for all subjects at this experiment's expand_xy/expand_z."""
+        from preprocessing.create_rois import create_rois_for_subjects
+
+        cfg = self.preprocess_config
+        create_rois_for_subjects(
+            subjects=self.dataset.subjects,
+            suffix_to_use=self.dataset.suffix_to_use,
+            prl_df=self.dataset.prl_df,
+            data_root=self.dataset.data_root,
+            expand_xy=cfg.expand_xy,
+            expand_z=cfg.expand_z,
+            processes=cfg.processes,
+            dry_run=cfg.dry_run,
+        )
+
+    def prepare_data(self) -> Path:
+        """Stack channels and produce the final datalist with expansion suffixes."""
+        from preprocessing.prepare_training_data import prepare_training_data
+
+        cfg = self.preprocess_config
+        return prepare_training_data(
+            datalist_template_path=self.dataset.datalist_template_path,
+            data_root=self.dataset.data_root,
+            images=cfg.images,
+            expand_xy=cfg.expand_xy,
+            expand_z=cfg.expand_z,
+            output_path=self.datalist_src,
+        )
+
+    # --- Datalist & cases ---
+
+    @property
+    def datalist(self) -> dict:
+        """Load the prepared datalist (from run_dir if available, else source_home)."""
+        path = self.datalist_dst if self.datalist_dst.exists() else self.datalist_src
+        with open(path) as f:
+            return json.load(f)
+
+    @property
+    def cases(self) -> list[dict]:
+        """Flat list of all cases with split, case_type, and inference paths.
+
+        Cached after first access. Call refresh_cases() to re-scan disk
+        (e.g. after predict() generates new inference files).
         """
+        if self._cases is None:
+            self._cases = self._build_cases()
+        return self._cases
+
+    def refresh_cases(self) -> None:
+        """Invalidate cached cases so the next access re-scans disk."""
+        self._cases = None
+
+    def _build_cases(self) -> list[dict]:
+        datalist = self.datalist
+        cases = []
+
+        for item in datalist.get("testing", []):
+            item = dict(item)
+            item["split"] = "testing"
+            self._resolve_inference_path(item)
+            resolve_case_type(item)
+            cases.append(item)
+
+        for item in datalist.get("training", []):
+            item = dict(item)
+            item["split"] = f"fold{item.pop('fold')}"
+            self._resolve_inference_path(item)
+            resolve_case_type(item)
+            cases.append(item)
+
+        return cases
+
+    def _resolve_inference_path(self, case: dict) -> None:
+        """Add 'inference' key to a case dict if the predicted file exists.
+
+        Also converts image/label to absolute Paths.
+        """
+        data_root = self.dataset.data_root
+        cfg = self.preprocess_config
+
+        # Make label absolute
+        label = Path(case["label"])
+        if not label.is_absolute():
+            label = data_root / label
+        case["label"] = label
+
+        # Make image absolute
+        image = Path(case["image"])
+        if not image.is_absolute():
+            image = data_root / image
+        case["image"] = image
+
+        # Resolve inference output path
+        label_relative = label.relative_to(data_root)
+        if case["split"] == "testing":
+            inf_path = (
+                self.run_dir / "ensemble_output"
+                / label_relative.with_name(
+                    f"{cfg.datalist_suffix}_ensemble.nii.gz"
+                )
+            )
+        else:
+            # Validation: fold_predictions/fold0/...
+            inf_path = (
+                self.run_dir / "fold_predictions" / case["split"]
+                / label_relative.with_name(
+                    f"{cfg.datalist_suffix}.nii.gz"
+                )
+            )
+
+        if inf_path.exists():
+            case["inference"] = inf_path
+
+    # --- Setup ---
+
+    def setup(self) -> None:
+        """Create run directory and write configs + datalist into it."""
         self.run_dir.mkdir(parents=True, exist_ok=True)
+
+        # Ensure datalist exists (create ROIs + prepare data if needed)
+        if not self.datalist_src.exists():
+            self.create_rois()
+            self.dataset.create_datalist()
+            self.prepare_data()
 
         # Write label_config.json
         label_cfg = self.training_config.to_label_config_dict(
@@ -71,30 +199,26 @@ class Experiment:
 
         # Copy datalist
         if not self.datalist_dst.exists():
-            if not self.datalist_src.exists():
-                raise FileNotFoundError(
-                    f"Source datalist not found: {self.datalist_src}. "
-                    f"Run dataset.prepare_data() first."
-                )
             import shutil
             shutil.copyfile(self.datalist_src, self.datalist_dst)
 
         # Validate image/label paths exist
-        with open(self.datalist_dst) as f:
-            datalist = json.load(f)
-
-        dataroot = self.dataset.data_root
+        datalist = self.datalist
         for item in datalist.get("training", []) + datalist.get("testing", []):
-            img_path = Path(dataroot) / item["image"]
+            img_path = self.dataset.data_root / item["image"]
             if not img_path.exists():
                 raise FileNotFoundError(f"Image not found: {img_path}")
+            img_path = self.dataset.data_root / item["label"]
+            if not img_path.exists():
+                raise FileNotFoundError(f"Label not found: {img_path}")
 
         # Write run info
+        cfg = self.preprocess_config
         description = (
             f"Training run\n"
             f"dataset={self.dataset.name}\n"
-            f"expand_xy={self.preprocess_config.expand_xy}, "
-            f"expand_z={self.preprocess_config.expand_z}\n"
+            f"images={list(cfg.images)}\n"
+            f"expand_xy={cfg.expand_xy}, expand_z={cfg.expand_z}\n"
             f"run_dir={self.run_dir}\n"
             f"learning_rate={self.training_config.learning_rate}\n"
             f"num_epochs={self.training_config.num_epochs}\n"
@@ -104,11 +228,10 @@ class Experiment:
 
         logger.info(f"Experiment setup complete: {self.run_dir}")
 
-    def train(self) -> None:
-        """Run MONAI AutoRunner training.
+    # --- Training ---
 
-        This replaces the logic from training/roi_train2/train.py.
-        """
+    def train(self) -> None:
+        """Run MONAI AutoRunner training."""
         from monai.apps.auto3dseg import AutoRunner
 
         if not self.datalist_dst.exists():
@@ -147,10 +270,10 @@ class Experiment:
         logger.info(f"Starting training in {self.run_dir}")
         runner.run()
 
+    # --- Prediction ---
+
     def predict(self, fold: int | None = None) -> dict[int, str]:
         """Run fold validation inference.
-
-        Uses the Auto3DSeg inference infrastructure in each fold's scripts/ dir.
 
         Args:
             fold: Specific fold number, or None for all folds.
@@ -158,15 +281,12 @@ class Experiment:
         Returns:
             Dict mapping fold number to "success" or error message.
         """
-        from scripts.generate_fold_predictions import (
-            run_fold_inference, get_validation_cases,
-        )
+        from scripts.generate_fold_predictions import run_fold_inference
 
         output_dir = self.run_dir / "fold_predictions"
         output_dir.mkdir(parents=True, exist_ok=True)
 
-        with open(self.datalist_dst) as f:
-            datalist = json.load(f)
+        datalist = self.datalist
 
         if fold is not None:
             folds = [fold]
@@ -188,60 +308,52 @@ class Experiment:
                 logger.error(f"Error processing fold {fold_num}: {e}")
                 results[fold_num] = f"error: {e}"
 
+        self.refresh_cases()
         return results
+
+    # --- Evaluation ---
 
     def evaluate(self, test_only: bool = False, output_csv: Path | None = None,
                  print_results: bool = False) -> pd.DataFrame | None:
-        """Compute performance metrics.
+        """Compute performance metrics using self.cases.
 
-        Wraps compute_performance_metrics.py logic. Returns a DataFrame
-        of per-case metrics if output_csv is requested.
+        Groups cases by split and runs analyze_dataset() on each group.
+        Returns a DataFrame of per-case metrics.
         """
         from scripts.compute_performance_metrics import (
-            get_test_inference, get_validation_inference,
             analyze_dataset, print_results as _print_results,
         )
         import pandas as _pd
 
-        label_config_path = self.run_dir / "label_config.json"
-        if not label_config_path.exists():
-            raise FileNotFoundError(
-                f"label_config.json not found in {self.run_dir}. Run setup() first."
-            )
+        cases = self.cases
 
-        from helpers.paths import load_config
-        label_config = load_config(label_config_path)
-        expand_xy, expand_z = label_config["expand_xy"], label_config["expand_z"]
-        expand_suffix = f"_xy{expand_xy}_z{expand_z}"
-
-        datalist_path = self.run_dir / f"datalist_xy{expand_xy}_z{expand_z}.json"
-        with open(datalist_path) as f:
-            datalist = json.load(f)
-
-        dataroot = label_config["dataroot"]
-        inf_root = self.run_dir / "ensemble_output"
-        val_root = self.run_dir / "fold_predictions"
+        # Group by split
+        by_split: dict[str, list[dict]] = defaultdict(list)
+        for case in cases:
+            if "inference" not in case:
+                continue
+            by_split[case["split"]].append(case)
 
         all_results = {}
 
-        inf_data = get_test_inference(
-            datalist["testing"], dataroot, inf_root, expand_suffix
-        )
-        inf_results = analyze_dataset(inf_data, split="testing")
-        if inf_results.get("aggregated"):
-            all_results["testing"] = inf_results
-            if print_results:
-                _print_results(inf_results)
+        # Process testing first
+        if "testing" in by_split:
+            results = analyze_dataset(by_split["testing"], split="testing")
+            if results.get("aggregated"):
+                all_results["testing"] = results
+                if print_results:
+                    _print_results(results)
 
+        # Process validation folds
         if not test_only:
-            val_data = get_validation_inference(
-                datalist["training"], dataroot, val_root, expand_suffix
-            )
-            for fold_name, fold_data in val_data.items():
-                split = f"validation {fold_name}"
-                results = analyze_dataset(fold_data, split=split)
+            for split_name in sorted(by_split):
+                if split_name == "testing":
+                    continue
+                results = analyze_dataset(
+                    by_split[split_name], split=f"validation {split_name}"
+                )
                 if results.get("aggregated"):
-                    all_results[split] = results
+                    all_results[f"validation {split_name}"] = results
                     if print_results:
                         _print_results(results)
 
@@ -262,6 +374,8 @@ class Experiment:
 
         return df
 
+    # --- Class methods ---
+
     @classmethod
     def from_run_dir(cls, run_dir: Path, dataset: Dataset) -> Experiment:
         """Reconstruct an Experiment from an existing run directory.
@@ -275,13 +389,14 @@ class Experiment:
         run_dir = Path(run_dir)
         if not run_dir.is_absolute():
             run_dir = dataset.work_home / run_dir
-            
+
         label_config = load_config(run_dir / "label_config.json")
         monai_config = load_config(run_dir / "monai_config.json")
 
         preprocess_config = PreprocessingConfig(
             expand_xy=label_config["expand_xy"],
             expand_z=label_config["expand_z"],
+            images=label_config.get("images", ["flair", "phase"]),
         )
 
         train_param = monai_config.get("train_param", {})
@@ -303,3 +418,10 @@ class Experiment:
 
     def __repr__(self) -> str:
         return f"Experiment(run_dir={self.run_dir}, dataset={self.dataset.name})"
+
+
+def resolve_case_type(t_case):
+    if "prl" in Path(t_case['label']).name:
+        t_case['case_type'] = "PRL"
+    else:
+        t_case['case_type'] = "Lesion"

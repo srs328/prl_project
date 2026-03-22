@@ -24,10 +24,11 @@ def cli():
 @click.argument("dataset_name")
 @click.option("--expand-xy", type=int, default=None, help="X/Y expansion (overrides dataset default)")
 @click.option("--expand-z", type=int, default=None, help="Z expansion (overrides dataset default)")
+@click.option("--images", type=str, multiple=True, default=None, help="Image channels (e.g. --images flair --images phase)")
 @click.option("--processes", type=int, default=None, help="Parallel processes (default: sequential)")
 @click.option("--dry-run", is_flag=True, help="Print commands without executing")
 @click.option("--rebuild-datalist", is_flag=True, default=False, help="Rebuild datalist_template.json")
-def preprocess(dataset_name, expand_xy, expand_z, processes, dry_run, rebuild_datalist):
+def preprocess(dataset_name, expand_xy, expand_z, images, processes, dry_run, rebuild_datalist):
     """Run full preprocessing pipeline for a dataset.
 
     DATASET_NAME is the name of the dataset (e.g., 'roi_train2').
@@ -35,7 +36,7 @@ def preprocess(dataset_name, expand_xy, expand_z, processes, dry_run, rebuild_da
     """
     import attrs
     from core.dataset import Dataset
-    from core.configs import PreprocessingConfig
+    from core.experiment import Experiment
 
     ds = Dataset(dataset_name)
     config = ds.default_preprocess
@@ -45,6 +46,8 @@ def preprocess(dataset_name, expand_xy, expand_z, processes, dry_run, rebuild_da
         overrides["expand_xy"] = expand_xy
     if expand_z is not None:
         overrides["expand_z"] = expand_z
+    if images:
+        overrides["images"] = images
     if processes is not None:
         overrides["processes"] = processes
     if dry_run:
@@ -52,10 +55,17 @@ def preprocess(dataset_name, expand_xy, expand_z, processes, dry_run, rebuild_da
 
     if overrides:
         config = attrs.evolve(config, **overrides)
+        
+    # Create datalist template (Dataset responsibility — fold assignments)
+    ds.create_datalist(rebuild=rebuild_datalist)
 
-    click.echo(f"Preprocessing {ds.name} with {config.suffix}")
-    result = ds.preprocess(config, rebuild_datalist=rebuild_datalist)
+    # Create ROIs and prepare data (Experiment responsibility)
+    exp = Experiment(ds, config, ds.default_training, run_dir=Path("."))
+    click.echo(f"Preprocessing {ds.name} with {config.datalist_suffix}")
+    exp.create_rois()
+    result = exp.prepare_data()
     click.echo(f"Done. Datalist: {result}")
+
 
 
 @cli.command()
@@ -64,11 +74,14 @@ def preprocess(dataset_name, expand_xy, expand_z, processes, dry_run, rebuild_da
               help="Run directory (default: auto-increment)")
 @click.option("--expand-xy", type=int, default=None)
 @click.option("--expand-z", type=int, default=None)
+@click.option("--images", type=str, multiple=True, default=None, help="Image channels")
 @click.option("--epochs", type=int, default=None)
 @click.option("--lr", type=float, default=None, help="Learning rate")
 @click.option("--batch-size", type=int, default=None)
 @click.option("--roi-size", type=int, nargs=3, default=None, help="ROI size (3 ints)")
-def train(dataset_name, run_dir, expand_xy, expand_z, epochs, lr, batch_size, roi_size):
+@click.option("--algos", type=str, multiple=True, default=None, help="Models to use")
+@click.option("--init-only", is_flag=True, help="Just create the run dir")
+def train(dataset_name, run_dir, expand_xy, expand_z, images, epochs, lr, batch_size, roi_size, algos, init_only):
     """Train a model on a dataset.
 
     DATASET_NAME is the name of the dataset (e.g., 'roi_train2').
@@ -86,6 +99,8 @@ def train(dataset_name, run_dir, expand_xy, expand_z, epochs, lr, batch_size, ro
         pp_overrides["expand_xy"] = expand_xy
     if expand_z is not None:
         pp_overrides["expand_z"] = expand_z
+    if images:
+        pp_overrides["images"] = images
     if pp_overrides:
         pp_config = attrs.evolve(pp_config, **pp_overrides)
 
@@ -98,12 +113,17 @@ def train(dataset_name, run_dir, expand_xy, expand_z, epochs, lr, batch_size, ro
         tr_overrides["num_images_per_batch"] = batch_size
     if roi_size is not None:
         tr_overrides["roi_size"] = list(roi_size)
+    if algos:
+        tr_overrides["algos"] = algos
     if tr_overrides:
         tr_config = attrs.evolve(tr_config, **tr_overrides)
 
     exp = Experiment(ds, pp_config, tr_config, run_dir=run_dir or Experiment(ds, pp_config, tr_config, Path(".")).next_run_dir())
-    click.echo(f"Training {ds.name} in {exp.run_dir}")
     exp.setup()
+    if init_only:
+        click.echo(f"Initializing {exp.run_dir}")
+        return
+    click.echo(f"Training {ds.name} in {exp.run_dir}")
     exp.train()
 
 

@@ -19,13 +19,26 @@ class PreprocessingConfig:
 
     expand_xy: int = attrs.field(default=20, validator=attrs.validators.ge(0))
     expand_z: int = attrs.field(default=2, validator=attrs.validators.ge(0))
+    images: tuple[str, ...] = attrs.field(
+        default=("flair", "phase"), converter=tuple,
+    )
     processes: int | None = None  # None = sequential
     dry_run: bool = False
+
+    @property
+    def image_prefix(self) -> str:
+        """Joined sorted image names, e.g. 'flair.phase'."""
+        return ".".join(sorted(self.images))
 
     @property
     def suffix(self) -> str:
         """The xy/z suffix used in filenames, e.g. 'xy20_z2'."""
         return f"xy{self.expand_xy}_z{self.expand_z}"
+
+    @property
+    def datalist_suffix(self) -> str:
+        """Combined image + expansion suffix, e.g. 'flair.phase_xy20_z2'."""
+        return f"{self.image_prefix}_{self.suffix}"
 
 
 @attrs.define
@@ -87,7 +100,7 @@ class TrainingConfig:
             "suffix_to_use": str(dataset.suffix_to_use_path),
             "expand_xy": preprocess.expand_xy,
             "expand_z": preprocess.expand_z,
-            "images": dataset.images,
+            "images": list(preprocess.images),
         }
 
     def to_monai_config_dict(self, dataset) -> dict:
