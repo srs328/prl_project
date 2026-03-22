@@ -130,3 +130,35 @@ param_grid:
 ```
 
 Then: `prl grid roi_train2 experiment.yaml --launch`
+
+## My Plan
+
+### Dataset class iterable of cases
+
+I want the Dataset class to have a property or function that gives an iterable of all the cases as dicts. Each case's dict should be like:
+
+```
+{
+  "subid": 1125,
+  "lesion_index": 28,
+  "fold": 2,
+  "image": "sub1125-20160919/28/flair.phase_xy20_z2.nii.gz",
+  "label": "sub1125-20160919/28/lesion_xy20_z2.nii.gz"
+}
+```
+
+compute_performance_metrics.py::analyze_dataset processes each case in the datalist file so that it also has the key "split", "case_type", and a full path to any inference that was done on the case (for both validation and test data). Eventually it ends up with `all_results` which is a dict organized like:
+
+```
+{
+  "testing": [cases: dict],
+  "fold1": [cases: dict],
+  "fold2": [cases: dict],
+  ...
+  "foldN": [cases: dict]
+},
+```
+
+Then if a csv is request, all_results gets flattened, and each case gets a property "split" that specifies the fold or if it was testing data. 
+
+What I want 

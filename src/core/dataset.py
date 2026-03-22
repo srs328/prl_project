@@ -150,3 +150,7 @@ class Dataset:
 
     def __repr__(self) -> str:
         return f"Dataset('{self.name}')"
+
+
+class DataList:
+    pass
