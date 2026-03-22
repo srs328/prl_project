@@ -1,0 +1,104 @@
+{
+  "run1": {
+    "label_params": {},
+    "monai_params": {
+      "train_param.num_crops_per_image": 2,
+      "train_param.loss": {
+        "_target_": "DiceCELoss",
+        "include_background": true,
+        "squared_pred": true,
+        "smooth_nr": 0,
+        "smooth_dr": 1e-05,
+        "softmax": "$not @sigmoid",
+        "sigmoid": "$@sigmoid",
+        "to_onehot_y": "$not @sigmoid"
+      }
+    },
+    "run_dir": "/home/shridhar.singh9-umw/prl_project/training/roi_train2/stage2_numcrops_incbackground_sweep/run1"
+  },
+  "run2": {
+    "label_params": {},
+    "monai_params": {
+      "train_param.num_crops_per_image": 2,
+      "train_param.loss": {
+        "_target_": "DiceCELoss",
+        "include_background": false,
+        "squared_pred": true,
+        "smooth_nr": 0,
+        "smooth_dr": 1e-05,
+        "softmax": "$not @sigmoid",
+        "sigmoid": "$@sigmoid",
+        "to_onehot_y": "$not @sigmoid"
+      }
+    },
+    "run_dir": "/home/shridhar.singh9-umw/prl_project/training/roi_train2/stage2_numcrops_incbackground_sweep/run2"
+  },
+  "run3": {
+    "label_params": {},
+    "monai_params": {
+      "train_param.num_crops_per_image": 4,
+      "train_param.loss": {
+        "_target_": "DiceCELoss",
+        "include_background": true,
+        "squared_pred": true,
+        "smooth_nr": 0,
+        "smooth_dr": 1e-05,
+        "softmax": "$not @sigmoid",
+        "sigmoid": "$@sigmoid",
+        "to_onehot_y": "$not @sigmoid"
+      }
+    },
+    "run_dir": "/home/shridhar.singh9-umw/prl_project/training/roi_train2/stage2_numcrops_incbackground_sweep/run3"
+  },
+  "run4": {
+    "label_params": {},
+    "monai_params": {
+      "train_param.num_crops_per_image": 4,
+      "train_param.loss": {
+        "_target_": "DiceCELoss",
+        "include_background": false,
+        "squared_pred": true,
+        "smooth_nr": 0,
+        "smooth_dr": 1e-05,
+        "softmax": "$not @sigmoid",
+        "sigmoid": "$@sigmoid",
+        "to_onehot_y": "$not @sigmoid"
+      }
+    },
+    "run_dir": "/home/shridhar.singh9-umw/prl_project/training/roi_train2/stage2_numcrops_incbackground_sweep/run4"
+  },
+  "run5": {
+    "label_params": {},
+    "monai_params": {
+      "train_param.num_crops_per_image": 8,
+      "train_param.loss": {
+        "_target_": "DiceCELoss",
+        "include_background": true,
+        "squared_pred": true,
+        "smooth_nr": 0,
+        "smooth_dr": 1e-05,
+        "softmax": "$not @sigmoid",
+        "sigmoid": "$@sigmoid",
+        "to_onehot_y": "$not @sigmoid"
+      }
+    },
+    "run_dir": "/home/shridhar.singh9-umw/prl_project/training/roi_train2/stage2_numcrops_incbackground_sweep/run5"
+  },
+  "run6": {
+    "label_params": {},
+    "monai_params": {
+      "train_param.num_crops_per_image": 8,
+      "train_param.loss": {
+        "_target_": "DiceCELoss",
+        "include_background": false,
+        "squared_pred": true,
+        "smooth_nr": 0,
+        "smooth_dr": 1e-05,
+        "softmax": "$not @sigmoid",
+        "sigmoid": "$@sigmoid",
+        "to_onehot_y": "$not @sigmoid"
+      }
+    },
+    "run_dir": "/home/shridhar.singh9-umw/prl_project/training/roi_train2/stage2_numcrops_incbackground_sweep/run6"
+  }
+}
