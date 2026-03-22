@@ -56,39 +56,30 @@ class TrainingConfig:
     num_epochs_per_validation: int = 1
     roi_size: list[int] = attrs.Factory(lambda: [44, 44, 8])
     crop_ratios: list[int] | None = None
+    loss: dict | None = None  # Full DiceCELoss config, or None for MONAI default
 
-    def to_train_param(self) -> dict:
-        """Convert to the dict format AutoRunner.set_training_params() expects.
+    def to_input_dict(self, datalist_path, dataroot) -> dict:
+        """Build the AutoRunner input dict. ALL training params go here.
 
-        List-valued params are excluded here (they go into the input dict instead)
-        to avoid BundleAlgo CLI mangling.
+        Everything flows through fill_template_config() → config.update(input_config)
+        → hyper_parameters.yaml. No need for set_training_params() / CLI overrides.
         """
-        param = {
+        d = {
+            "modality": "MRI",
+            "datalist": str(datalist_path),
+            "dataroot": str(dataroot),
             "learning_rate": self.learning_rate,
             "num_images_per_batch": self.num_images_per_batch,
             "num_epochs": self.num_epochs,
             "num_warmup_epochs": self.num_warmup_epochs,
             "num_epochs_per_validation": self.num_epochs_per_validation,
-        }
-        if self.crop_ratios is not None:
-            param["crop_ratios"] = self.crop_ratios
-        return param
-
-    def to_input_dict(self, datalist_path, dataroot) -> dict:
-        """Build the AutoRunner input dict.
-
-        List-valued params (roi_size, crop_ratios) are placed here instead of
-        train_param to avoid Fire CLI mangling in BundleAlgo.train().
-        """
-        input_dict = {
-            "modality": "MRI",
-            "datalist": str(datalist_path),
-            "dataroot": str(dataroot),
             "roi_size": self.roi_size,
         }
         if self.crop_ratios is not None:
-            input_dict["crop_ratios"] = self.crop_ratios
-        return input_dict
+            d["crop_ratios"] = self.crop_ratios
+        if self.loss is not None:
+            d["loss"] = self.loss
+        return d
 
     def to_label_config_dict(self, preprocess: PreprocessingConfig, dataset) -> dict:
         """Generate the label_config.json dict for a run directory."""
@@ -115,6 +106,8 @@ class TrainingConfig:
             "roi_size": self.roi_size,
             "crop_ratios": self.crop_ratios,
         }
+        if self.loss is not None:
+            train_param["loss"] = self.loss
         return {
             "training_work_home": str(dataset.work_home),
             "N_FOLDS": dataset.n_folds,

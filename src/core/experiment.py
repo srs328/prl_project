@@ -232,21 +232,31 @@ class Experiment:
 
     def train(self) -> None:
         """Run MONAI AutoRunner training."""
+        import pickle
         from monai.apps.auto3dseg import AutoRunner
 
         if not self.datalist_dst.exists():
             self.setup()
 
-        # Build train_param (excludes list-valued params)
-        train_param = self.training_config.to_train_param()
-        algos = self.training_config.algos
+        # Clean up incomplete folds so AutoRunner doesn't skip them.
+        # When a job is killed mid-training, algo_object.pkl exists (from algo_gen)
+        # with best_metric=None, but progress.yaml has partial scores that fool
+        # AutoRunner's get_score() into thinking the fold completed.
+        for fold_dir in sorted(self.run_dir.glob("segresnet_*")):
+            pkl_path = fold_dir / "algo_object.pkl"
+            progress_path = fold_dir / "model" / "progress.yaml"
+            if pkl_path.exists() and progress_path.exists():
+                with open(pkl_path, "rb") as f:
+                    pkl_data = pickle.load(f)
+                if pkl_data.get("best_metric") is None:
+                    logger.info(
+                        f"Incomplete fold detected: {fold_dir.name} "
+                        "— removing progress.yaml"
+                    )
+                    progress_path.unlink()
 
-        # Remove list-valued params from train_param (they go into input_dict)
-        for key in list(train_param):
-            if isinstance(train_param[key], list):
-                del train_param[key]
-
-        # Build input dict
+        # All params flow through the input dict → fill_template_config() →
+        # hyper_parameters.yaml. No set_training_params() needed.
         input_dict = self.training_config.to_input_dict(
             self.datalist_dst, self.dataset.data_root
         )
@@ -260,12 +270,11 @@ class Experiment:
 
         runner = AutoRunner(
             work_dir=self.run_dir,
-            algos=algos,
+            algos=self.training_config.algos,
             input=input_dict,
             mlflow_tracking_uri=mlflow_tracking_uri,
             mlflow_experiment_name=mlflow_experiment_name,
         )
-        runner.set_training_params(train_param)
 
         logger.info(f"Starting training in {self.run_dir}")
         runner.run()
