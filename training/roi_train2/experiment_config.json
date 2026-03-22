@@ -1,12 +1,33 @@
 {
   "train_home": "${PROJECT_ROOT}/training/roi_train2",
-  "experiment_name": "stage1_crop_lr_sweep",
+  "experiment_name": "stage2_numcrops_incbackground_sweep",
   "base_label_config": "label_config.jsonc",
   "base_monai_config": "monai_config.jsonc",
   "param_grid": {
     "monai": {
-      "train_param.crop_ratios": [null, [1, 1, 4], [1, 1, 8]],
-      "train_param.learning_rate": [0.0001, 0.0002, 0.0005]
+      "train_param.num_crops_per_image": [2, 4, 8],
+      "train_param.loss": [
+        {
+          "_target_": "DiceCELoss",
+          "include_background": true,
+          "squared_pred": true,
+          "smooth_nr": 0,
+          "smooth_dr": 1.0e-05,
+          "softmax": "$not @sigmoid",
+          "sigmoid": "$@sigmoid",
+          "to_onehot_y": "$not @sigmoid"
+        },
+        {
+          "_target_": "DiceCELoss",
+          "include_background": false,
+          "squared_pred": true,
+          "smooth_nr": 0,
+          "smooth_dr": 1.0e-05,
+          "softmax": "$not @sigmoid",
+          "sigmoid": "$@sigmoid",
+          "to_onehot_y": "$not @sigmoid"
+        }
+      ]
     }
   }
 }

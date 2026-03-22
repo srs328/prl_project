@@ -125,7 +125,7 @@ input_dict = {
     "dataroot": str(dataroot),
 }
 for key in list(train_param):
-    if isinstance(train_param[key], list):
+    if isinstance(train_param[key], list) or isinstance(train_param[key], dict):
         input_dict[key] = train_param.pop(key)
         logger.info(f"{key}: {input_dict[key]}")
 
