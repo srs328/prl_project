@@ -1,5 +1,6 @@
 {
-  "train_home": "${PROJECT_ROOT}/training/roi_train2",
+  "train_home": "${PROJECT_ROOT}/training",
+  "dataset_name": "roi_train2",
   "experiment_name": "stage1_crop_lr_sweep",
   "base_label_config": "label_config.jsonc",
   "base_monai_config": "monai_config.jsonc",

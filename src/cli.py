@@ -128,7 +128,6 @@ def train(dataset_name, run_dir, expand_xy, expand_z, images, epochs, lr, batch_
 
 
 @cli.command()
-@click.argument("dataset_name")
 @click.argument("experiment_config", type=click.Path(exists=True, path_type=Path))
 @click.option("--dry-run", is_flag=True, help="Preview without writing")
 @click.option("--no-prepare", is_flag=True, help="Skip data preparation")
@@ -136,28 +135,18 @@ def train(dataset_name, run_dir, expand_xy, expand_z, images, epochs, lr, batch_
 @click.option("--processes", type=int, default=1, help="Parallel processes for local execution")
 @click.option("--run-key", type=str, default=None, help="Launch only a specific run")
 @click.option("--launch", is_flag=True, help="Generate and immediately launch")
-def grid(dataset_name, experiment_config, dry_run, no_prepare, hpc, processes, run_key, launch):
+def grid(experiment_config, dry_run, no_prepare, hpc, processes, run_key, launch):
     """Generate (and optionally launch) HPO experiments.
 
-    DATASET_NAME is the dataset name. EXPERIMENT_CONFIG is a YAML file
-    with param_grid and experiment_name.
+    EXPERIMENT_CONFIG is a YAML/JSON file with dataset_name, experiment_name,
+    and param_grid.
     """
-    from helpers.paths import load_config
-    from core.dataset import Dataset
     from core.grid import ExperimentGrid
 
-    config = load_config(experiment_config)
-    dataset_name = config["dataset_name"]
-    ds = Dataset(dataset_name)
-
-    eg = ExperimentGrid(
-        dataset=ds,
-        param_grid=config["param_grid"],
-        experiment_name=config["experiment_name"],
-    )
+    eg = ExperimentGrid.from_config(experiment_config)
 
     experiments = eg.generate(dry_run=dry_run, prepare_data=not no_prepare)
-
+    
     if launch and not dry_run:
         mode = "hpc" if hpc else "local"
         eg.launch(experiments=experiments, mode=mode, processes=processes,
@@ -180,8 +169,7 @@ def predict(run_dir, fold, dataset_name):
     if dataset_name is None:
         from helpers.paths import load_config
         label_config = load_config(run_dir / "label_config.json")
-        # Infer dataset name from train_home
-        dataset_name = Path(label_config["train_home"]).name
+        dataset_name = label_config["dataset_name"]
 
     ds = Dataset(dataset_name)
     exp = Experiment.from_run_dir(run_dir, ds)
@@ -212,7 +200,7 @@ def metrics(run_dir, test_only, output_csv, print_results, dataset_name):
     if dataset_name is None:
         from helpers.paths import load_config
         label_config = load_config(run_dir / "label_config.json")
-        dataset_name = Path(label_config["train_home"]).name
+        dataset_name = label_config["dataset_name"]
 
     ds = Dataset(dataset_name)
     exp = Experiment.from_run_dir(run_dir, ds)

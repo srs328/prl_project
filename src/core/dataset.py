@@ -25,14 +25,16 @@ class Dataset:
     """Represents a named dataset with fixed subjects and fold assignments.
 
     All paths are derived from the dataset name:
-      - source_home: PROJECT_ROOT/training/{name} (templates, dataset.yaml)
-      - work_home:   TRAIN_ROOT/{name} (run directories with model outputs)
-      - data_root:   DATA_ROOT (subject imaging data)
+      - train_home:    PROJECT_ROOT/training (parent of all datasets)
+      - dataset_home:  PROJECT_ROOT/training/{name} (templates, dataset.yaml)
+      - work_home:     TRAIN_ROOT/{name} (run directories with model outputs)
+      - data_root:     DATA_ROOT (subject imaging data)
     """
 
     def __init__(self, name: str):
         self.name = name
-        self.source_home = PROJECT_ROOT / "training" / name
+        self.train_home = PROJECT_ROOT / "training"
+        self.dataset_home = PROJECT_ROOT / "training" / name
         self.work_home = TRAIN_ROOT / name
         self.data_root = DATA_ROOT
 
@@ -76,7 +78,7 @@ class Dataset:
 
     @property
     def datalist_template_path(self) -> Path:
-        return self.source_home / "datalist_template.json"
+        return self.dataset_home / "datalist_template.json"
 
     def create_datalist(self, rebuild: bool = False) -> Path | None:
         """Create datalist_template.json with stratified fold assignments.

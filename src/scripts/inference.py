@@ -390,9 +390,7 @@ def infer_subject(
     data_root = Path(data_root)
 
     # Derive run identifier for output filename
-    train_home = Path(label_config["train_home"])
-    # work_home is TRAIN_ROOT / dataset_name
-    dataset_name = train_home.name
+    dataset_name = label_config["dataset_name"]
     from helpers.paths import TRAIN_ROOT
     dataset_work_home = TRAIN_ROOT / dataset_name
     run_id = _derive_run_id(run_dir, dataset_work_home)

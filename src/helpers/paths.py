@@ -18,7 +18,6 @@ import yaml
 PROJECT_ROOT = Path(os.environ.get('PRL_PROJECT_ROOT', Path(__file__).parent.parent))
 DATA_ROOT = Path(os.environ.get('PRL_DATA_ROOT', '/media/smbshare/srs-9/prl_project/data'))
 TRAIN_ROOT = Path(os.environ.get('PRL_TRAIN_ROOT', '/media/smbshare/srs-9/prl_project/training'))
-TRAIN_HOME = Path(os.environ.get('PRL_TRAIN_ROOT', '/media/smbshare/srs-9/prl_project/training'))
 
 # Token replacements
 TOKEN_MAP = {
@@ -96,17 +95,17 @@ def load_dataset_config(name):
     Looks up PROJECT_ROOT/training/{name}/dataset.yaml, expands tokens,
     and resolves relative paths against the dataset's source_home directory.
     """
-    source_home = PROJECT_ROOT / "training" / name
-    config_path = source_home / "dataset.yaml"
+    dataset_home = PROJECT_ROOT / "training" / name
+    config_path = dataset_home / "dataset.yaml"
     if not config_path.exists():
         raise FileNotFoundError(
             f"Dataset '{name}' not found: {config_path} does not exist"
         )
     config = load_config(config_path)
 
-    # Resolve relative paths against source_home
+    # Resolve relative paths against dataset_home
     for key in ("subjects", "suffix_to_use"):
         if key in config and not Path(config[key]).is_absolute():
-            config[key] = str(source_home / config[key])
+            config[key] = str(dataset_home / config[key])
 
     return config

@@ -266,3 +266,268 @@ Modify `train.py` to run AutoRunner in phases: generate configs first, patch the
 | `train.py` | `algorithm_templates/segresnet/scripts/` | Fire CLI entry point -- calls `segmenter.run()` |
 | `my_autorunner.py` | `training/roi_train2/` | Your wrapper -- loads configs, creates AutoRunner |
 | `train.py` | `training/roi_train2/` | Your entry point -- loads configs, sets up run dir, calls AutoRunner |
+
+---
+
+## Deep Parameter Reference
+
+This section documents every parameter in `hyper_parameters.yaml` — how it's actually set, what can override it, and what it controls at runtime.
+
+### How to read this section
+
+Each parameter has an **Authority** — who wins if multiple sources set a value:
+- **Template default** — the value in the unfilled `algorithm_templates/segresnet/configs/hyper_parameters.yaml`
+- **algo.py** — set during `fill_template_config()` from data stats; overwrites the template
+- **input_config** — your values from `AutoRunner(input={...})`; merged via `config.update(input_config)` in algo.py line 271, overwriting algo.py's auto-computed values
+- **segmenter.py runtime** — final adjustments at training start; always wins
+
+---
+
+### Batch Size / Crops (most confusing chain)
+
+#### `num_images_per_batch`
+**Authority: template default = 1 (used as initial `batch_size` only)**
+
+The template contains:
+```yaml
+batch_size: '@num_images_per_batch'
+num_images_per_batch: 1
+```
+`@num_images_per_batch` is a ConfigParser reference that resolves at load time — so `batch_size` starts as whatever `num_images_per_batch` is. However, after this initial resolution, `num_images_per_batch` is never read again by any script. **Setting it in your input_config has no effect** because:
+1. The `@` reference is resolved once into `batch_size`
+2. If `auto_scale_batch=true`, segmenter.py immediately overwrites `batch_size` at runtime anyway
+
+#### `batch_size`
+**Authority: segmenter.py runtime (when `auto_scale_batch=true`)**
+
+Flow:
+1. Starts as `@num_images_per_batch` (from template)
+2. algo.py may compute a value via `auto_adjust_network_settings()`, but this is used during config generation, not at runtime
+3. **At runtime** (segmenter.py line 644-657): if `auto_scale_allowed=true` and `auto_scale_batch=true`, `auto_adjust_network_settings()` runs again and sets `batch_size = int(1.1 * gpu_factor_init)` based on GPU memory and roi_size
+4. **Then** (segmenter.py lines 1195-1201): if `crop_mode="ratio"`:
+   ```python
+   num_crops_per_image = batch_size   # batch_size moves here
+   batch_size = 1                     # always 1 in ratio mode
+   ```
+
+To control crops-per-image, **set `batch_size` directly and disable `auto_scale_batch`**:
+```json
+"auto_scale_batch": false,
+"batch_size": 4
+```
+This gives `num_crops_per_image=4` after the swap. Setting `num_images_per_batch` or `num_crops_per_image` directly does nothing useful.
+
+#### `num_crops_per_image`
+**Authority: segmenter.py runtime (derived from batch_size swap)**
+
+- Default in `parse_input_config()`: 1 (line 876)
+- **Overwritten unconditionally** at runtime (lines 1197-1201) when `auto_scale_allowed=true`:
+  - `crop_mode="ratio"`: `num_crops_per_image = batch_size`, then `batch_size = 1`
+  - Otherwise: `num_crops_per_image = 1`
+- Setting this in your input_config is pointless — it will be overwritten
+
+**Downstream effects of num_crops_per_image = N:**
+```
+num_epochs          = num_epochs // min(3, N)    # halved at N=2, one-third at N≥3
+num_warmup_epochs   = max(3, warmup // N)
+num_epochs_per_saving = max(1, saving // N)
+num_epochs_per_validation = max(1, validation // N)
+RandCropByLabelClassesd(num_samples=N, ...)  # N patches per image per step
+```
+
+---
+
+### Auto-Scale Flags
+
+All four flags only apply when `auto_scale_allowed=true` (master switch).
+
+#### `auto_scale_allowed`
+**Authority: template default = true**
+
+Master switch. If false, all `auto_scale_*` flags are ignored and runtime adjustments (including the batch/crop swap) are skipped. The only way to completely take manual control over batch_size and num_crops_per_image is to set this to false.
+
+#### `auto_scale_batch`
+**Authority: template default = true**
+
+If true, segmenter.py recalculates `batch_size` at runtime based on GPU memory:
+```python
+gpu_factor_init = gpu_memory_fraction * base_numel / roi_size.prod()
+batch_size = int(1.1 * gpu_factor_init)
+```
+On your V100s with `roi_size=[44,44,8]`, this computed `batch_size=2`, giving `num_crops_per_image=2` for all runs in the stage2 sweep regardless of what you set.
+
+Set `"auto_scale_batch": false` if you want to control batch_size / num_crops_per_image yourself.
+
+#### `auto_scale_roi`
+**Authority: template default = false**
+
+If true, roi_size is scaled UP to fill GPU memory (opposite of auto_scale_batch — bigger patches instead of more patches). Disabled when using a pretrained model.
+
+#### `auto_scale_filters`
+**Authority: template default = false**
+
+If true, `init_filters` is increased when roi_size is small (since small ROIs leave spare GPU memory). Disabled when using a pretrained model.
+
+---
+
+### Cropping
+
+#### `crop_mode`
+**Authority: algo.py (auto-determined), overridable via input_config**
+
+Set by algo.py based on roi_size vs image_size:
+- `"ratio"` if any roi dimension < 0.8 × image dimension → `RandCropByLabelClassesd`
+- `"rand"` otherwise → `RandSpatialCropd` (no class balancing)
+
+For this project, roi_size=[44,44,8] is much smaller than image_size=[51,52,16], so `crop_mode` is always `"ratio"`.
+
+#### `crop_ratios`
+**Authority: input_config (no auto-computation)**
+
+Per-class sampling weights for `RandCropByLabelClassesd`. Only active in `crop_mode="ratio"`.
+- `null` (default): equal probability for each class
+- `[1, 1, 4]`: 4x more crops centered on rim voxels
+
+Stage 1 sweep showed this had no effect here because roi_size ≈ image_size — the crop always captures the whole lesion regardless of centering.
+
+#### `cache_class_indices`
+**Authority: segmenter.py runtime**
+
+If null, auto-set to `True` when `cache_rate_train > 0`. Pre-computes which voxels belong to each class so `RandCropByLabelClassesd` doesn't scan every epoch. Only meaningful in `crop_mode="ratio"`.
+
+#### `max_samples_per_class`
+**Authority: segmenter.py default = 10 × num_epochs**
+
+Limits cached voxels per class for `ClassesToIndicesd`. Only meaningful when `cache_class_indices=True`.
+
+---
+
+### Resampling
+
+#### `resample`
+**Authority: algo.py (auto-determined), overridable**
+
+Auto-set to `True` if any case's spacing deviates more than ±50% from target spacing. For this project, spacings are very consistent, so `resample=False`.
+
+#### `resample_resolution`
+**Authority: algo.py (auto-computed from data stats), overridable**
+
+Target voxel spacing. Even when `resample=False`, this value is used by `auto_adjust_network_settings()` to compute roi_size and gpu_factor. Auto-computed as median spacing by default. For this project: approximately `[0.8, 0.8, 0.8]` mm.
+
+#### `resample_mode`
+**Authority: input_config (not in hyper_parameters.yaml directly)**
+
+Controls how algo.py computes `resample_resolution`. Options: `"auto"` (default), `"median"`, `"median10"`, `"ones"`. Only relevant if you want to override the auto-computed target spacing.
+
+---
+
+### Loss
+
+#### `loss`
+**Authority: input_config (can fully replace), template default is DiceCELoss**
+
+The full loss config dict. When passed through input_config, it replaces the entire template loss dict (shallow merge). The `$expression` syntax is evaluated by ConfigParser before instantiation:
+- `softmax: $not @sigmoid` → resolves to `softmax=True` when `sigmoid=False`
+- `sigmoid: $@sigmoid` → mirrors the top-level `sigmoid` parameter
+- `to_onehot_y: $not @sigmoid` → label one-hot encoding when using softmax
+
+The loss is wrapped in `DeepSupervisionLoss` automatically for the SegResNetDS deep supervision heads.
+
+To pass a custom loss including `weight`, use:
+```json
+"weight": "$torch.tensor([1.0, 1.0, 5.0]).cuda()"
+```
+Plain Python lists fail (`TypeError: cannot assign 'list' object to buffer 'weight'`) because PyTorch requires a Tensor. The `.cuda()` is required — without it you get a device mismatch error.
+
+#### `sigmoid`
+**Authority: algo.py (auto-determined from class_index)**
+
+If class labels are non-overlapping (standard case), `sigmoid=False` → softmax + one-hot. If class indices overlap across classes (multi-label), `sigmoid=True` → independent sigmoid per class. For this project always `False`.
+
+---
+
+### Network
+
+#### `blocks_down`
+**Authority: algo.py (auto-determined from levels)**
+
+Encoder depth profile. Computed from number of resolution levels:
+- 5 levels: `[1, 2, 2, 4, 4]`
+- 4 levels: `[1, 2, 2, 4]`
+- 3 levels: `[1, 2, 4]` ← for this project (roi_size=[44,44,8])
+- 2 levels: `[1, 3]`
+
+#### `init_filters`
+**Authority: algo.py / segmenter.py runtime (when `auto_scale_filters=true`)**
+
+Base filter count (doubles at each encoder level). Default 32. Only auto-scaled up when `auto_scale_filters=true` and roi_size is small. For this project: 32.
+
+#### `roi_size`
+**Authority: algo.py (auto-computed), overridable via input_config**
+
+Patch size for training crops and sliding-window inference. Overriding this is the primary lever for changing network capacity. For this project explicitly set to `[44, 44, 8]` to match the lesion ROI dimensions.
+
+---
+
+### Intensity Normalization
+
+#### `normalize_mode`
+**Authority: algo.py (auto-determined from modality)**
+
+- MRI → `"meanstd"` (z-score normalization)
+- CT → `"range"` (clip to `intensity_bounds`, scale to [-1,1])
+
+#### `intensity_bounds`
+**Authority: algo.py (auto-computed as 0.5th / 99.5th percentile)**
+
+Only used in `"range"` / CT normalization. For MRI (meanstd), this is set but unused.
+
+---
+
+### Training Dynamics
+
+#### `num_epochs`
+**Authority: algo.py (auto-computed from dataset size), overridable — then adjusted at runtime**
+
+algo.py formula: `clip(ceil(80000 / n_cases), 300, 1250)`. Can be overridden via input_config. Then at runtime, further reduced: `num_epochs = num_epochs // min(3, num_crops_per_image)`. So if you set 500 epochs and end up with `num_crops_per_image=2`, you get 250 effective epochs.
+
+#### `learning_rate`
+**Authority: input_config / template default = 2e-4**
+
+No auto-adjustment. Referenced by `optimizer.lr: '@learning_rate'` so changing one changes both.
+
+#### `early_stopping_fraction`
+**Authority: input_config / template default = 0.001**
+
+If validation metric improves less than this fraction over the last 10% of epochs (checked after the halfway point), training stops early.
+
+#### `cache_rate`
+**Authority: segmenter.py runtime (auto-computed from available RAM)**
+
+If null, computed from system RAM and dataset size: `min(available_ram / (data_size + 50GB_os_reserve), 1.0)`. Train set gets priority. Values < 0.1 round to 0 (no caching). You can set an explicit value to override.
+
+---
+
+### Parameters That Look Settable But Are Ignored or Overridden
+
+| Parameter | Why it doesn't do what you'd expect |
+|-----------|-------------------------------------|
+| `num_images_per_batch` | Resolves once into `batch_size` at config parse time; never read again. Overridden by `auto_scale_batch` anyway. |
+| `num_crops_per_image` | Unconditionally overwritten by the batch_size↔crops swap at runtime (when `auto_scale_allowed=true`). |
+| `batch_size` (when `auto_scale_batch=true`) | Recomputed from GPU memory, then moved to `num_crops_per_image` in ratio mode. |
+| `num_epochs` | Divided by `min(3, num_crops_per_image)` at runtime. Set to 500, get 250 with 2 crops/image. |
+| `intensity_bounds` | Unused for MRI (meanstd normalization). Only active for CT. |
+| `num_warmup_epochs`, `num_epochs_per_saving`, `num_epochs_per_validation` | All divided by `num_crops_per_image` at runtime. |
+
+---
+
+### How to Actually Control num_crops_per_image
+
+The only reliable way:
+```json
+"auto_scale_batch": false,
+"batch_size": 2
+```
+With `auto_scale_batch=false`, the runtime recalculation is skipped, and `batch_size` stays as you set it. Then the `crop_mode="ratio"` swap gives `num_crops_per_image=2, batch_size=1`.
+
+Do **not** set `num_images_per_batch` or `num_crops_per_image` directly — neither survives to training.

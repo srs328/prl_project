@@ -7,7 +7,6 @@ and launches experiments locally or on HPC.
 from __future__ import annotations
 
 import json
-import shutil
 import subprocess
 import sys
 from itertools import product
@@ -51,6 +50,66 @@ class ExperimentGrid:
         self.base_training = base_training or dataset.default_training
         self.work_home = dataset.work_home / experiment_name
 
+    def get_info(self) -> tuple[dict[str], dict[str]]:
+        """Return string identifiers of each hyperparameter value
+        
+        Returns a tuple containing lists of strings for the preprocessing 
+        and training parameters that were varied. If string identifiers were 
+        specified in the config, these will be returned. Otherwise, the actual 
+        parameters will be returned in string format
+        """
+        preprocess_params = self.param_grid.get("preprocessing", {}) 
+        preprocess_param_ids = self.param_grid.get("preprocessing_ids", preprocess_params)
+        preprocess_param_ids = {
+            k: [str(item) for item in v] for k, v in preprocess_param_ids.items()
+        }
+        
+        training_params = self.param_grid.get("training", {})
+        training_param_ids = self.param_grid.get("training_ids", training_params)
+        training_param_ids = {
+            k: [str(item) for item in v] for k, v in training_param_ids.items()
+        }
+        
+        return preprocess_param_ids, training_param_ids
+    
+    @staticmethod
+    def run_params(preprocess_params: dict, training_params: dict) -> list[dict]:
+        """Return a run-name → parameter mapping for the given param dicts.
+
+        Each entry has keys: 'run_name', 'preprocessing', 'training'.
+        Order is deterministic and matches the directories generate() creates.
+        No side effects — safe to call in notebooks without touching the filesystem.
+
+        Pass raw param dicts for actual values, or string-ID dicts from get_info()
+        for human-readable labels::
+
+            # actual values
+            pp = eg.param_grid.get('preprocessing', {})
+            tr = eg.param_grid.get('training', {})
+            df = pd.DataFrame(eg.run_params(pp, tr))
+
+            # string labels (from get_info)
+            pp_ids, tr_ids = eg.get_info()
+            df = pd.DataFrame(eg.run_params(pp_ids, tr_ids))
+        """
+        pp_keys = list(preprocess_params.keys())
+        pp_combos = list(product(*[preprocess_params[k] for k in pp_keys])) if pp_keys else [()]
+
+        tr_keys = list(training_params.keys())
+        tr_combos = list(product(*[training_params[k] for k in tr_keys])) if tr_keys else [()]
+
+        runs = []
+        run_num = 1
+        for pp_combo in pp_combos:
+            for tr_combo in tr_combos:
+                runs.append({
+                    "run_name": f"run{run_num}",
+                    "preprocessing": dict(zip(pp_keys, pp_combo)),
+                    "training": dict(zip(tr_keys, tr_combo)),
+                })
+                run_num += 1
+        return runs
+
     def generate(self, dry_run: bool = False, prepare_data: bool = True) -> list[Experiment]:
         """Generate all experiment run directories from param grid.
 
@@ -58,20 +117,13 @@ class ExperimentGrid:
         are in the grid, creates ROIs and prepares data for each unique
         preprocessing config via a temporary Experiment.
         """
-        preprocess_params = self.param_grid.get("preprocessing", {})
-        training_params = self.param_grid.get("training", {})
-
-        # Build cartesian product
-        pp_keys = list(preprocess_params.keys())
-        pp_values = [preprocess_params[k] for k in pp_keys]
-        pp_combos = list(product(*pp_values)) if pp_keys else [()]
-
-        tr_keys = list(training_params.keys())
-        tr_values = [training_params[k] for k in tr_keys]
-        tr_combos = list(product(*tr_values)) if tr_keys else [()]
-
         # Pre-create ROIs and datalists for all unique preprocessing configs
         if prepare_data and not dry_run:
+            preprocess_params = self.param_grid.get("preprocessing", {})
+            pp_keys = list(preprocess_params.keys())
+            pp_values = [preprocess_params[k] for k in pp_keys]
+            pp_combos = list(product(*pp_values)) if pp_keys else [()]
+
             unique_pp_configs = set()
             for pp_combo in pp_combos:
                 pp_dict = dict(zip(pp_keys, pp_combo))
@@ -79,7 +131,7 @@ class ExperimentGrid:
                 unique_pp_configs.add(pp_config)
 
             for pp_config in unique_pp_configs:
-                datalist_path = self.dataset.source_home / f"datalist_{pp_config.datalist_suffix}.json"
+                datalist_path = self.dataset.dataset_home / f"datalist_{pp_config.datalist_suffix}.json"
                 if not datalist_path.exists():
                     logger.info(
                         f"Preparing data for {pp_config.datalist_suffix}..."
@@ -96,43 +148,45 @@ class ExperimentGrid:
 
         experiments = []
         manifest = {}
-        run_num = 1
 
-        for pp_combo in pp_combos:
-            for tr_combo in tr_combos:
-                pp_dict = dict(zip(pp_keys, pp_combo))
-                tr_dict = dict(zip(tr_keys, tr_combo))
+        for entry in self.run_params(
+            self.param_grid.get("preprocessing", {}),
+            self.param_grid.get("training", {}),
+        ):
+            run_name = entry["run_name"]
+            pp_dict  = entry["preprocessing"]
+            tr_dict  = entry["training"]
+            run_dir  = self.work_home / run_name
 
-                pp_config = attrs.evolve(self.base_preprocess, **pp_dict)
-                tr_config = attrs.evolve(self.base_training, **tr_dict)
+            pp_config = attrs.evolve(self.base_preprocess, **pp_dict)
+            tr_config = attrs.evolve(self.base_training, **tr_dict)
 
-                run_dir = self.work_home / f"run{run_num}"
-                run_name = f"run{run_num}"
+            if dry_run:
+                print(f"\n[DRY RUN] {run_name}:")
+                if pp_dict:
+                    print(f"  Preprocessing: {pp_dict}")
+                print(f"  Training: {tr_dict}")
+                print(f"  Run dir: {run_dir}")
+            else:
+                import time
+                t_run = time.perf_counter()
+                exp = Experiment(
+                    dataset=self.dataset,
+                    preprocess_config=pp_config,
+                    training_config=tr_config,
+                    run_dir=run_dir,
+                )
+                exp.setup(validate=False)
+                elapsed = time.perf_counter() - t_run
+                logger.debug(f"generate: {run_name} setup took {elapsed:.2f}s")
+                experiments.append(exp)
+                print(f"Generated {run_name} in {run_dir}")
 
-                if dry_run:
-                    print(f"\n[DRY RUN] {run_name}:")
-                    if pp_dict:
-                        print(f"  Preprocessing: {pp_dict}")
-                    print(f"  Training: {tr_dict}")
-                    print(f"  Run dir: {run_dir}")
-                else:
-                    exp = Experiment(
-                        dataset=self.dataset,
-                        preprocess_config=pp_config,
-                        training_config=tr_config,
-                        run_dir=run_dir,
-                    )
-                    exp.setup()
-                    experiments.append(exp)
-                    print(f"Generated {run_name} in {run_dir}")
-
-                manifest[run_name] = {
-                    "preprocessing_params": pp_dict,
-                    "training_params": tr_dict,
-                    "run_dir": str(run_dir),
-                }
-
-                run_num += 1
+            manifest[run_name] = {
+                "preprocessing_params": pp_dict,
+                "training_params": tr_dict,
+                "run_dir": str(run_dir),
+            }
 
         # Write manifest
         if not dry_run:
@@ -141,9 +195,9 @@ class ExperimentGrid:
             with open(manifest_path, "w") as f:
                 json.dump(manifest, f, indent=2)
             logger.info(f"Manifest saved to {manifest_path}")
-            
+            self.save_config()
 
-        total = run_num - 1
+        total = len(manifest)
         if dry_run:
             print(f"\n[DRY RUN] Would generate {total} total runs")
         else:
@@ -187,8 +241,8 @@ class ExperimentGrid:
 
     def _launch_single(self, exp: Experiment, dry_run: bool = False) -> None:
         """Launch a single experiment via subprocess."""
-        # Use the train.py in the dataset's source_home
-        train_script = self.dataset.source_home / "train.py"
+        # Use the train.py in the dataset's dataset_home
+        train_script = self.dataset.dataset_home / "train.py"
 
         cmd = f"cd {exp.run_dir} && {sys.executable} {train_script} --run-dir {exp.run_dir}"
 
@@ -215,7 +269,7 @@ class ExperimentGrid:
             manifest = json.load(f)
 
         runs = list(manifest.values())
-        train_script = self.dataset.source_home / "train.py"
+        train_script = self.dataset.dataset_home / "train.py"
 
         script_content = f"""#!/bin/bash
 #BSUB -J "prl_hpo[1-{len(runs)}]"
@@ -289,27 +343,87 @@ echo "Training in $run_dir completed with exit code $?"
 
         return experiments
 
+    def save_config(self, output_path: Path | None = None) -> Path:
+        """Save the grid configuration to a YAML file.
+
+        Produces a file that can be passed back to from_config() to recreate
+        this grid exactly. Useful when the grid was constructed by direct
+        initialization rather than loaded from a file.
+
+        Args:
+            output_path: Destination file. Defaults to
+                work_home/experiment_config.yaml.
+
+        Returns:
+            The path the config was written to.
+        """
+        import yaml
+
+        if output_path is None:
+            self.work_home.mkdir(parents=True, exist_ok=True)
+            output_path = self.work_home / "experiment_config.yaml"
+
+        config: dict = {
+            "dataset_name": self.dataset.name,
+            "experiment_name": self.experiment_name,
+            "param_grid": self.param_grid,
+        }
+
+        # Include base config overrides only when they differ from dataset defaults.
+        # This keeps the saved file clean for the common case.
+        default_pp = self.dataset.default_preprocess
+        if self.base_preprocess != default_pp:
+            config["base_preprocessing"] = attrs.asdict(self.base_preprocess)
+
+        default_tr = self.dataset.default_training
+        if attrs.asdict(self.base_training) != attrs.asdict(default_tr):
+            config["base_training"] = attrs.asdict(self.base_training)
+
+        output_path = Path(output_path)
+        output_path.write_text(yaml.dump(config, default_flow_style=False, sort_keys=False))
+        logger.info(f"Experiment config saved to {output_path}")
+        return output_path
+
     @classmethod
     def from_config(cls, config_path: Path) -> ExperimentGrid:
-        """Create an ExperimentGrid from an experiment config YAML file.
+        """Create an ExperimentGrid from an experiment config YAML/JSON file.
 
         Expected format:
-            dataset: roi_train2
+            dataset_name: roi_train2
             experiment_name: stage1_crop_lr_sweep
             param_grid:
               training:
                 crop_ratios: [null, [1, 1, 4]]
                 learning_rate: [0.0001, 0.0002]
+
+        Optional base config overrides (produced by save_config when they
+        differ from dataset defaults):
+            base_preprocessing:
+              expand_xy: 10
+            base_training:
+              learning_rate: 0.0001
         """
         from helpers.paths import load_config
 
         config = load_config(config_path)
-        dataset = Dataset(config["dataset"])
+        dataset = Dataset(config["dataset_name"])
+
+        base_preprocess = None
+        if "base_preprocessing" in config:
+            base_preprocess = attrs.evolve(
+                dataset.default_preprocess, **config["base_preprocessing"]
+            )
+
+        base_training = None
+        if "base_training" in config:
+            base_training = TrainingConfig.from_dict(config["base_training"])
 
         return cls(
             dataset=dataset,
             param_grid=config["param_grid"],
             experiment_name=config["experiment_name"],
+            base_preprocess=base_preprocess,
+            base_training=base_training,
         )
         
     @classmethod

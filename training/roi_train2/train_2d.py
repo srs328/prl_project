@@ -35,16 +35,16 @@ input_dict = {
     "roi_size": [44, 44, 8],
 }
 
-runner = AutoRunner(
-    work_dir=WORK_DIR,
-    algos=["segresnet2d"],
-    input=input_dict,
-    analyze=False,
-    algo_gen=False,
-    train=True,
-    ensemble=True,
-    mlflow_tracking_uri=f"{WORK_DIR}/mlruns",
-    mlflow_experiment_name="3",
-)
+# runner = AutoRunner(
+#     work_dir=WORK_DIR,
+#     algos=["segresnet2d"],
+#     input=input_dict,
+#     analyze=False,
+#     algo_gen=False,
+#     train=False,
+#     ensemble=True,
+#     mlflow_tracking_uri=f"{WORK_DIR}/mlruns",
+#     mlflow_experiment_name="3",
+# )
 
-runner.run()
+# runner.run()

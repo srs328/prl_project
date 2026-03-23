@@ -48,8 +48,8 @@ class Experiment:
 
     @property
     def datalist_src(self) -> Path:
-        """Path to the datalist in the dataset's source_home."""
-        return self.dataset.source_home / self.datalist_name
+        """Path to the datalist in the dataset's dataset_home."""
+        return self.dataset.dataset_home / self.datalist_name
 
     @property
     def datalist_dst(self) -> Path:
@@ -175,15 +175,34 @@ class Experiment:
 
     # --- Setup ---
 
-    def setup(self) -> None:
-        """Create run directory and write configs + datalist into it."""
+    def setup(self, validate: bool = True, overwrite: bool = False) -> None:
+        """Create run directory and write configs + datalist into it.
+
+        Args:
+            validate: Check that every image/label path in the datalist exists
+                on disk. Set to False when generating many runs in a grid where
+                the datalist has already been validated — avoids repeated SMB
+                round-trips that can add several seconds per run.
+            overwrite: If False (default), skip setup silently if label_config.json
+                already exists. Set to True to re-write all config files.
+        """
+        import time
+        t0 = time.perf_counter()
+
+        if not overwrite and (self.run_dir / "label_config.json").exists():
+            logger.warning(f"setup [{self.run_dir.name}]: already set up, skipping (pass overwrite=True to force)")
+            return
+
         self.run_dir.mkdir(parents=True, exist_ok=True)
+        logger.debug(f"setup [{self.run_dir.name}]: mkdir done ({time.perf_counter()-t0:.2f}s)")
 
         # Ensure datalist exists (create ROIs + prepare data if needed)
         if not self.datalist_src.exists():
+            logger.debug(f"setup [{self.run_dir.name}]: datalist_src missing, running preprocessing")
             self.create_rois()
             self.dataset.create_datalist()
             self.prepare_data()
+        logger.debug(f"setup [{self.run_dir.name}]: datalist check done ({time.perf_counter()-t0:.2f}s)")
 
         # Write label_config.json
         label_cfg = self.training_config.to_label_config_dict(
@@ -191,26 +210,33 @@ class Experiment:
         )
         with open(self.run_dir / "label_config.json", "w") as f:
             json.dump(label_cfg, f, indent=2)
+        logger.debug(f"setup [{self.run_dir.name}]: label_config written ({time.perf_counter()-t0:.2f}s)")
 
         # Write monai_config.json
         monai_cfg = self.training_config.to_monai_config_dict(self.dataset)
         with open(self.run_dir / "monai_config.json", "w") as f:
             json.dump(monai_cfg, f, indent=2)
+        logger.debug(f"setup [{self.run_dir.name}]: monai_config written ({time.perf_counter()-t0:.2f}s)")
 
         # Copy datalist
         if not self.datalist_dst.exists():
             import shutil
             shutil.copyfile(self.datalist_src, self.datalist_dst)
+        logger.debug(f"setup [{self.run_dir.name}]: datalist copied ({time.perf_counter()-t0:.2f}s)")
 
-        # Validate image/label paths exist
-        datalist = self.datalist
-        for item in datalist.get("training", []) + datalist.get("testing", []):
-            img_path = self.dataset.data_root / item["image"]
-            if not img_path.exists():
-                raise FileNotFoundError(f"Image not found: {img_path}")
-            img_path = self.dataset.data_root / item["label"]
-            if not img_path.exists():
-                raise FileNotFoundError(f"Label not found: {img_path}")
+        # Validate image/label paths exist (skippable for grid generation)
+        if validate:
+            datalist = self.datalist
+            n = len(datalist.get("training", [])) + len(datalist.get("testing", []))
+            logger.debug(f"setup [{self.run_dir.name}]: validating {n} cases against data_root (SMB)...")
+            for item in datalist.get("training", []) + datalist.get("testing", []):
+                img_path = self.dataset.data_root / item["image"]
+                if not img_path.exists():
+                    raise FileNotFoundError(f"Image not found: {img_path}")
+                img_path = self.dataset.data_root / item["label"]
+                if not img_path.exists():
+                    raise FileNotFoundError(f"Label not found: {img_path}")
+            logger.debug(f"setup [{self.run_dir.name}]: validation done ({time.perf_counter()-t0:.2f}s)")
 
         # Write run info
         cfg = self.preprocess_config
@@ -226,7 +252,7 @@ class Experiment:
         with open(self.run_dir / "info.txt", "w") as f:
             f.write(description)
 
-        logger.info(f"Experiment setup complete: {self.run_dir}")
+        logger.info(f"Experiment setup complete: {self.run_dir} ({time.perf_counter()-t0:.2f}s)")
 
     # --- Training ---
 
@@ -281,11 +307,12 @@ class Experiment:
 
     # --- Prediction ---
 
-    def predict(self, fold: int | None = None) -> dict[int, str]:
+    def predict(self, fold: int | None = None, regenerate: bool = False) -> dict[int, str]:
         """Run fold validation inference.
 
         Args:
             fold: Specific fold number, or None for all folds.
+            regenerate: Re-run even if outputs already exist. Default False.
 
         Returns:
             Dict mapping fold number to "success" or error message.
@@ -311,6 +338,7 @@ class Experiment:
                 success = run_fold_inference(
                     self.run_dir, fold_num, self.datalist_dst,
                     self.dataset.data_root, output_dir,
+                    regenerate=regenerate,
                 )
                 results[fold_num] = "success" if success else "failed"
             except Exception as e:

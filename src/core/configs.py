@@ -85,7 +85,8 @@ class TrainingConfig:
         """Generate the label_config.json dict for a run directory."""
         return {
             "dataroot": str(dataset.data_root),
-            "train_home": str(dataset.source_home),
+            "train_home": str(dataset.train_home),
+            "dataset_name": dataset.name,
             "prl_df": str(dataset.prl_df_path),
             "subjects": str(dataset.subjects_path),
             "suffix_to_use": str(dataset.suffix_to_use_path),
