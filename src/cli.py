@@ -149,10 +149,10 @@ def grid(experiment_config, dry_run, no_prepare, hpc, processes, run_key, launch
 
     experiments = eg.generate(dry_run=dry_run, prepare_data=not no_prepare, validate=validate, overwrite=overwrite)
     
-    if launch and not dry_run:
+    if launch:
         mode = "hpc" if hpc else "local"
         eg.launch(experiments=experiments, mode=mode, processes=processes,
-                  dry_run=False, run_key=run_key)
+                  dry_run=dry_run, run_key=run_key)
 
 
 @cli.command()

@@ -7,7 +7,7 @@
 # module load cuda/11.x
 
 # Activate the MONAI virtual environment
-source ~/.virtualenvs/monai/bin/activate
+source /home/shridhar.singh9-umw/prl_project/prl_project/.venv/bin/activate
 
 # Export environment variables for HPC paths
 # Override these if your HPC paths differ from local

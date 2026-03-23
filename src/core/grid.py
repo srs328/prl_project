@@ -273,10 +273,10 @@ class ExperimentGrid:
 
         script_content = f"""#!/bin/bash
 #BSUB -J "prl_hpo[1-{len(runs)}]"
-#BSUB -n 1
+#BSUB -n 3
 #BSUB -q gpu
-#BSUB -gpu "num=1"
-#BSUB -R "rusage[mem=32G]"
+#BSUB -gpu "num=1:mode=exclusive_process:j_exclusive=yes"
+#BSUB -R "select[hname!='c4140c08'] rusage[mem=4G]"
 #BSUB -W 24:00
 #BSUB -o {self.work_home}/logs/run_%J_%I.log
 #BSUB -e {self.work_home}/logs/run_%J_%I.err

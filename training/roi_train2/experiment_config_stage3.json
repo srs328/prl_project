@@ -6,7 +6,7 @@
   "base_monai_config": "monai_config.jsonc",
   "param_grid": {
     "training": {
-      "num_images_per_batch": [1, 4],
+      "batch_size": [1, 4],
       "loss": [
         {
           "_target_": "DiceCELoss",
