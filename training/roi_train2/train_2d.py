@@ -40,9 +40,9 @@ runner = AutoRunner(
     algos=["segresnet2d"],
     input=input_dict,
     analyze=False,
-    algo_gen=True,
+    algo_gen=False,
     train=True,
-    ensemble=False,
+    ensemble=True,
     mlflow_tracking_uri=f"{WORK_DIR}/mlruns",
     mlflow_experiment_name="3",
 )
