@@ -12,11 +12,12 @@ import json
 import re
 from pathlib import Path
 
+import yaml
+
 # Root paths — set env vars to override
 PROJECT_ROOT = Path(os.environ.get('PRL_PROJECT_ROOT', Path(__file__).parent.parent))
 DATA_ROOT = Path(os.environ.get('PRL_DATA_ROOT', '/media/smbshare/srs-9/prl_project/data'))
 TRAIN_ROOT = Path(os.environ.get('PRL_TRAIN_ROOT', '/media/smbshare/srs-9/prl_project/training'))
-TRAIN_HOME = Path(os.environ.get('PRL_TRAIN_ROOT', '/media/smbshare/srs-9/prl_project/training'))
 
 # Token replacements
 TOKEN_MAP = {
@@ -65,9 +66,9 @@ def strip_json_comments(text):
 
 def load_config(config_path):
     """
-    Load a JSON/JSONC config file and expand all ${VAR} tokens.
+    Load a JSON/JSONC/YAML config file and expand all ${VAR} tokens.
 
-    Supports .jsonc files with // line comments.
+    Supports .jsonc files with // line comments and .yaml/.yml files.
     Paths are resolved relative to os.cwd() if relative.
     """
     config_path = Path(config_path)
@@ -78,8 +79,33 @@ def load_config(config_path):
     with open(config_path) as f:
         text = f.read()
 
-    if config_path.suffix == '.jsonc':
-        text = strip_json_comments(text)
+    if config_path.suffix in ('.yaml', '.yml'):
+        config = yaml.safe_load(text)
+    else:
+        if config_path.suffix == '.jsonc':
+            text = strip_json_comments(text)
+        config = json.loads(text)
 
-    config = json.loads(text)
     return expand_tokens(config)
+
+
+def load_dataset_config(name):
+    """Load dataset.yaml by dataset name.
+
+    Looks up PROJECT_ROOT/training/{name}/dataset.yaml, expands tokens,
+    and resolves relative paths against the dataset's source_home directory.
+    """
+    dataset_home = PROJECT_ROOT / "training" / name
+    config_path = dataset_home / "dataset.yaml"
+    if not config_path.exists():
+        raise FileNotFoundError(
+            f"Dataset '{name}' not found: {config_path} does not exist"
+        )
+    config = load_config(config_path)
+
+    # Resolve relative paths against dataset_home
+    for key in ("subjects", "suffix_to_use"):
+        if key in config and not Path(config[key]).is_absolute():
+            config[key] = str(dataset_home / config[key])
+
+    return config

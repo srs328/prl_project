@@ -12,44 +12,16 @@ Usage:
 """
 
 import sys
-import json
 import argparse
 from pathlib import Path
 from typing import Dict, Tuple, List
-from collections import defaultdict
 import numpy as np
-import pandas as pd
-from my_python_utils import save_json
 
 import nibabel as nib
 from nibabel.spatialimages import SpatialImage
 
-from helpers.paths import load_config
 from helpers.utils import dice_score
 
-
-def get_test_inference(test_data, dataroot, inf_root, suffix) -> list[dict]:
-    for scan in test_data:
-        scan.update({k: Path(v) if isinstance(v, str) and ".nii.gz" in v else v for k, v in scan.items()})
-        scan['inference'] = inf_root / Path(scan['label']).relative_to(dataroot).with_name(f"flair.phase{suffix}_ensemble.nii.gz")
-        if "prl" in Path(scan['label']).name:
-            scan['case_type'] = "PRL"
-        else:
-            scan['case_type'] = "Lesion"
-    return test_data
-
-
-def get_validation_inference(train_data, dataroot, val_root, suffix):
-    validation_data = defaultdict(list)
-    for scan in train_data:
-        scan.update({k: Path(v) if isinstance(v, str) and ".nii.gz" in v else v for k, v in scan.items()})
-        scan['inference'] = val_root / f"fold{scan['fold']}" / scan['label'].relative_to(dataroot).with_name(f"flair.phase{suffix}.nii.gz")
-        if "prl" in scan['label'].name:
-            scan['case_type'] = "PRL"
-        else:
-            scan['case_type'] = "Lesion"
-        validation_data[f"fold{scan['fold']}"].append(scan)
-    return validation_data
 
 
 def get_confusion_matrix(lab: SpatialImage, inf: SpatialImage) -> Tuple[int, int, int, int]:
@@ -309,78 +281,28 @@ def main():
     parser = argparse.ArgumentParser(
         description="Compute performance metrics from inference results"
     )
-    parser.add_argument("train_dir", type=Path, help="Path to training home")
+    parser.add_argument("run_dir", type=Path, help="Path to run directory")
+    parser.add_argument("--dataset", type=str, default="roi_train2",
+                        help="Dataset name (default: roi_train2)")
     parser.add_argument("--test-only", action="store_true", help="Only analyze test set")
     parser.add_argument("--output-csv", type=Path, help="Save results to CSV")
-    parser.add_argument("--save-path", type=Path, help="Save image and label paths for all cases")
     parser.add_argument("--print-results", action="store_true", help="Whether to print results to console")
 
     args = parser.parse_args()
 
-    if not args.train_dir.exists():
-        print(f"Error: Run directory not found: {args.train_dir}")
-        return 1
-    
-    train_dir = Path(args.train_dir)
-    label_config = load_config(train_dir / "label_config.json")
+    from core.dataset import Dataset
+    from core.experiment import Experiment
 
-    expand_xy, expand_z = label_config['expand_xy'], label_config['expand_z']
-    expand_suffix = f"_xy{expand_xy}_z{expand_z}"
-    with open(train_dir / f"datalist_xy{expand_xy}_z{expand_z}.json", 'r') as f:
-        datalist = json.load(f)
+    ds = Dataset(args.dataset)
+    exp = Experiment.from_run_dir(args.run_dir, ds)
 
-    dataroot = label_config['dataroot']
-    inf_root = train_dir / "ensemble_output"
-    val_root = train_dir / "fold_predictions"
+    df = exp.evaluate(
+        test_only=args.test_only,
+        output_csv=args.output_csv,
+        print_results=args.print_results,
+    )
 
-    # Analyze splits
-    splits = ['testing']
-    if not args.test_only:
-        splits.extend(['training', 'validation'])
-
-    all_results = {}
-    
-
-    inf_data = get_test_inference(datalist['testing'], dataroot, inf_root, expand_suffix)
-    val_data = get_validation_inference(datalist['training'], dataroot, val_root, expand_suffix)
-    
-    inf_results = analyze_dataset(inf_data, split="testing")
-    if inf_results.get('aggregated'):
-        all_results['testing'] = inf_results
-        if args.print_results:
-            print_results(inf_results)
-    
-    for fold, fold_data in val_data.items():
-        split=f"validation {fold}"
-        results = analyze_dataset(fold_data, split=split)
-        if results.get('aggregated'):
-            all_results[split] = results
-            if args.print_results:
-                print_results(results)
-
-    # Save to CSV if requested
-    if args.output_csv:
-        all_cases = []
-        for split, results in all_results.items():
-            for case in results['cases']:
-                case['split'] = split
-                all_cases.append(case)
-
-        if all_cases:
-            df = pd.DataFrame(all_cases)
-            df.to_csv(args.output_csv, index=False)
-            print(f"\n\nResults saved to: {args.output_csv}")
-    
-    if args.save_path:
-        save_path = args.save_path
-        if not save_path.is_absolute():
-            save_path = train_dir / save_path
-    else:
-        save_path = train_dir / f"datalist_{expand_suffix}_final.json"
-    save_data = {"testing": inf_data, "validation": val_data}
-    save_json(save_data, save_path)
-
-    return 0
+    return 0 if df is not None else 1
 
 
 if __name__ == "__main__":

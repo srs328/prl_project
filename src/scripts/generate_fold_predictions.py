@@ -16,9 +16,10 @@ import argparse
 import sys
 import tempfile
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List
 import subprocess
-import shutil
+
+from loguru import logger
 
 from helpers.paths import load_config
 
@@ -42,28 +43,36 @@ def create_fold_datalist(validation_cases: List[Dict], output_path: Path) -> Non
 
 
 def run_fold_inference(run_dir: Path, fold_num: int, datalist_path: Path,
-                      data_root: Path, output_dir: Path) -> bool:
+                      data_root: Path, output_dir: Path,
+                      regenerate: bool = False) -> bool:
     """
     Run inference for a single fold using Auto3DSeg infrastructure.
+
+    Args:
+        regenerate: Re-run even if outputs already exist. Default False.
 
     Returns:
         True if successful, False otherwise
     """
-    print(f"\n{'='*80}")
-    print(f"Running inference for Fold {fold_num}")
-    print(f"{'='*80}\n")
+    logger.info(f"Running inference for fold {fold_num}")
 
     # Get validation cases
     validation_cases = get_validation_cases(datalist_path, fold_num)
 
     if not validation_cases:
-        print(f"No validation cases found for fold {fold_num}")
+        logger.warning(f"No validation cases found for fold {fold_num}")
         return False
 
-    print(f"Found {len(validation_cases)} validation cases")
+    logger.debug(f"Found {len(validation_cases)} validation cases for fold {fold_num}")
 
-    # Create fold-specific output directory
+    # Skip if outputs already exist
     fold_output_dir = output_dir / f"fold{fold_num}"
+    if not regenerate and fold_output_dir.exists():
+        existing = list(fold_output_dir.rglob("*.nii.gz"))
+        if len(existing) >= len(validation_cases):
+            logger.info(f"Fold {fold_num}: outputs already exist ({len(existing)} files), skipping")
+            return True
+
     fold_output_dir.mkdir(parents=True, exist_ok=True)
 
     # Create temporary datalist with just validation cases
@@ -72,35 +81,25 @@ def run_fold_inference(run_dir: Path, fold_num: int, datalist_path: Path,
         create_fold_datalist(validation_cases, temp_datalist)
 
     try:
-        # Path to the fold's auto-generated scripts
         fold_scripts_dir = run_dir / f"segresnet_{fold_num}" / "scripts"
         segmenter_path = fold_scripts_dir / "segmenter.py"
 
         if not segmenter_path.exists():
-            print(f"Error: Segmenter script not found at {segmenter_path}")
+            logger.error(f"Segmenter script not found: {segmenter_path}")
             return False
 
-        # Create config overrides for inference
         config_file = run_dir / f"segresnet_{fold_num}" / "configs" / "hyper_parameters.yaml"
 
         if not config_file.exists():
-            print(f"Error: Config file not found at {config_file}")
+            logger.error(f"Config file not found: {config_file}")
             return False
 
-        # Run inference using the auto-generated segmenter
-        # This will use the infer.py infrastructure
         infer_script = fold_scripts_dir / "infer.py"
 
         if not infer_script.exists():
-            print(f"Error: Infer script not found at {infer_script}")
+            logger.error(f"Infer script not found: {infer_script}")
             return False
 
-        print(f"\nRunning inference from: {infer_script}")
-        print(f"Config: {config_file}")
-        print(f"Output dir: {fold_output_dir}")
-
-        # Build command to run inference
-        # The infer.py script uses fire, so we can pass parameters directly
         cmd = [
             sys.executable,
             str(infer_script),
@@ -110,16 +109,15 @@ def run_fold_inference(run_dir: Path, fold_num: int, datalist_path: Path,
             f"--data_list_file_path={temp_datalist}",
         ]
 
-        print(f"\nCommand: {' '.join(cmd)}\n")
+        logger.debug(f"Fold {fold_num} command: {' '.join(cmd)}")
 
         result = subprocess.run(cmd, cwd=str(fold_scripts_dir))
 
         if result.returncode != 0:
-            print(f"Error: Inference failed with return code {result.returncode}")
+            logger.error(f"Fold {fold_num} inference failed (return code {result.returncode})")
             return False
 
-        print(f"\n✓ Fold {fold_num} inference complete")
-        print(f"  Results saved to: {fold_output_dir}")
+        logger.info(f"Fold {fold_num} inference complete -> {fold_output_dir}")
 
         return True
 
