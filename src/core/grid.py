@@ -110,7 +110,7 @@ class ExperimentGrid:
                 run_num += 1
         return runs
 
-    def generate(self, dry_run: bool = False, prepare_data: bool = True) -> list[Experiment]:
+    def generate(self, dry_run: bool = False, prepare_data: bool = True, validate: bool = False, overwrite: bool = False) -> list[Experiment]:
         """Generate all experiment run directories from param grid.
 
         Returns a list of Experiment objects. If expand_xy/expand_z/images
@@ -176,7 +176,7 @@ class ExperimentGrid:
                     training_config=tr_config,
                     run_dir=run_dir,
                 )
-                exp.setup(validate=False)
+                exp.setup(validate=validate, overwrite=overwrite)
                 elapsed = time.perf_counter() - t_run
                 logger.debug(f"generate: {run_name} setup took {elapsed:.2f}s")
                 experiments.append(exp)

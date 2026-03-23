@@ -4,6 +4,7 @@
     "TEST_SPLIT": 0.2,
     "train_param": {
         "algos": ["segresnet"],
+        "auto_scale_batch": false,
         "learning_rate": 0.0002,
         "num_images_per_batch": 1,
         "num_epochs": 500,

@@ -21,3 +21,7 @@ if config["crop_mode"] == "ratio":
 I'm wondering, should I bother redoing every run from run5 - run 12 with the proper settings? Or just do it for a subset of those: like one option would be to skip runs with no background. The reason is the HPC limits the number of concurrent GPU tasks, so I wonder if there are other things I could be trying instead of making sure all 8 of these runs are corrected. What do you think?
 
 Here is the key for the loss column: bg: include_background=true; nowt means DiceCELoss(weight=None), and wt115 means DiceCELoss(weight=[1,1,5])
+
+
+
+ok can you just do a double check that my stage3 parameter sweep (/media/smbshare/srs-9/prl_project/training/roi_train2/stage3_numcrops_bkd_constwt115) will work now? stage 2 should have had 2 crops per batch in every run. so for this one i want to use 1 and 4. I understand that first, batch_size is set from num_images_per_batch, and as long as auto_scale_batch is false (which I set in monai_config.jsonc), it will stay that way. Then num_crops_per_image will become batch_size and batch_size will become 1. is that what will happen?

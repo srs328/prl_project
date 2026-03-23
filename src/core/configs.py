@@ -41,6 +41,7 @@ class PreprocessingConfig:
         return f"{self.image_prefix}_{self.suffix}"
 
 
+#TODO: a workaround added to handle new parameters; 
 @attrs.define
 class TrainingConfig:
     """MONAI AutoRunner training hyperparameters.
@@ -57,6 +58,7 @@ class TrainingConfig:
     roi_size: list[int] = attrs.Factory(lambda: [44, 44, 8])
     crop_ratios: list[int] | None = None
     loss: dict | None = None  # Full DiceCELoss config, or None for MONAI default
+    extra: dict = attrs.Factory(dict)  # Pass-through for any additional MONAI params
 
     def to_input_dict(self, datalist_path, dataroot) -> dict:
         """Build the AutoRunner input dict. ALL training params go here.
@@ -79,6 +81,7 @@ class TrainingConfig:
             d["crop_ratios"] = self.crop_ratios
         if self.loss is not None:
             d["loss"] = self.loss
+        d.update(self.extra)
         return d
 
     def to_label_config_dict(self, preprocess: PreprocessingConfig, dataset) -> dict:
@@ -109,6 +112,7 @@ class TrainingConfig:
         }
         if self.loss is not None:
             train_param["loss"] = self.loss
+        train_param.update(self.extra)
         return {
             "training_work_home": str(dataset.work_home),
             "N_FOLDS": dataset.n_folds,
@@ -118,5 +122,13 @@ class TrainingConfig:
 
     @classmethod
     def from_dict(cls, d: dict) -> TrainingConfig:
-        """Create from a dict (e.g. parsed from dataset.yaml defaults.training)."""
-        return cls(**{k: v for k, v in d.items() if k in attrs.fields_dict(cls)})
+        """Create from a dict (e.g. parsed from dataset.yaml defaults.training).
+
+        Known fields are mapped to typed attrs fields. Anything else is collected
+        into `extra` and passed through to to_input_dict() verbatim, so new MONAI
+        params can be added to dataset.yaml without touching this class.
+        """
+        known = attrs.fields_dict(cls)
+        known_params = {k: v for k, v in d.items() if k in known and k != "extra"}
+        extra_params = {k: v for k, v in d.items() if k not in known}
+        return cls(**known_params, extra=extra_params)

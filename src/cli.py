@@ -135,7 +135,9 @@ def train(dataset_name, run_dir, expand_xy, expand_z, images, epochs, lr, batch_
 @click.option("--processes", type=int, default=1, help="Parallel processes for local execution")
 @click.option("--run-key", type=str, default=None, help="Launch only a specific run")
 @click.option("--launch", is_flag=True, help="Generate and immediately launch")
-def grid(experiment_config, dry_run, no_prepare, hpc, processes, run_key, launch):
+@click.option("--overwrite", is_flag=True, help="To overwrite existing experiment run folders")
+@click.option("--validate", is_flag=True, help="To validate that all datalist files exist")
+def grid(experiment_config, dry_run, no_prepare, hpc, processes, run_key, launch, overwrite, validate):
     """Generate (and optionally launch) HPO experiments.
 
     EXPERIMENT_CONFIG is a YAML/JSON file with dataset_name, experiment_name,
@@ -145,7 +147,7 @@ def grid(experiment_config, dry_run, no_prepare, hpc, processes, run_key, launch
 
     eg = ExperimentGrid.from_config(experiment_config)
 
-    experiments = eg.generate(dry_run=dry_run, prepare_data=not no_prepare)
+    experiments = eg.generate(dry_run=dry_run, prepare_data=not no_prepare, validate=validate, overwrite=overwrite)
     
     if launch and not dry_run:
         mode = "hpc" if hpc else "local"
