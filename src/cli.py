@@ -147,6 +147,7 @@ def grid(dataset_name, experiment_config, dry_run, no_prepare, hpc, processes, r
     from core.grid import ExperimentGrid
 
     config = load_config(experiment_config)
+    dataset_name = config["dataset_name"]
     ds = Dataset(dataset_name)
 
     eg = ExperimentGrid(
@@ -228,5 +229,113 @@ def metrics(run_dir, test_only, output_csv, print_results, dataset_name):
         click.echo("No results to report.")
 
 
+@cli.command()
+@click.argument("run_dir", type=click.Path(exists=True, path_type=Path))
+@click.argument("subject", required=False, default=None)
+@click.option("--data-root", type=click.Path(exists=True, path_type=Path), default=None,
+              help="Data root for resolving subject names (default: PRL_DATA_ROOT)")
+@click.option("--all", "process_all", is_flag=True,
+              help="Process every subject under --data-root (requires explicit --data-root)")
+@click.option("--subjects-file", type=click.Path(exists=True, path_type=Path), default=None,
+              help="Text file with subject names (one per line), resolved against --data-root")
+@click.option("--processes", type=int, default=None,
+              help="Parallel processes for multi-subject inference (default: sequential)")
+def infer(run_dir, subject, data_root, process_all, subjects_file, processes):
+    """Run trained model on fresh subject(s).
+
+    RUN_DIR is the trained model directory.
+    SUBJECT is a subject folder name (resolved under --data-root) or absolute path.
+    Use --all to process every subject under --data-root, or --subjects-file for a list.
+    """
+    import re
+    from scripts.inference import infer_subject
+    from helpers.paths import DATA_ROOT
+
+    if data_root is None:
+        data_root = DATA_ROOT
+
+    # Resolve subject directories
+    subject_dirs = []
+
+    if process_all:
+        if not subject and not subjects_file:
+            # Scan data_root for subject directories
+            subject_dirs = sorted(
+                p for p in data_root.iterdir()
+                if p.is_dir() and re.match(r"^sub\d+", p.name)
+            )
+            if not subject_dirs:
+                click.echo(f"No subject directories found under {data_root}")
+                return
+        else:
+            raise click.UsageError("--all cannot be combined with SUBJECT or --subjects-file")
+
+    elif subjects_file is not None:
+        if subject:
+            raise click.UsageError("Cannot combine SUBJECT with --subjects-file")
+        with open(subjects_file) as f:
+            for line in f:
+                name = line.strip()
+                if not name:
+                    continue
+                p = Path(name)
+                if p.is_absolute():
+                    subject_dirs.append(p)
+                else:
+                    subject_dirs.append(data_root / name)
+
+    elif subject is not None:
+        p = Path(subject)
+        if p.is_absolute() and p.exists():
+            subject_dirs.append(p)
+        else:
+            subject_dirs.append(data_root / subject)
+
+    else:
+        raise click.UsageError(
+            "Provide SUBJECT, --all, or --subjects-file"
+        )
+
+    # Validate all dirs exist
+    for sd in subject_dirs:
+        if not sd.exists():
+            raise click.UsageError(f"Subject directory not found: {sd}")
+
+    click.echo(f"Processing {len(subject_dirs)} subject(s) using {run_dir}")
+
+    tasks = [
+        {"run_dir": run_dir, "subject_dir": sd, "data_root": data_root}
+        for sd in subject_dirs
+    ]
+
+    if processes is not None and len(tasks) > 1:
+        from helpers.parallel import BetterPool
+        from tqdm import tqdm
+
+        click.echo(f"Using {processes} parallel processes")
+        with BetterPool(processes) as pool:
+            results = pool.imap_unordered(_infer_wrapper, tasks)
+            for name, result in tqdm(results, total=len(tasks)):
+                click.echo(f"  {name}: {result}")
+    else:
+        for task in tasks:
+            sd = task["subject_dir"]
+            click.echo(f"\n--- {sd.name} ---")
+            result = infer_subject(**task)
+            click.echo(f"Output: {result}")
+
+    click.echo(f"\nDone. Processed {len(subject_dirs)} subject(s).")
+
+
+def _infer_wrapper(kwargs):
+    """Wrapper for BetterPool — unpacks dict args and returns (name, result)."""
+    from scripts.inference import infer_subject
+    name = kwargs["subject_dir"].name
+    result = infer_subject(**kwargs)
+    return name, result
+
+
 if __name__ == "__main__":
     cli()
+
+# prl infer --data-root $inf_dataroot --subjects-file $subjects_list  $run_dir  

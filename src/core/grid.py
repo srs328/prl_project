@@ -7,6 +7,7 @@ and launches experiments locally or on HPC.
 from __future__ import annotations
 
 import json
+import shutil
 import subprocess
 import sys
 from itertools import product
@@ -140,6 +141,7 @@ class ExperimentGrid:
             with open(manifest_path, "w") as f:
                 json.dump(manifest, f, indent=2)
             logger.info(f"Manifest saved to {manifest_path}")
+            
 
         total = run_num - 1
         if dry_run:
@@ -309,6 +311,10 @@ echo "Training in $run_dir completed with exit code $?"
             param_grid=config["param_grid"],
             experiment_name=config["experiment_name"],
         )
+        
+    @classmethod
+    def from_manifest(cls, manifest_path: Path):
+        pass
 
     def __repr__(self) -> str:
         return (
