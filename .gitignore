@@ -1,6 +1,9 @@
 # Project specific
 /junk/
 /.venv
+
+/libraries
+
 tutorials/
 figures/
 screenshots/
@@ -12,6 +15,7 @@ scratch.py
 *cp_work_dir
 .*
 !.gitignore
+setup_env.sh
 
 fsf
 src/mri_data/new_files.log
@@ -181,3 +185,4 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 prl_project.code-workspace
+setup_env.sh

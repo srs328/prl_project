@@ -10,7 +10,7 @@ dataroot = Path("/media/smbshare/3Tpioneer_bids")
 targetroot = Path("/media/smbshare/srs-9/prl_project/training/test_train2")
 
 subject_sessions = []
-with open("/home/srs-9/Projects/prl_project/data/subject-sessions.csv", 'r') as f:
+with open("/home/srs-9/Projects/prl_project/resources/subject-sessions.csv", 'r') as f:
     reader = csv.reader(f)
     next(reader)
     subject_sessions = [line for line in reader]

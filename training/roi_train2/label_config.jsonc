@@ -1,0 +1,10 @@
+{
+    "dataroot": "${DATA_ROOT}",
+    "train_home": "${PROJECT_ROOT}/training/roi_train2",
+    "prl_df": "${PROJECT_ROOT}/src/resources/PRL_spreadsheet-lstai_update_label_reference.csv",
+    "subjects": "${PROJECT_ROOT}/training/roi_train2/subjects.txt",
+    "suffix_to_use": "${PROJECT_ROOT}/training/roi_train2/labels_to_use.csv",
+    "expand_xy": 20,
+    "expand_z": 2,
+    "images": ["flair", "phase"]
+}

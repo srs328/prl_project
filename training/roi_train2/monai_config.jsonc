@@ -1,0 +1,17 @@
+{
+    "training_work_home": "${TRAIN_ROOT}/roi_train2",
+    "N_FOLDS": 5,
+    "TEST_SPLIT": 0.2,
+    "train_param": {
+        "algos": ["segresnet"],
+        "learning_rate": 0.0002,
+        "num_images_per_batch": 1,
+        "num_epochs": 500,
+        "num_warmup_epochs": 1,
+        "num_epochs_per_validation": 1,
+        "roi_size": [44, 44, 8],
+        // crop_ratios: per-class sampling weights for RandCropByLabelClassesd [bg, lesion, rim]
+        // null = equal probability across classes. e.g. [1, 1, 4] = 4x rim oversampling
+        "crop_ratios": null
+    }
+}

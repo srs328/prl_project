@@ -1,0 +1,93 @@
+
+================================================================================
+CROSS-FOLD METRICS SUMMARY
+================================================================================
+
+Folds found: [0, 1, 2, 3, 4]
+
+Key metrics to evaluate:
+  • train/loss: Should be decreasing - indicates learning is happening
+  • val/acc: Main performance metric - higher is better
+  • Fold variance: High std indicates instability across folds
+  • Per-fold comparison: Look for outlier folds (very high or low)
+
+
+TRAIN Metrics:
+--------------------------------------------------------------------------------
+
+  train/loss:
+    Mean:     0.641072
+    Std:      0.066006
+    Min:      0.569691
+    Max:      1.088475
+    Per-fold (mean across epochs):
+      Fold 2: 0.643100 ← Best
+      Fold 4: 0.642676
+      Fold 1: 0.641683
+      Fold 3: 0.639167
+      Fold 0: 0.638732 ← Worst
+
+VAL Metrics:
+--------------------------------------------------------------------------------
+
+  val/acc:
+    Mean:     0.460334
+    Std:      0.074315
+    Min:      0.157358
+    Max:      0.566979
+    Per-fold (mean across epochs):
+      Fold 4: 0.511171 ← Best
+      Fold 2: 0.482314
+      Fold 1: 0.462011
+      Fold 3: 0.423990
+      Fold 0: 0.422184 ← Worst
+
+VAL_CLASS Metrics:
+--------------------------------------------------------------------------------
+
+  val_class/acc_0:
+    Mean:     0.597486
+    Std:      0.049709
+    Min:      0.314716
+    Max:      0.665915
+    Per-fold (mean across epochs):
+      Fold 4: 0.628188 ← Best
+      Fold 3: 0.611078
+      Fold 0: 0.608877
+      Fold 1: 0.581326
+      Fold 2: 0.557959 ← Worst
+
+  val_class/acc_1:
+    Mean:     0.323182
+    Std:      0.121721
+    Min:      0.000000
+    Max:      0.543679
+    Per-fold (mean across epochs):
+      Fold 2: 0.406670 ← Best
+      Fold 4: 0.394154
+      Fold 1: 0.342695
+      Fold 3: 0.236902
+      Fold 0: 0.235490 ← Worst
+
+================================================================================
+INTERPRETATION & NEXT STEPS
+================================================================================
+
+Validation Accuracy:
+  Mean: 0.4603 ± 0.0743
+  Range: 0.1574 - 0.5670
+  ✓ Reasonable consistency across folds
+
+Training Loss:
+  Mean: 0.6411 ± 0.0660
+
+Performance Variation:
+  Best fold (Fold 4): 0.5112
+  Worst fold (Fold 0): 0.4222
+  Potential improvement: 21.1%
+
+Recommendations:
+  1. Check outlier folds for data quality issues
+  2. Verify fold assignment is balanced (look at datalist)
+  3. Consider if high variance is expected (few samples per fold?)
+  4. Next: tune hyperparameters or collect more data
