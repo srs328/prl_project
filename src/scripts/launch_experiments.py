@@ -108,19 +108,22 @@ def generate_lsf_array_script(training_work_home, manifest_dict, output_script):
 
     script_content = f"""#!/bin/bash
 #BSUB -J "prl_hpo[1-{len(runs)}]"
-#BSUB -n 1
+#BSUB -n 3
 #BSUB -q gpu
 #BSUB -gpu "num=1"
-#BSUB -R "rusage[mem=32G]"
+#BSUB -R "select[hname!='c4140c08'] rusage[mem=4G]"
 #BSUB -W 24:00
 #BSUB -o {training_work_home}/logs/run_%J_%I.log
 #BSUB -e {training_work_home}/logs/run_%J_%I.err
 
 # Source HPC environment setup
 source {PROJECT_ROOT}/hpc/setup_env_hpc.sh
+source /home/shridhar.singh9-umw/prl_project/prl_project/.venv/bin/activate
 
+ml cuda
 echo "Host: $(hostname)"
 echo "GPU: $(nvidia-smi --query-gpu=name --format=csv,noheader 2>/dev/null || echo 'N/A')"
+
 echo "Array index: $LSB_JOBINDEX"
 
 # Map array index to run directory
