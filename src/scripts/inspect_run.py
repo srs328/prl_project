@@ -44,8 +44,52 @@ def parse_training_log(log_path: Path) -> dict:
                 key = key.strip()
                 if key in RUNTIME_KEYS:
                     values[key] = val.strip()
+            if " => " in line:
+                key, _, val = line.partition(": ")
+                key = key.strip()
+                if key in RUNTIME_KEYS:
+                    values[key] = val.strip()
     return values
 
+
+DYNAMIC_PARAMS = [
+    "batch_size",
+    "num_crops_per_image",
+    "num_epochs",
+    "num_warmup_epochs",
+    "num_steps_per_image",
+    "start_epoch",
+]
+def params_from_training_log(log_path: Path) -> dict:
+    """the training.log contains the final authoritative reference for what
+    num_epochs, batch_size, num_crops_per_image, and a few others were set to,
+    and these may be different from what hyper_parameters.yaml shows if any of 
+    auto_scale_allowed, auto_scale_batch, auto_scale_roi, auto_scale_filters are true
+    
+    First:
+        Suggested network parameters: 
+        Batch size 1 => 2 
+        ROI size [224, 224, 144] => [44, 44, 8] 
+        init_filters 32 => 32 
+    Then final:   
+        Using num_epochs => 166
+        Using start_epoch => 0
+        batch_size => 2 
+        num_crops_per_image => 4 
+        num_steps_per_image => 1 
+        num_warmup_epochs => 3 
+    """
+    if not log_path.exists():
+        return {}
+    values = {}
+    with open(log_path) as f:
+        for line in f:
+            line = line.strip()    
+            if " => " in line:
+                key, _, val = line.partition(" => ")
+                key = key.strip()
+                if key in DYNAMIC_PARAMS:
+                    values[key] = val.strip()
 
 def get_fold_status(fold_dir: Path) -> str:
     """Return fold completion status from algo_object.pkl."""
