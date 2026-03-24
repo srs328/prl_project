@@ -419,6 +419,7 @@ segmenter.py supports resuming from a checkpoint via two config keys:
 - `start_epoch` — the epoch to resume from
 
 Neither is set by default in `hyper_parameters.yaml`. If you wanted to resume a killed fold from its last checkpoint rather than retraining from scratch, you'd need to manually add `continue: true` to that fold's `hyper_parameters.yaml` before rerunning. The existing `model.pt` (best checkpoint) and `model_final.pt` (latest checkpoint) would then be loaded.
+
 ## Deep Parameter Reference
 
 This section documents every parameter in `hyper_parameters.yaml` — how it's actually set, what can override it, and what it controls at runtime.
