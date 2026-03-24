@@ -11,6 +11,7 @@ from __future__ import annotations
 import json
 import os
 import sys
+import contextlib
 import subprocess
 import tempfile
 from collections import defaultdict
@@ -258,28 +259,10 @@ class Experiment:
 
     def train(self) -> None:
         """Run MONAI AutoRunner training."""
-        import pickle
         from monai.apps.auto3dseg import AutoRunner
 
         if not self.datalist_dst.exists():
-            self.setup()
-
-        # Clean up incomplete folds so AutoRunner doesn't skip them.
-        # When a job is killed mid-training, algo_object.pkl exists (from algo_gen)
-        # with best_metric=None, but progress.yaml has partial scores that fool
-        # AutoRunner's get_score() into thinking the fold completed.
-        for fold_dir in sorted(self.run_dir.glob("segresnet_*")):
-            pkl_path = fold_dir / "algo_object.pkl"
-            progress_path = fold_dir / "model" / "progress.yaml"
-            if pkl_path.exists() and progress_path.exists():
-                with open(pkl_path, "rb") as f:
-                    pkl_data = pickle.load(f)
-                if pkl_data.get("best_metric") is None:
-                    logger.info(
-                        f"Incomplete fold detected: {fold_dir.name} "
-                        "— removing progress.yaml"
-                    )
-                    progress_path.unlink()
+            self.setup()        
 
         # All params flow through the input dict → fill_template_config() →
         # hyper_parameters.yaml. No set_training_params() needed.
@@ -302,7 +285,41 @@ class Experiment:
         )
 
         logger.info(f"Starting training in {self.run_dir}")
-        runner.run()
+        try:
+            runner.run()
+        except Exception:
+            self.cleanup(self.run_dir, success=False)
+            raise
+        else:
+            self.cleanup(self.run_dir, success=True)
+          
+    @staticmethod
+    def cleanup(run_dir, success=True):
+        import pickle
+        import shutil
+        for fold_dir in sorted(run_dir.glob("segresnet_*")):
+            log_path: Path = fold_dir / "model/training.log"
+            if success:
+                if log_path.exists():
+                    shutil.copy(log_path, log_path.parent / "orig_training.log")
+            else:
+                # Clean up incomplete folds so AutoRunner doesn't skip them.
+                # When a job is killed mid-training, algo_object.pkl exists (from algo_gen)
+                # with best_metric=None, but progress.yaml has partial scores that fool
+                # AutoRunner's get_score() into thinking the fold completed.
+                pkl_path = fold_dir / "algo_object.pkl"
+                progress_path = fold_dir / "model" / "progress.yaml"
+                if pkl_path.exists() and progress_path.exists():
+                    with open(pkl_path, "rb") as f:
+                        pkl_data = pickle.load(f)
+                    if pkl_data.get("best_metric") is None:
+                        logger.info(
+                            f"Incomplete fold detected: {fold_dir.name} "
+                            "— removing progress.yaml"
+                        )
+                        progress_path.unlink()
+                        # delete the training log too
+                        log_path.unlink(missing_ok=True)
 
     # --- Prediction ---
 
@@ -350,7 +367,7 @@ class Experiment:
     # --- Evaluation ---
 
     def evaluate(self, test_only: bool = False, output_csv: Path | None = None,
-                 print_results: bool = False) -> pd.DataFrame | None:
+                 print_results: bool | str = False) -> pd.DataFrame | None:
         """Compute performance metrics using self.cases.
 
         Groups cases by split and runs analyze_dataset() on each group.
@@ -378,7 +395,12 @@ class Experiment:
             if results.get("aggregated"):
                 all_results["testing"] = results
                 if print_results:
-                    _print_results(results)
+                    if type(print_results) is str:
+                        with open(print_results, 'a') as f:
+                            with contextlib.redirect_stdout(f):
+                                _print_results(results)
+                    else:
+                        _print_results(results)
 
         # Process validation folds
         if not test_only:
