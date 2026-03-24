@@ -61,35 +61,52 @@ DYNAMIC_PARAMS = [
     "start_epoch",
 ]
 def params_from_training_log(log_path: Path) -> dict:
-    """the training.log contains the final authoritative reference for what
-    num_epochs, batch_size, num_crops_per_image, and a few others were set to,
-    and these may be different from what hyper_parameters.yaml shows if any of 
-    auto_scale_allowed, auto_scale_batch, auto_scale_roi, auto_scale_filters are true
-    
-    First:
-        Suggested network parameters: 
-        Batch size 1 => 2 
-        ROI size [224, 224, 144] => [44, 44, 8] 
-        init_filters 32 => 32 
-    Then final:   
-        Using num_epochs => 166
-        Using start_epoch => 0
-        batch_size => 2 
-        num_crops_per_image => 4 
-        num_steps_per_image => 1 
-        num_warmup_epochs => 3 
+    """Parse final authoritative runtime parameters from training.log.
+
+    The log has two ' => ' zones:
+      1. Auto-scale suggestions before training ('Batch size 1 => 2', etc.)
+      2. The final params block anchored between:
+           'Writing Tensorboard logs to ...'  (start sentinel)
+           'Re-saving main config to ...'     (end sentinel)
+         which looks like:
+           Using num_epochs => 250
+            Using start_epoch => 0
+            batch_size => 1
+            num_crops_per_image => 2
+            ...
+
+    We parse only the anchored block to avoid false matches elsewhere.
+    Keys may have a 'Using ' prefix which is stripped.
     """
     if not log_path.exists():
         return {}
+
+    lines = log_path.read_text().splitlines()
+
+    # Find the anchored block
+    start = end = None
+    for i, line in enumerate(lines):
+        if "Writing Tensorboard logs to" in line:
+            start = i + 1
+        elif start is not None and "Re-saving main config to" in line:
+            end = i
+            break
+
+    if start is None:
+        return {}  # training never reached this point
+
+    block = lines[start:end]  # end=None → rest of file if sentinel missing
+
     values = {}
-    with open(log_path) as f:
-        for line in f:
-            line = line.strip()    
-            if " => " in line:
-                key, _, val = line.partition(" => ")
-                key = key.strip()
-                if key in DYNAMIC_PARAMS:
-                    values[key] = val.strip()
+    for line in block:
+        if " => " not in line:
+            continue
+        key, _, val = line.partition(" => ")
+        key = key.strip().removeprefix("Using ").strip()
+        if key in DYNAMIC_PARAMS:
+            values[key] = val.strip()
+    return values
+
 
 def get_fold_status(fold_dir: Path) -> str:
     """Return fold completion status from algo_object.pkl."""
