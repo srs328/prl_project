@@ -74,6 +74,7 @@ class AlgoConfig:
     num_warmup_epochs: int = 1
     num_epochs_per_validation: int = 1
     num_epochs_per_saving: int = 1
+    num_steps_per_image: int | None = None
     num_crops_per_image: int = 1
     num_workers: int = 4
 
@@ -101,9 +102,10 @@ class AlgoConfig:
 
     # --- Pass-through for rare/future params ---
     extra: dict = attrs.Factory(dict)
+    start_epoch: int = 0
 
     # Fields excluded from MONAI input dict (metadata only)
-    _SKIP_IN_INPUT: ClassVar[frozenset] = frozenset({"algo", "extra"})
+    _SKIP_IN_INPUT: ClassVar[frozenset] = frozenset({"algo", "extra", "start_epoch"})
 
     def to_input_dict(self, datalist_path, dataroot) -> dict:
         """Build the AutoRunner input dict.
