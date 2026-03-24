@@ -275,6 +275,8 @@ def predict(run_dir, fold, dataset_name):
     help="Save results to CSV",
 )
 @click.option("--print", "print_results", is_flag=True, help="Print detailed results")
+# @click.option("--print-file", "print_results", type=str, help="File to print results to") #?can't have the two share?
+@click.option("--print-file", "print_file", type=str, help="File to print results to")
 @click.option(
     "--dataset",
     "dataset_name",
@@ -282,7 +284,7 @@ def predict(run_dir, fold, dataset_name):
     default=None,
     help="Dataset name (auto-detected if omitted)",
 )
-def metrics(run_dir, test_only, output_csv, print_results, dataset_name):
+def metrics(run_dir, test_only, output_csv, print_results, print_file, dataset_name):
     """Compute performance metrics for a training run.
 
     RUN_DIR is the path to the training run directory.
@@ -299,9 +301,11 @@ def metrics(run_dir, test_only, output_csv, print_results, dataset_name):
     ds = Dataset(dataset_name)
     exp = Experiment.from_run_dir(run_dir, ds)
 
-    if output_csv is None:
-        output_csv = run_dir / "performance_metrics.csv"
+    if output_csv is not None and not output_csv.is_absolute():
+        output_csv = run_dir / output_csv
 
+    if print_file:
+        print_results = print_file
     df = exp.evaluate(
         test_only=test_only, output_csv=output_csv, print_results=print_results
     )
