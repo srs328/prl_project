@@ -9,7 +9,7 @@ export PRL_TRAIN_ROOT="/home/shridhar.singh9-umw/prl_project/training"
 export PRL_TRAIN_HOME="/home/shridhar.singh9-umw/prl_project/prl_project/training"
 
 source $PRL_PROJECT_ROOT/.venv/bin/activate
-export PYTHONPATH="${PRL_PROJECT_ROOT}/src:$PYTHONPATH"
+export PYTHONPATH="${PRL_PROJECT_ROOT}/src"
 
 
 echo "PRL Pipeline environment configured:"

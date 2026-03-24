@@ -49,6 +49,9 @@ class TrainingConfig:
     These map directly to the train_param dict consumed by AutoRunner.
     """
     batch_size: int = None
+    num_crops_per_image: int = 1
+    auto_scale_allowed: bool = True
+    auto_scale_batch: bool = False
     algos: list[str] = attrs.Factory(lambda: ["segresnet"])
     learning_rate: float = 0.0002
     num_images_per_batch: int = 1
@@ -76,7 +79,10 @@ class TrainingConfig:
             "num_warmup_epochs": self.num_warmup_epochs,
             "num_epochs_per_validation": self.num_epochs_per_validation,
             "roi_size": self.roi_size,
-            "batch_size": self.batch_size
+            "batch_size": self.batch_size,
+            "auto_scale_allowed": False,
+            "auto_scale_batch": False,
+            "num_crops_per_image": 1,
         }
         if self.crop_ratios is not None:
             d["crop_ratios"] = self.crop_ratios
