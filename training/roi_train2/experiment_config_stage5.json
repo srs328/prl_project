@@ -1,17 +1,20 @@
 {
   "train_home": "${PROJECT_ROOT}/training",
   "dataset_name": "roi_train2",
-  "experiment_name": "stage4_sweep_dicece_wts",
+  "experiment_name": "stage5_sweep_dicecewt_nbatch",
   "base_label_config": "label_config.jsonc",
   "base_monai_config": "monai_config.jsonc",
   "param_grid": {
     "training": {
-      "batch_size": [1,2,4],
+      "auto_scale_allowed": [false],
+      "auto_scale_batch": [false],
+      "batch_size": [2],
+      "num_crops_per_image": [2, 4],
       "loss": [
         {
           "_target_": "DiceCELoss",
           "include_background": true,
-          "weight": "$torch.tensor([1.0, 2.0, 5.0]).cuda()",
+          "weight": "$torch.tensor([1.0, 1.0, 5.0]).cuda()",
           "squared_pred": true,
           "smooth_nr": 0,
           "smooth_dr": 1.0e-05,
