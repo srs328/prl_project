@@ -17,7 +17,7 @@ from helpers.paths import (
     PROJECT_ROOT, DATA_ROOT, TRAIN_ROOT,
     load_dataset_config,
 )
-from core.configs import PreprocessingConfig, TrainingConfig
+from core.configs import PreprocessingConfig, AlgoConfig
 from preprocessing.create_datalist import create_datalist_template
 
 
@@ -55,7 +55,7 @@ class Dataset:
             expand_z=defaults.get("expand_z", 2),
         )
         training_defaults = defaults.get("training", {})
-        self.default_training = TrainingConfig.from_dict(training_defaults)
+        self.default_training = AlgoConfig.from_dict(training_defaults)
 
     @cached_property
     def prl_df(self) -> pd.DataFrame:

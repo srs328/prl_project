@@ -129,3 +129,21 @@ Traceback (most recent call last):
     raise CalledProcessError(retcode, process.args,
                              output=stdout, stderr=stderr)
 subprocess.CalledProcessError: Command '['python', '/media/smbshare/srs-9/prl_project/training/roi_train2_t1/run_losswt115_numcrop2/segresnet_0/scripts/train.py', 'run', "--config_file='/media/smbshare/srs-9/prl_project/training/roi_train2_t1/run_losswt115_numcrop2/segresnet_0/configs/hyper_parameters.yaml'"]' returned non-zero exit status 1.
+
+
+9: batch_size: 4
+104: num_crops_per_image: 1
+271: Given num_crops_per_image 4, num_epochs was adjusted 500 => 166
+276:  batch_size => 1 
+277:  num_crops_per_image => 4 
+
+
+
+got it. next im trying to understand why segresnet adjusts the epochs down when you set num_crops_per_image higher than 1. for instance: "Given num_crops_per_image 4, num_epochs was adjusted 500 => 166". 
+
+Lets take "~/hpc/prl_project/training/roi_train2/stage3_numcrops_bkd_constwt115" as an example. In run4, num_crops_per_image=4. You'll see in "~/hpc/prl_project/training/roi_train2/stage3_numcrops_bkd_constwt115/logs/run_162720_4.err" that each epoch takes around 20-40 seconds. Then take run1 as an example where num_crops_per_image=1 so epochs stay at 500. Yet each epoch still takes around the same time (see ~/hpc/prl_project/training/roi_train2/stage3_numcrops_bkd_constwt115/logs/run_162720_1.err, same time per epoch).
+
+So to me it seems like the same amount of "work" is being done per epoch, but less total work is being done with num_crops_per_image=4 (it finishes almost 4 times faster), so will I even be able to compare these side by side? Should I have checked to prevent it from adjusting the epochs down? Or do i have some fundamental misunderstanding.
+
+
+got it. so I will also submit the three runs that will be produced by `~/hpc/prl_project/prl_project/training/roi_train2/experiment_config_stage5.json`. So that tomorrow I have everything in front of me (i need to finalize an abstract by Friday). 
