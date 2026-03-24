@@ -17,7 +17,7 @@ export PRL_TRAIN_ROOT="${PRL_TRAIN_ROOT:-/home/shridhar.singh9-umw/prl_project/t
 
 # Ensure Python can import the project
 # export PYTHONPATH="${PRL_PROJECT_ROOT}/src:${PRL_PROJECT_ROOT}:${PYTHONPATH}"
-export PYTHONPATH="${PRL_PROJECT_ROOT}/src:${PRL_PROJECT_ROOT}"
+# export PYTHONPATH="${PRL_PROJECT_ROOT}/src:${PYTHONPATH}"
 
 echo "HPC environment configured:"
 echo "  PRL_PROJECT_ROOT=$PRL_PROJECT_ROOT"

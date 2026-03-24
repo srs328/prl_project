@@ -293,15 +293,10 @@ class Experiment:
         mlflow_experiment_name = (
             run_name[3:] if run_name.startswith("run") else run_name
         )
-        print("THIS SHOULD JUST DO ANALYZING AND ALGO_GEN")
         runner = AutoRunner(
             work_dir=self.run_dir,
             algos=[self.training_config.algo],
             input=input_dict,
-            analyze=True,
-            algo_gen=True,
-            train=False,
-            ensemble=False,
             mlflow_tracking_uri=mlflow_tracking_uri,
             mlflow_experiment_name=mlflow_experiment_name,
         )
