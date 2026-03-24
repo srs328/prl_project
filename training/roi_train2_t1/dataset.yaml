@@ -1,4 +1,4 @@
-name: roi_train2
+name: roi_train2_t1
 
 # Data identity
 subjects: subjects.txt
@@ -10,14 +10,15 @@ test_split: 0.2
 
 # Preprocessing defaults (overridable by ExperimentGrid)
 defaults:
-  images: [flair, phase]
+  images: [flair, phase, t1]
   expand_xy: 20
   expand_z: 2
 
   # Training defaults (overridable per-experiment)
   training:
-    algo: segresnet
+    algos: [segresnet]
     auto_scale_batch: false
+    batch_size: 2
     learning_rate: 0.0002
     num_images_per_batch: 1
     num_epochs: 500
@@ -25,3 +26,13 @@ defaults:
     num_epochs_per_validation: 1
     roi_size: [44, 44, 8]
     crop_ratios: null
+    loss:
+    - _target_: DiceCELoss
+      include_background: true
+      weight: $torch.tensor([1.0, 1.0, 5.0]).cuda()
+      squared_pred: true
+      smooth_nr: 0
+      smooth_dr: 1.0e-05
+      softmax: $not @sigmoid
+      sigmoid: $@sigmoid
+      to_onehot_y: $not @sigmoid

@@ -15,7 +15,7 @@ from pathlib import Path
 import attrs
 from loguru import logger
 
-from core.configs import PreprocessingConfig, TrainingConfig
+from core.configs import PreprocessingConfig, AlgoConfig
 from core.dataset import Dataset
 from core.experiment import Experiment
 from helpers.parallel import BetterPool
@@ -42,7 +42,7 @@ class ExperimentGrid:
     def __init__(self, dataset: Dataset, param_grid: dict,
                  experiment_name: str,
                  base_preprocess: PreprocessingConfig | None = None,
-                 base_training: TrainingConfig | None = None):
+                 base_training: AlgoConfig | None = None):
         self.dataset = dataset
         self.param_grid = param_grid
         self.experiment_name = experiment_name
@@ -417,7 +417,7 @@ echo "Training in $run_dir completed with exit code $?"
 
         base_training = None
         if "base_training" in config:
-            base_training = TrainingConfig.from_dict(config["base_training"])
+            base_training = AlgoConfig.from_dict(config["base_training"])
 
         return cls(
             dataset=dataset,

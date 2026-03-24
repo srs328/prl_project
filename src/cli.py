@@ -22,13 +22,38 @@ def cli():
 
 @cli.command()
 @click.argument("dataset_name")
-@click.option("--expand-xy", type=int, default=None, help="X/Y expansion (overrides dataset default)")
-@click.option("--expand-z", type=int, default=None, help="Z expansion (overrides dataset default)")
-@click.option("--images", type=str, multiple=True, default=None, help="Image channels (e.g. --images flair --images phase)")
-@click.option("--processes", type=int, default=None, help="Parallel processes (default: sequential)")
+@click.option(
+    "--expand-xy",
+    type=int,
+    default=None,
+    help="X/Y expansion (overrides dataset default)",
+)
+@click.option(
+    "--expand-z", type=int, default=None, help="Z expansion (overrides dataset default)"
+)
+@click.option(
+    "--images",
+    type=str,
+    multiple=True,
+    default=None,
+    help="Image channels (e.g. --images flair --images phase)",
+)
+@click.option(
+    "--processes",
+    type=int,
+    default=None,
+    help="Parallel processes (default: sequential)",
+)
 @click.option("--dry-run", is_flag=True, help="Print commands without executing")
-@click.option("--rebuild-datalist", is_flag=True, default=False, help="Rebuild datalist_template.json")
-def preprocess(dataset_name, expand_xy, expand_z, images, processes, dry_run, rebuild_datalist):
+@click.option(
+    "--rebuild-datalist",
+    is_flag=True,
+    default=False,
+    help="Rebuild datalist_template.json",
+)
+def preprocess(
+    dataset_name, expand_xy, expand_z, images, processes, dry_run, rebuild_datalist
+):
     """Run full preprocessing pipeline for a dataset.
 
     DATASET_NAME is the name of the dataset (e.g., 'roi_train2').
@@ -55,7 +80,7 @@ def preprocess(dataset_name, expand_xy, expand_z, images, processes, dry_run, re
 
     if overrides:
         config = attrs.evolve(config, **overrides)
-        
+
     # Create datalist template (Dataset responsibility — fold assignments)
     ds.create_datalist(rebuild=rebuild_datalist)
 
@@ -67,21 +92,38 @@ def preprocess(dataset_name, expand_xy, expand_z, images, processes, dry_run, re
     click.echo(f"Done. Datalist: {result}")
 
 
-
 @cli.command()
 @click.argument("dataset_name")
-@click.option("--run-dir", type=click.Path(path_type=Path), default=None,
-              help="Run directory (default: auto-increment)")
+@click.option(
+    "--run-dir",
+    type=click.Path(path_type=Path),
+    default=None,
+    help="Run directory (default: auto-increment)",
+)
 @click.option("--expand-xy", type=int, default=None)
 @click.option("--expand-z", type=int, default=None)
 @click.option("--images", type=str, multiple=True, default=None, help="Image channels")
 @click.option("--epochs", type=int, default=None)
 @click.option("--lr", type=float, default=None, help="Learning rate")
 @click.option("--batch-size", type=int, default=None)
+@click.option("--num-crops-per-image", type=int, default=None)
 @click.option("--roi-size", type=int, nargs=3, default=None, help="ROI size (3 ints)")
 @click.option("--algos", type=str, multiple=True, default=None, help="Models to use")
 @click.option("--init-only", is_flag=True, help="Just create the run dir")
-def train(dataset_name, run_dir, expand_xy, expand_z, images, epochs, lr, batch_size, roi_size, algos, init_only):
+def train(
+    dataset_name,
+    run_dir,
+    expand_xy,
+    expand_z,
+    images,
+    epochs,
+    lr,
+    batch_size,
+    num_crops_per_image,
+    roi_size,
+    algos,
+    init_only,
+):
     """Train a model on a dataset.
 
     DATASET_NAME is the name of the dataset (e.g., 'roi_train2').
@@ -111,6 +153,8 @@ def train(dataset_name, run_dir, expand_xy, expand_z, images, epochs, lr, batch_
         tr_overrides["learning_rate"] = lr
     if batch_size is not None:
         tr_overrides["num_images_per_batch"] = batch_size
+    if num_crops_per_image is not None:
+        tr_overrides["num_crops_per_image"] = num_crops_per_image
     if roi_size is not None:
         tr_overrides["roi_size"] = list(roi_size)
     if algos:
@@ -118,7 +162,13 @@ def train(dataset_name, run_dir, expand_xy, expand_z, images, epochs, lr, batch_
     if tr_overrides:
         tr_config = attrs.evolve(tr_config, **tr_overrides)
 
-    exp = Experiment(ds, pp_config, tr_config, run_dir=run_dir or Experiment(ds, pp_config, tr_config, Path(".")).next_run_dir())
+    exp = Experiment(
+        ds,
+        pp_config,
+        tr_config,
+        run_dir=run_dir
+        or Experiment(ds, pp_config, tr_config, Path(".")).next_run_dir(),
+    )
     exp.setup()
     if init_only:
         click.echo(f"Initializing {exp.run_dir}")
@@ -132,12 +182,28 @@ def train(dataset_name, run_dir, expand_xy, expand_z, images, epochs, lr, batch_
 @click.option("--dry-run", is_flag=True, help="Preview without writing")
 @click.option("--no-prepare", is_flag=True, help="Skip data preparation")
 @click.option("--hpc", is_flag=True, help="Submit to HPC instead of running locally")
-@click.option("--processes", type=int, default=1, help="Parallel processes for local execution")
+@click.option(
+    "--processes", type=int, default=1, help="Parallel processes for local execution"
+)
 @click.option("--run-key", type=str, default=None, help="Launch only a specific run")
 @click.option("--launch", is_flag=True, help="Generate and immediately launch")
-@click.option("--overwrite", is_flag=True, help="To overwrite existing experiment run folders")
-@click.option("--validate", is_flag=True, help="To validate that all datalist files exist")
-def grid(experiment_config, dry_run, no_prepare, hpc, processes, run_key, launch, overwrite, validate):
+@click.option(
+    "--overwrite", is_flag=True, help="To overwrite existing experiment run folders"
+)
+@click.option(
+    "--validate", is_flag=True, help="To validate that all datalist files exist"
+)
+def grid(
+    experiment_config,
+    dry_run,
+    no_prepare,
+    hpc,
+    processes,
+    run_key,
+    launch,
+    overwrite,
+    validate,
+):
     """Generate (and optionally launch) HPO experiments.
 
     EXPERIMENT_CONFIG is a YAML/JSON file with dataset_name, experiment_name,
@@ -147,19 +213,34 @@ def grid(experiment_config, dry_run, no_prepare, hpc, processes, run_key, launch
 
     eg = ExperimentGrid.from_config(experiment_config)
 
-    experiments = eg.generate(dry_run=dry_run, prepare_data=not no_prepare, validate=validate, overwrite=overwrite)
-    
+    experiments = eg.generate(
+        dry_run=dry_run,
+        prepare_data=not no_prepare,
+        validate=validate,
+        overwrite=overwrite,
+    )
+
     if launch:
         mode = "hpc" if hpc else "local"
-        eg.launch(experiments=experiments, mode=mode, processes=processes,
-                  dry_run=dry_run, run_key=run_key)
+        eg.launch(
+            experiments=experiments,
+            mode=mode,
+            processes=processes,
+            dry_run=dry_run,
+            run_key=run_key,
+        )
 
 
 @cli.command()
 @click.argument("run_dir", type=click.Path(exists=True, path_type=Path))
 @click.option("--fold", type=int, default=None, help="Specific fold (default: all)")
-@click.option("--dataset", "dataset_name", type=str, default=None,
-              help="Dataset name (auto-detected from run_dir configs if omitted)")
+@click.option(
+    "--dataset",
+    "dataset_name",
+    type=str,
+    default=None,
+    help="Dataset name (auto-detected from run_dir configs if omitted)",
+)
 def predict(run_dir, fold, dataset_name):
     """Generate fold validation predictions for a training run.
 
@@ -170,6 +251,7 @@ def predict(run_dir, fold, dataset_name):
 
     if dataset_name is None:
         from helpers.paths import load_config
+
         label_config = load_config(run_dir / "label_config.json")
         dataset_name = label_config["dataset_name"]
 
@@ -186,11 +268,20 @@ def predict(run_dir, fold, dataset_name):
 @cli.command()
 @click.argument("run_dir", type=click.Path(exists=True, path_type=Path))
 @click.option("--test-only", is_flag=True, help="Only analyze test set")
-@click.option("--output-csv", type=click.Path(path_type=Path), default=None,
-              help="Save results to CSV")
+@click.option(
+    "--output-csv",
+    type=click.Path(path_type=Path),
+    default=None,
+    help="Save results to CSV",
+)
 @click.option("--print", "print_results", is_flag=True, help="Print detailed results")
-@click.option("--dataset", "dataset_name", type=str, default=None,
-              help="Dataset name (auto-detected if omitted)")
+@click.option(
+    "--dataset",
+    "dataset_name",
+    type=str,
+    default=None,
+    help="Dataset name (auto-detected if omitted)",
+)
 def metrics(run_dir, test_only, output_csv, print_results, dataset_name):
     """Compute performance metrics for a training run.
 
@@ -201,6 +292,7 @@ def metrics(run_dir, test_only, output_csv, print_results, dataset_name):
 
     if dataset_name is None:
         from helpers.paths import load_config
+
         label_config = load_config(run_dir / "label_config.json")
         dataset_name = label_config["dataset_name"]
 
@@ -210,8 +302,9 @@ def metrics(run_dir, test_only, output_csv, print_results, dataset_name):
     if output_csv is None:
         output_csv = run_dir / "performance_metrics.csv"
 
-    df = exp.evaluate(test_only=test_only, output_csv=output_csv,
-                      print_results=print_results)
+    df = exp.evaluate(
+        test_only=test_only, output_csv=output_csv, print_results=print_results
+    )
 
     if df is not None:
         click.echo(f"Metrics computed for {len(df)} cases -> {output_csv}")
@@ -222,14 +315,30 @@ def metrics(run_dir, test_only, output_csv, print_results, dataset_name):
 @cli.command()
 @click.argument("run_dir", type=click.Path(exists=True, path_type=Path))
 @click.argument("subject", required=False, default=None)
-@click.option("--data-root", type=click.Path(exists=True, path_type=Path), default=None,
-              help="Data root for resolving subject names (default: PRL_DATA_ROOT)")
-@click.option("--all", "process_all", is_flag=True,
-              help="Process every subject under --data-root (requires explicit --data-root)")
-@click.option("--subjects-file", type=click.Path(exists=True, path_type=Path), default=None,
-              help="Text file with subject names (one per line), resolved against --data-root")
-@click.option("--processes", type=int, default=None,
-              help="Parallel processes for multi-subject inference (default: sequential)")
+@click.option(
+    "--data-root",
+    type=click.Path(exists=True, path_type=Path),
+    default=None,
+    help="Data root for resolving subject names (default: PRL_DATA_ROOT)",
+)
+@click.option(
+    "--all",
+    "process_all",
+    is_flag=True,
+    help="Process every subject under --data-root (requires explicit --data-root)",
+)
+@click.option(
+    "--subjects-file",
+    type=click.Path(exists=True, path_type=Path),
+    default=None,
+    help="Text file with subject names (one per line), resolved against --data-root",
+)
+@click.option(
+    "--processes",
+    type=int,
+    default=None,
+    help="Parallel processes for multi-subject inference (default: sequential)",
+)
 def infer(run_dir, subject, data_root, process_all, subjects_file, processes):
     """Run trained model on fresh subject(s).
 
@@ -251,14 +360,17 @@ def infer(run_dir, subject, data_root, process_all, subjects_file, processes):
         if not subject and not subjects_file:
             # Scan data_root for subject directories
             subject_dirs = sorted(
-                p for p in data_root.iterdir()
+                p
+                for p in data_root.iterdir()
                 if p.is_dir() and re.match(r"^sub\d+", p.name)
             )
             if not subject_dirs:
                 click.echo(f"No subject directories found under {data_root}")
                 return
         else:
-            raise click.UsageError("--all cannot be combined with SUBJECT or --subjects-file")
+            raise click.UsageError(
+                "--all cannot be combined with SUBJECT or --subjects-file"
+            )
 
     elif subjects_file is not None:
         if subject:
@@ -282,9 +394,7 @@ def infer(run_dir, subject, data_root, process_all, subjects_file, processes):
             subject_dirs.append(data_root / subject)
 
     else:
-        raise click.UsageError(
-            "Provide SUBJECT, --all, or --subjects-file"
-        )
+        raise click.UsageError("Provide SUBJECT, --all, or --subjects-file")
 
     # Validate all dirs exist
     for sd in subject_dirs:
@@ -320,6 +430,7 @@ def infer(run_dir, subject, data_root, process_all, subjects_file, processes):
 def _infer_wrapper(kwargs):
     """Wrapper for BetterPool — unpacks dict args and returns (name, result)."""
     from scripts.inference import infer_subject
+
     name = kwargs["subject_dir"].name
     result = infer_subject(**kwargs)
     return name, result
@@ -328,4 +439,4 @@ def _infer_wrapper(kwargs):
 if __name__ == "__main__":
     cli()
 
-# prl infer --data-root $inf_dataroot --subjects-file $subjects_list  $run_dir  
+# prl infer --data-root $inf_dataroot --subjects-file $subjects_list  $run_dir

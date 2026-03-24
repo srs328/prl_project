@@ -161,3 +161,15 @@ nib.save(nib.Nifti1Image(out, orig.affine, orig.header), './rim.nii.gz')
 
 But what I ultimately want is for all the inferred ROI labels for the subject to end up on the same file. See what would be the most resource and time efficient way to accomplish something like this. In the end, the final output should be at the top of the subjects folder (where the flair and phase and other images live) called "prl_inference_{some identifier for the run used to make it}"
 - Run identifiers is something worth talking about. Right now we identify them based on their subpath inside of the dataset dir (e.g. roi_train2 has runs like run1, run2, but also stage1_crop_lr_sweep/run1 is an identifier). This is fine for now, we could name an inference "prl_inference_stage1_crop_lr_sweep_run1.nii.gz"
+
+## Cleaning up and refactoring the train params workflow
+
+Right now the way that train params are handled is really messy and hard to follow. Its exacerbated by the fact that segresnet does its own post processing in some cases. Like how the pipeline looks to see a particular dataset's default config (fine for the PreprocessingConfig, bad for TrainingConfig). Then it looks for overrides for a particular train run. Then it has to evolve the TrainingConfig and try to incorporate it with segresnet.
+
+But there's an obvious fix. I just realized: TrainingConfig should just be an attrs representation of the entire hyper_parameters.yaml from the algorithm_templates (I saved this folder in ./training for our reference). The defaults will just be the template defaults. Then it's easy and predictable to evolve them. 
+
+What I'm envisioning is a parameters base class so that I could easily try out swinunetr or dints later. The configs for those two networks is a bit more complicated because they don't have just one .yaml file in `configs/`. I cloned the auto3dseg tutorial from github into /home/srs-9/monai/tutorials/auto3dseg so you can analyze the idiomatic use of auto3dseg models to inform your plan. 
+
+Can you come up with a plan for reworking the handling of training params like this. I'm aiming for predicability and ease of use; no more looking in several locations to follow the flow of parameters. 
+
+Also just for fun, after you've analyzed, tell me if python abstractbaseclasses are useful here or if it's overkill. I dont have a good working understanding of how they work and when you'd want those over a straightforward base class and inheritance, so itd be cool to learn.

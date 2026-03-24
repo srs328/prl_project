@@ -22,7 +22,7 @@ from loguru import logger
 if TYPE_CHECKING:
     import pandas as pd
     from core.dataset import Dataset
-    from core.configs import PreprocessingConfig, TrainingConfig
+    from core.configs import PreprocessingConfig, AlgoConfig
 
 
 class Experiment:
@@ -33,7 +33,7 @@ class Experiment:
     """
 
     def __init__(self, dataset: Dataset, preprocess_config: PreprocessingConfig,
-                 training_config: TrainingConfig, run_dir: Path):
+                 training_config: AlgoConfig, run_dir: Path):
         self.dataset = dataset
         self.preprocess_config = preprocess_config
         self.training_config = training_config
@@ -296,7 +296,7 @@ class Experiment:
         print("THIS SHOULD JUST DO ANALYZING AND ALGO_GEN")
         runner = AutoRunner(
             work_dir=self.run_dir,
-            algos=self.training_config.algos,
+            algos=[self.training_config.algo],
             input=input_dict,
             analyze=True,
             algo_gen=True,
@@ -425,7 +425,7 @@ class Experiment:
         to reconstruct the configs.
         """
         from helpers.paths import load_config
-        from core.configs import PreprocessingConfig, TrainingConfig
+        from core.configs import PreprocessingConfig, AlgoConfig
 
         run_dir = Path(run_dir)
         if not run_dir.is_absolute():
@@ -441,7 +441,7 @@ class Experiment:
         )
 
         train_param = monai_config.get("train_param", {})
-        training_config = TrainingConfig.from_dict(train_param)
+        training_config = AlgoConfig.from_dict(train_param)
 
         return cls(
             dataset=dataset,
