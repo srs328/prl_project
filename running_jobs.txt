@@ -1,0 +1,17 @@
+Stage 4:
+- [1.0, 2.0, 5.0]; bkd; batch_size=1 num_crops_per_image=4 (166249[7])
+- [1.0, 3.0, 5.0]; bkd; batch_size=1 num_crops_per_image=4 (local)
+- [1.0, 5.0, 5.0]; bkd; batch_size=1 num_crops_per_image=4 (166249[9])
+
+
+Stage 5:
+- [1.0, 1.0, 5.0]; nobkd; batch_size=2 num_crops_per_image=4 166279[1]
+- [1.0, 3.0, 5.0], nobkd; batch_size=2 num_crops_per_image=4 166279[2]
+- [1.0, 5.0, 5.0], nobkd; batch_size=2 num_crops_per_image=4 166279[3]
+- [1.0, 1.0, 5.0], bkd; batch_size=2 num_crops_per_image=4 166277[4]
+- [1.0, 3.0, 5.0], bkd; batch_size=2 num_crops_per_image=4 166277[5]
+- [1.0, 5.0, 5.0], bkd; batch_size=2 num_crops_per_image=4 166277[6]
+
+
+flair.phase.t1:
+- [1.0, 1.0, 5.0]; bkd; batch_size=1; num_crops_per_image=1 (local)
