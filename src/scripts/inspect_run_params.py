@@ -46,6 +46,62 @@ def parse_training_log(log_path: Path) -> dict:
     return values
 
 
+DYNAMIC_PARAMS = [
+    "batch_size",
+    "num_crops_per_image",
+    "num_epochs",
+    "num_warmup_epochs",
+    "num_steps_per_image",
+    "start_epoch",
+]
+def params_from_training_log(log_path: Path) -> dict:
+    """Parse final authoritative runtime parameters from training.log.
+
+    The log has two ' => ' zones:
+      1. Auto-scale suggestions before training ('Batch size 1 => 2', etc.)
+      2. The final params block anchored between:
+           'Writing Tensorboard logs to ...'  (start sentinel)
+           'Re-saving main config to ...'     (end sentinel)
+         which looks like:
+           Using num_epochs => 250
+            Using start_epoch => 0
+            batch_size => 1
+            num_crops_per_image => 2
+            ...
+
+    We parse only the anchored block to avoid false matches elsewhere.
+    Keys may have a 'Using ' prefix which is stripped.
+    """
+    if not log_path.exists():
+        return {}
+
+    lines = log_path.read_text().splitlines()
+
+    # Find the anchored block
+    start = end = None
+    for i, line in enumerate(lines):
+        if "Writing Tensorboard logs to" in line:
+            start = i + 1
+        elif start is not None and "Re-saving main config to" in line:
+            end = i
+            break
+
+    if start is None:
+        return {}  # training never reached this point
+
+    block = lines[start:end]  # end=None → rest of file if sentinel missing
+
+    values = {}
+    for line in block:
+        if " => " not in line:
+            continue
+        key, _, val = line.partition(" => ")
+        key = key.strip().removeprefix("Using ").strip()
+        if key in DYNAMIC_PARAMS:
+            values[key] = val.strip()
+    return values
+
+
 def get_fold_status(fold_dir: Path) -> str:
     """Return fold completion status from algo_object.pkl."""
     pkl_path = fold_dir / "algo_object.pkl"
