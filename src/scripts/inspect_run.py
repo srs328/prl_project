@@ -30,6 +30,7 @@ RUNTIME_KEYS = [
 ]
 
 
+# this will save the value of key from the last line that matches ": " in line
 def parse_training_log(log_path: Path) -> dict:
     """Parse key: value lines from training.log into a dict."""
     if not log_path.exists():
@@ -39,6 +40,11 @@ def parse_training_log(log_path: Path) -> dict:
         for line in f:
             line = line.strip()
             if ": " in line:
+                key, _, val = line.partition(": ")
+                key = key.strip()
+                if key in RUNTIME_KEYS:
+                    values[key] = val.strip()
+            if " => " in line:
                 key, _, val = line.partition(": ")
                 key = key.strip()
                 if key in RUNTIME_KEYS:

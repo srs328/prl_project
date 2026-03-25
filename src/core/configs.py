@@ -10,7 +10,7 @@ from __future__ import annotations
 from typing import ClassVar
 
 import attrs
-
+from pathlib import Path
 
 @attrs.define(frozen=True)
 class PreprocessingConfig:
@@ -194,7 +194,6 @@ class SegResNetConfig(AlgoConfig):
     Network architecture fields are remapped to MONAI's 'network#' nested-key
     syntax in to_input_dict(). None = let MONAI auto_adjust decide.
     """
-
     algo: str = "segresnet"
 
     # Network architecture
@@ -218,7 +217,19 @@ class SegResNetConfig(AlgoConfig):
                 d[monai_key] = d.pop(attr_name)
         return d
 
+    @classmethod
+    def load_from_algo_dir(cls, algo_dir, foldnum=None):
+        import yaml
+        if foldnum is None:
+            file = Path(algo_dir) / "configs/hyper_parameters.yaml"
+        else:
+            file = Path(algo_dir) / f"segresnet_{foldnum-1}" / "configs/hyper_parameters.yaml"
 
+        with open(file, 'r') as f:
+            yaml_data = yaml.full_load(f)
+        
+        return cls.from_dict(yaml_data)
+        
 # Register subclasses
 _ALGO_REGISTRY["segresnet"] = SegResNetConfig
 

@@ -1,5 +1,18 @@
 # Auto3DSeg SegResNet Infrastructure Guide
 
+## Table of Contents
+
+- [Overview](#overview)
+- [Architecture: How the Pieces Fit Together](#architecture-how-the-pieces-fit-together)
+- [Parameter Flow in Detail](#parameter-flow-in-detail)
+- [Key Config Parameters Reference](#key-config-parameters-reference)
+- [The batch\_size / num\_crops\_per\_image Interaction](#the-batch_size--num_crops_per_image-interaction)
+- [Directory Structure (Per Run)](#directory-structure-per-run)
+- [What You Can vs. Can't Control](#what-you-can-vs-cant-control)
+- [Key Source Files](#key-source-files)
+- [Deep Dive: AutoRunner Internals](#deep-dive-autorunner-internals)
+- [Deep Parameter Reference](#deep-parameter-reference)
+
 ## Overview
 
 MONAI Auto3DSeg automates 3D medical image segmentation pipeline setup. For this project, it uses the **SegResNet** algorithm with deep supervision (`SegResNetDS`). The framework handles data analysis, config generation, training, and inference across multiple cross-validation folds.
@@ -419,6 +432,7 @@ segmenter.py supports resuming from a checkpoint via two config keys:
 - `start_epoch` — the epoch to resume from
 
 Neither is set by default in `hyper_parameters.yaml`. If you wanted to resume a killed fold from its last checkpoint rather than retraining from scratch, you'd need to manually add `continue: true` to that fold's `hyper_parameters.yaml` before rerunning. The existing `model.pt` (best checkpoint) and `model_final.pt` (latest checkpoint) would then be loaded.
+
 ## Deep Parameter Reference
 
 This section documents every parameter in `hyper_parameters.yaml` — how it's actually set, what can override it, and what it controls at runtime.
@@ -484,6 +498,22 @@ num_epochs_per_saving = max(1, saving // N)
 num_epochs_per_validation = max(1, validation // N)
 RandCropByLabelClassesd(num_samples=N, ...)  # N patches per image per step
 ```
+
+#### training.log
+
+Before the first training epoch begins, the final authoritative reference for parameters is logged as:
+
+```log
+Using num_epochs => 166
+ Using start_epoch => 0
+ batch_size => 2 
+ num_crops_per_image => 4 
+ num_steps_per_image => 1 
+ num_warmup_epochs => 3 
+```
+
+
+Note: `self.global_rank` is just a PyTorch thing that identifies GPU processes, and the process with rank 0 is the one designated for saving checkpoints, logging data, or performing validations. 
 
 ---
 
