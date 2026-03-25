@@ -158,7 +158,7 @@ class AlgoConfig:
             "TEST_SPLIT": dataset.test_split,
             "train_param": train_param,
         }
-
+    
     @classmethod
     def from_dict(cls, d: dict) -> AlgoConfig:
         """Create from a dict (dataset.yaml, monai_config.json, etc.).
@@ -180,6 +180,12 @@ class AlgoConfig:
         extra_params = {k: v for k, v in d.items() if k not in known}
         return config_cls(algo=algo, **known_params, extra=extra_params)
 
+    def get_loss_param(self, param):
+        import re
+        val = self.loss.get(param, None)
+        if type(val) is str and "torch" in val:
+            str = re.match(r"\$torch\.tensor\(\[(.+)\]\).+", wt)[1]
+            return re.match(r"\$torch\.tensor\((\[]))")
 
 @attrs.define
 class SegResNetConfig(AlgoConfig):
