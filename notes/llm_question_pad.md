@@ -147,3 +147,4 @@ So to me it seems like the same amount of "work" is being done per epoch, but le
 
 
 got it. so I will also submit the three runs that will be produced by `~/hpc/prl_project/prl_project/training/roi_train2/experiment_config_stage5.json`. So that tomorrow I have everything in front of me (i need to finalize an abstract by Friday). 
+

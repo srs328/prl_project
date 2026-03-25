@@ -20,12 +20,12 @@ from typing import TYPE_CHECKING
 
 from loguru import logger
 
+from core.configs import PreprocessingConfig, AlgoConfig
+
 if TYPE_CHECKING:
     import pandas as pd
     from core.dataset import Dataset
-    from core.configs import PreprocessingConfig, AlgoConfig
-
-
+    
 class Experiment:
     """A single training run with fixed hyperparameters.
 
@@ -33,8 +33,13 @@ class Experiment:
     and a run directory where all outputs live.
     """
 
-    def __init__(self, dataset: Dataset, preprocess_config: PreprocessingConfig,
-                 training_config: AlgoConfig, run_dir: Path):
+    def __init__(
+        self,
+        dataset: Dataset,
+        preprocess_config: PreprocessingConfig,
+        training_config: AlgoConfig,
+        run_dir: Path,
+    ):
         self.dataset = dataset
         self.preprocess_config = preprocess_config
         self.training_config = training_config
@@ -56,6 +61,17 @@ class Experiment:
     def datalist_dst(self) -> Path:
         """Path to the datalist copy in the run directory."""
         return self.run_dir / self.datalist_name
+
+    @property
+    def hyper_params(self) -> AlgoConfig:
+        """Returns the actual hyper_params used in training"""
+        for fold_n in range(self.dataset.n_folds):
+            # TODO Make this a function if other algos name folds differently 
+            fold_dir = self.run_dir / f"{self.training_config.algo}_{fold_n}"
+            if self.has_trained(fold_dir):
+                hyper_params_file = fold_dir / "configs/hyper_parameters.yaml"
+                params = AlgoConfig.load_from_yaml(hyper_params_file)
+                return params
 
     # --- Preprocessing (moved from Dataset) ---
 
@@ -157,18 +173,17 @@ class Experiment:
         label_relative = label.relative_to(data_root)
         if case["split"] == "testing":
             inf_path = (
-                self.run_dir / "ensemble_output"
-                / label_relative.with_name(
-                    f"{cfg.datalist_suffix}_ensemble.nii.gz"
-                )
+                self.run_dir
+                / "ensemble_output"
+                / label_relative.with_name(f"{cfg.datalist_suffix}_ensemble.nii.gz")
             )
         else:
             # Validation: fold_predictions/fold0/...
             inf_path = (
-                self.run_dir / "fold_predictions" / case["split"]
-                / label_relative.with_name(
-                    f"{cfg.datalist_suffix}.nii.gz"
-                )
+                self.run_dir
+                / "fold_predictions"
+                / case["split"]
+                / label_relative.with_name(f"{cfg.datalist_suffix}.nii.gz")
             )
 
         if inf_path.exists():
@@ -188,22 +203,31 @@ class Experiment:
                 already exists. Set to True to re-write all config files.
         """
         import time
+
         t0 = time.perf_counter()
 
         if not overwrite and (self.run_dir / "label_config.json").exists():
-            logger.warning(f"setup [{self.run_dir.name}]: already set up, skipping (pass overwrite=True to force)")
+            logger.warning(
+                f"setup [{self.run_dir.name}]: already set up, skipping (pass overwrite=True to force)"
+            )
             return
 
         self.run_dir.mkdir(parents=True, exist_ok=True)
-        logger.debug(f"setup [{self.run_dir.name}]: mkdir done ({time.perf_counter()-t0:.2f}s)")
+        logger.debug(
+            f"setup [{self.run_dir.name}]: mkdir done ({time.perf_counter() - t0:.2f}s)"
+        )
 
         # Ensure datalist exists (create ROIs + prepare data if needed)
         if not self.datalist_src.exists():
-            logger.debug(f"setup [{self.run_dir.name}]: datalist_src missing, running preprocessing")
+            logger.debug(
+                f"setup [{self.run_dir.name}]: datalist_src missing, running preprocessing"
+            )
             self.create_rois()
             self.dataset.create_datalist()
             self.prepare_data()
-        logger.debug(f"setup [{self.run_dir.name}]: datalist check done ({time.perf_counter()-t0:.2f}s)")
+        logger.debug(
+            f"setup [{self.run_dir.name}]: datalist check done ({time.perf_counter() - t0:.2f}s)"
+        )
 
         # Write label_config.json
         label_cfg = self.training_config.to_label_config_dict(
@@ -211,25 +235,34 @@ class Experiment:
         )
         with open(self.run_dir / "label_config.json", "w") as f:
             json.dump(label_cfg, f, indent=2)
-        logger.debug(f"setup [{self.run_dir.name}]: label_config written ({time.perf_counter()-t0:.2f}s)")
+        logger.debug(
+            f"setup [{self.run_dir.name}]: label_config written ({time.perf_counter() - t0:.2f}s)"
+        )
 
         # Write monai_config.json
         monai_cfg = self.training_config.to_monai_config_dict(self.dataset)
         with open(self.run_dir / "monai_config.json", "w") as f:
             json.dump(monai_cfg, f, indent=2)
-        logger.debug(f"setup [{self.run_dir.name}]: monai_config written ({time.perf_counter()-t0:.2f}s)")
+        logger.debug(
+            f"setup [{self.run_dir.name}]: monai_config written ({time.perf_counter() - t0:.2f}s)"
+        )
 
         # Copy datalist
         if not self.datalist_dst.exists():
             import shutil
+
             shutil.copyfile(self.datalist_src, self.datalist_dst)
-        logger.debug(f"setup [{self.run_dir.name}]: datalist copied ({time.perf_counter()-t0:.2f}s)")
+        logger.debug(
+            f"setup [{self.run_dir.name}]: datalist copied ({time.perf_counter() - t0:.2f}s)"
+        )
 
         # Validate image/label paths exist (skippable for grid generation)
         if validate:
             datalist = self.datalist
             n = len(datalist.get("training", [])) + len(datalist.get("testing", []))
-            logger.debug(f"setup [{self.run_dir.name}]: validating {n} cases against data_root (SMB)...")
+            logger.debug(
+                f"setup [{self.run_dir.name}]: validating {n} cases against data_root (SMB)..."
+            )
             for item in datalist.get("training", []) + datalist.get("testing", []):
                 img_path = self.dataset.data_root / item["image"]
                 if not img_path.exists():
@@ -237,7 +270,9 @@ class Experiment:
                 img_path = self.dataset.data_root / item["label"]
                 if not img_path.exists():
                     raise FileNotFoundError(f"Label not found: {img_path}")
-            logger.debug(f"setup [{self.run_dir.name}]: validation done ({time.perf_counter()-t0:.2f}s)")
+            logger.debug(
+                f"setup [{self.run_dir.name}]: validation done ({time.perf_counter() - t0:.2f}s)"
+            )
 
         # Write run info
         cfg = self.preprocess_config
@@ -253,7 +288,9 @@ class Experiment:
         with open(self.run_dir / "info.txt", "w") as f:
             f.write(description)
 
-        logger.info(f"Experiment setup complete: {self.run_dir} ({time.perf_counter()-t0:.2f}s)")
+        logger.info(
+            f"Experiment setup complete: {self.run_dir} ({time.perf_counter() - t0:.2f}s)"
+        )
 
     # --- Training ---
 
@@ -262,7 +299,7 @@ class Experiment:
         from monai.apps.auto3dseg import AutoRunner
 
         if not self.datalist_dst.exists():
-            self.setup()        
+            self.setup()
 
         # All params flow through the input dict → fill_template_config() →
         # hyper_parameters.yaml. No set_training_params() needed.
@@ -292,11 +329,11 @@ class Experiment:
             raise
         else:
             self.cleanup(self.run_dir, success=True)
-          
+
     @staticmethod
     def cleanup(run_dir, success=True):
-        import pickle
         import shutil
+        # FIXME Should use algo to be generic (see hyper_param property)
         for fold_dir in sorted(run_dir.glob("segresnet_*")):
             log_path: Path = fold_dir / "model/training.log"
             if success:
@@ -307,23 +344,34 @@ class Experiment:
                 # When a job is killed mid-training, algo_object.pkl exists (from algo_gen)
                 # with best_metric=None, but progress.yaml has partial scores that fool
                 # AutoRunner's get_score() into thinking the fold completed.
-                pkl_path = fold_dir / "algo_object.pkl"
-                progress_path = fold_dir / "model" / "progress.yaml"
-                if pkl_path.exists() and progress_path.exists():
-                    with open(pkl_path, "rb") as f:
-                        pkl_data = pickle.load(f)
-                    if pkl_data.get("best_metric") is None:
-                        logger.info(
-                            f"Incomplete fold detected: {fold_dir.name} "
-                            "— removing progress.yaml"
-                        )
-                        progress_path.unlink()
-                        # delete the training log too
-                        log_path.unlink(missing_ok=True)
+                if not Experiment.has_trained(fold_dir):
+                    progress_path = fold_dir / "model" / "progress.yaml"
+                    logger.info(
+                        f"Incomplete fold detected: {fold_dir.name} "
+                        "— removing progress.yaml"
+                    )
+                    progress_path.unlink()
+                    # delete the training log too
+                    log_path.unlink(missing_ok=True)
+
+    @staticmethod
+    def has_trained(fold_dir):
+        import pickle
+
+        pkl_path = fold_dir / "algo_object.pkl"
+        progress_path = fold_dir / "model" / "progress.yaml"
+        if pkl_path.exists() and progress_path.exists():
+            with open(pkl_path, "rb") as f:
+                pkl_data = pickle.load(f)
+            if pkl_data.get("best_metric") is None:
+                return False
+        return True
 
     # --- Prediction ---
 
-    def predict(self, fold: int | None = None, regenerate: bool = False) -> dict[int, str]:
+    def predict(
+        self, fold: int | None = None, regenerate: bool = False
+    ) -> dict[int, str]:
         """Run fold validation inference.
 
         Args:
@@ -343,17 +391,18 @@ class Experiment:
         if fold is not None:
             folds = [fold]
         else:
-            fold_nums = set(
-                item.get("fold") for item in datalist.get("training", [])
-            )
+            fold_nums = set(item.get("fold") for item in datalist.get("training", []))
             folds = sorted(fold_nums)
 
         results = {}
         for fold_num in folds:
             try:
                 success = run_fold_inference(
-                    self.run_dir, fold_num, self.datalist_dst,
-                    self.dataset.data_root, output_dir,
+                    self.run_dir,
+                    fold_num,
+                    self.datalist_dst,
+                    self.dataset.data_root,
+                    output_dir,
                     regenerate=regenerate,
                 )
                 results[fold_num] = "success" if success else "failed"
@@ -366,15 +415,20 @@ class Experiment:
 
     # --- Evaluation ---
 
-    def evaluate(self, test_only: bool = False, output_csv: Path | None = None,
-                 print_results: bool | str = False) -> pd.DataFrame | None:
+    def evaluate(
+        self,
+        test_only: bool = False,
+        output_csv: Path | None = None,
+        print_results: bool | str = False,
+    ) -> pd.DataFrame | None:
         """Compute performance metrics using self.cases.
 
         Groups cases by split and runs analyze_dataset() on each group.
         Returns a DataFrame of per-case metrics.
         """
         from scripts.compute_performance_metrics import (
-            analyze_dataset, print_results as _print_results,
+            analyze_dataset,
+            print_results as _print_results,
         )
         import pandas as _pd
 
@@ -396,7 +450,7 @@ class Experiment:
                 all_results["testing"] = results
                 if print_results:
                     if type(print_results) is str:
-                        with open(print_results, 'a') as f:
+                        with open(print_results, "a") as f:
                             with contextlib.redirect_stdout(f):
                                 _print_results(results)
                     else:
@@ -479,7 +533,7 @@ class Experiment:
 
 
 def resolve_case_type(t_case):
-    if "prl" in Path(t_case['label']).name:
-        t_case['case_type'] = "PRL"
+    if "prl" in Path(t_case["label"]).name:
+        t_case["case_type"] = "PRL"
     else:
-        t_case['case_type'] = "Lesion"
+        t_case["case_type"] = "Lesion"

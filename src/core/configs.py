@@ -12,6 +12,16 @@ from typing import ClassVar
 import attrs
 from pathlib import Path
 
+
+def get_value(obj, key_path):
+    keys = key_path.split("#")
+    if len(keys) == 1:
+        return obj[keys[0]]
+    else:
+        return AlgoConfig.get_value(obj[keys[0]], "#".join(keys[1:]))
+
+
+
 @attrs.define(frozen=True)
 class PreprocessingConfig:
     """ROI cropping and data preparation parameters.
@@ -42,7 +52,12 @@ class PreprocessingConfig:
     def datalist_suffix(self) -> str:
         """Combined image + expansion suffix, e.g. 'flair.phase_xy20_z2'."""
         return f"{self.image_prefix}_{self.suffix}"
-
+    
+    def __getitem__(self, key):
+        try:
+            return getattr(self, key)
+        except AttributeError: 
+            raise KeyError(f"{self.__name__} has no property {key}")
 
 # ---------------------------------------------------------------------------
 # Algorithm training configs
@@ -52,7 +67,7 @@ class PreprocessingConfig:
 _ALGO_REGISTRY: dict[str, type[AlgoConfig]] = {}
 
 
-@attrs.define
+@attrs.define()
 class AlgoConfig:
     """Base training parameters shared across MONAI Auto3DSeg algorithms.
 
@@ -85,8 +100,9 @@ class AlgoConfig:
     crop_foreground: bool = True
 
     # --- Auto-scaling ---
-    auto_scale_allowed: bool = True
-    auto_scale_batch: bool = True
+    """Reversed the defaults for scale_allowed and scale_bath - now WYSIWYG"""
+    auto_scale_allowed: bool = False
+    auto_scale_batch: bool = False
     auto_scale_roi: bool = False
     auto_scale_filters: bool = False
 
@@ -179,13 +195,26 @@ class AlgoConfig:
         known_params = {k: v for k, v in d.items() if k in known and k != "extra"}
         extra_params = {k: v for k, v in d.items() if k not in known}
         return config_cls(algo=algo, **known_params, extra=extra_params)
+    
+    @classmethod
+    def load_from_yaml(cls, yaml_path):
+        import yaml
+        with open(yaml_path, 'r') as f:
+            yaml_data = yaml.full_load(f)
+        
+        return cls.from_dict(yaml_data)
 
-    def get_loss_param(self, param):
-        import re
-        val = self.loss.get(param, None)
-        if type(val) is str and "torch" in val:
-            str = re.match(r"\$torch\.tensor\(\[(.+)\]\).+", wt)[1]
-            return re.match(r"\$torch\.tensor\((\[]))")
+    
+        
+    def __getitem__(self, key):
+        obj = attrs.asdict(self)
+        for k in key.split("#"):
+            if not isinstance(obj, dict) or k not in obj:
+                raise KeyError(f"{type(self).__name__} could not resolve {key!r} (failed at {k!r})")
+            obj = obj[k]
+        return obj
+
+        
 
 @attrs.define
 class SegResNetConfig(AlgoConfig):

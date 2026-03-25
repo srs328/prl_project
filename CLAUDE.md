@@ -173,3 +173,4 @@ What I'm envisioning is a parameters base class so that I could easily try out s
 Can you come up with a plan for reworking the handling of training params like this. I'm aiming for predicability and ease of use; no more looking in several locations to follow the flow of parameters. 
 
 Also just for fun, after you've analyzed, tell me if python abstractbaseclasses are useful here or if it's overkill. I dont have a good working understanding of how they work and when you'd want those over a straightforward base class and inheritance, so itd be cool to learn.
+
