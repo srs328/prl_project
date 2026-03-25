@@ -14,6 +14,7 @@ from pathlib import Path
 import nibabel as nib
 import numpy as np
 from scipy import ndimage
+from scipy.spatial import ConvexHull
 from loguru import logger
 
 
@@ -70,38 +71,88 @@ def _crop_from_volume(volume: np.ndarray, coords: list[int]) -> np.ndarray:
     return crop
 
 
-def _count_rim_for_lesion(
-    index_crop: np.ndarray, infer_data: np.ndarray, lesion_id: int
-) -> int:
-    """Count rim voxels belonging to a specific lesion using connected components.
+def _get_lesion_rim(
+    index_crop: np.ndarray, infer_data: np.ndarray, lesion_id: int,
+    n_dilate: int = 1,
+) -> np.ndarray:
+    """Get boolean mask of rim voxels belonging to a specific lesion.
 
-    Finds label=2 connected components that overlap with the central lesion's
-    footprint (dilated by 1 voxel to capture rim just outside the boundary).
-    Excludes components that belong to distant neighbor lesions.
+    Uses connected components to find label=2 regions that overlap with the
+    central lesion's footprint (dilated to capture rim just outside boundary).
+    Excludes components belonging to distant neighbor lesions.
 
     Args:
         index_crop: Cropped lstai_lesion_index (same shape as infer_data).
         infer_data: Inference output (0=bg, 1=lesion, 2=rim).
         lesion_id: The central lesion's integer ID.
+        n_dilate: Voxels to dilate the lesion footprint by.
 
     Returns:
-        Number of rim voxels attributed to this lesion.
+        Boolean mask (same shape as infer_data) of rim voxels for this lesion.
     """
     rim_mask = infer_data == 2
     labeled, n_components = ndimage.label(rim_mask)
 
-    # Dilate the lesion footprint by 1 voxel to capture adjacent rim
     lesion_mask = index_crop == lesion_id
-    dilated = ndimage.binary_dilation(lesion_mask)
+    dilated = ndimage.binary_dilation(lesion_mask, iterations=n_dilate)
 
-    # Keep components that overlap with the dilated lesion mask
-    total_rim = 0
+    # Keep only components that overlap with the dilated lesion mask
+    result = np.zeros_like(rim_mask)
     for comp_id in range(1, n_components + 1):
         comp_mask = labeled == comp_id
         if np.any(comp_mask & dilated):
-            total_rim += int(comp_mask.sum())
+            result |= comp_mask
 
-    return total_rim
+    return result
+
+
+def _count_rim_for_lesion(
+    index_crop: np.ndarray, infer_data: np.ndarray, lesion_id: int,
+    n_dilate: int = 1,
+) -> int:
+    """Count rim voxels belonging to a specific lesion."""
+    return int(_get_lesion_rim(index_crop, infer_data, lesion_id, n_dilate).sum())
+
+
+def rim_convex_hull_volume(rim_mask: np.ndarray, voxel_sizes: tuple[float, ...]) -> float | None:
+    """Convex hull volume of rim voxels in mm³.
+
+    Returns None if fewer than 4 non-coplanar rim voxels (ConvexHull needs this).
+    """
+    coords = np.argwhere(rim_mask)  # (N, 3) in voxel indices
+    if len(coords) < 4:
+        return None
+    coords_mm = coords * np.array(voxel_sizes)
+    try:
+        hull = ConvexHull(coords_mm)
+        return float(hull.volume)
+    except Exception:
+        # Degenerate geometry (coplanar points, etc.)
+        return None
+
+
+def rim_enclosing_sphere_radius(rim_mask: np.ndarray, voxel_sizes: tuple[float, ...]) -> float | None:
+    """Radius (mm) of the smallest sphere enclosing all rim voxels.
+
+    Uses convex hull vertices + centroid approach (guaranteed enclosing,
+    not mathematically minimal but close for typical rim shapes).
+    Returns None if no rim voxels.
+    """
+    coords = np.argwhere(rim_mask)
+    if len(coords) == 0:
+        return None
+    coords_mm = coords * np.array(voxel_sizes)
+    if len(coords) < 4:
+        # Too few points for ConvexHull — use all points directly
+        center = coords_mm.mean(axis=0)
+        return float(np.max(np.linalg.norm(coords_mm - center, axis=1)))
+    try:
+        hull = ConvexHull(coords_mm)
+        vertices = coords_mm[hull.vertices]
+    except Exception:
+        vertices = coords_mm
+    center = vertices.mean(axis=0)
+    return float(np.max(np.linalg.norm(vertices - center, axis=1)))
 
 
 def count_predicted_prls(
@@ -135,6 +186,7 @@ def count_predicted_prls(
     bbox_file = subject_dir / f"lstai_bounding_boxes_{bbox_suffix}.txt"
     bounding_boxes = _parse_bounding_boxes(bbox_file)
 
+    # TODO generalize this for ground truth: add postfix parameter that can be used to build any filename
     # Build inference output filename pattern
     image_basenames = sorted(images)
     image_prefix = ".".join(image_basenames) + "_"
@@ -159,9 +211,15 @@ def count_predicted_prls(
         is_prl = np.any((index_crop == index) & (infer_data == 2))
 
         if is_prl:
-            # Connected component analysis to get reliable rim voxel count
-            rim_count = _count_rim_for_lesion(index_crop, infer_data, index)
-            prls.append({"lesion_index": index, "rim_voxels": rim_count})
+            rim = _get_lesion_rim(index_crop, infer_data, index)
+            # Get voxel sizes from the inference nifti header
+            vox = nib.load(str(infer_path)).header.get_zooms()[:3]
+            prls.append({
+                "lesion_index": index,
+                "rim_voxels": int(rim.sum()),
+                "hull_volume_mm3": rim_convex_hull_volume(rim, vox),
+                "sphere_radius_mm": rim_enclosing_sphere_radius(rim, vox),
+            })
 
     return {
         "subject": subject_dir.name,
@@ -169,6 +227,7 @@ def count_predicted_prls(
         "predicted_prls": len(prls),
         "prls": prls,
     }
+
 
 
 def run_diagnostics(
@@ -199,9 +258,15 @@ def print_diagnostics(results: dict) -> None:
     print(f"Predicted PRLs:   {results['predicted_prls']}")
 
     if results["prls"]:
-        print(f"\nPRL lesions (index → rim voxels):")
+        print("\nPRL lesions:")
         for prl in results["prls"]:
-            print(f"  Lesion {prl['lesion_index']:>3d}: {prl['rim_voxels']} rim voxels")
+            hull = prl.get("hull_volume_mm3")
+            sphere = prl.get("sphere_radius_mm")
+            hull_str = f"{hull:.1f} mm³" if hull is not None else "N/A"
+            sphere_str = f"{sphere:.2f} mm" if sphere is not None else "N/A"
+            print(f"  Lesion {prl['lesion_index']:>3d}: "
+                  f"{prl['rim_voxels']} rim voxels | "
+                  f"hull={hull_str} | sphere r={sphere_str}")
     else:
         print("\nNo PRLs predicted.")
     print()

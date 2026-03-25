@@ -219,4 +219,4 @@ I think the compute_metrics function I wrote here should become part of the same
 
 Something like that could be produced except instead of being along cases it could be along runs just the other code which aggregates mlflow runs
 
-My goal is to make it less overwhelming to approach analyzing all these runs. Since these are a ton of asks adding up to a complex job, lets plan it step by step and first think about how to digest the data.
+My goal is to make it less overwhelming to approach analyzing all these runs (/home/srs-9/Projects/prl_project/running_jobs.log contains info about the various training runs that are now complete). 

@@ -209,6 +209,7 @@ def run_ensemble_inference(
     run_dir = Path(run_dir)
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
+    postfix = f"infer_{run_id}"
 
     # Create task config for MONAI
     task_cfg = {
@@ -218,6 +219,18 @@ def run_ensemble_inference(
         "datalist": str(datalist_path),
         "dataroot": str(data_root),
     }
+    #FIXME check if they already exist, but I did this in a quick hacky way and don't have bypass/redo option
+    with open(datalist_path, 'r') as f:
+        datalist_obj = json.load(f)
+    # this loop should break and proceed if any one inf does not exist, otherwise it will end the function
+    for item in datalist_obj['testing']:
+        basename = item['image'].removesuffix(".nii.gz")
+        out_name = f"{basename}_{postfix}.nii.gz"
+        if not (data_root / out_name).exists():
+            break
+    else:
+        logger.info(f"Inference already complete at {output_dir.parent.parent}")
+        return
 
     with tempfile.NamedTemporaryFile(
         mode="w", suffix=".json", delete=False, dir=str(run_dir)
@@ -235,7 +248,7 @@ def run_ensemble_inference(
             "_target_": "SaveImage",
             "output_dir": str(output_dir),
             "data_root_dir": str(data_root),
-            "output_postfix": f"infer_{run_id}",
+            "output_postfix": postfix,
             "separate_folder": False,
         }
 
@@ -258,6 +271,7 @@ def uncrop_predictions(
     data_root: Path,
     images: tuple[str, ...],
     run_id: str,
+    infer_filepaths: dict = None
 ) -> Path:
     """Combine inferred ROI labels back onto full brain volume.
 
@@ -270,7 +284,7 @@ def uncrop_predictions(
     """
     subject_dir = Path(subject_dir)
     data_root = Path(data_root)
-    output_name = f"prl_inference_{run_id}"
+    output_name = f"prl_inference_{run_id}.nii.gz"
 
     # Reference image for shape and affine
     ref_img = nib.load(str(subject_dir / "flair.nii.gz"))
@@ -298,8 +312,11 @@ def uncrop_predictions(
         xmin, xsize, ymin, ysize, zmin, zsize = coords
 
         # Find the inference output
-        infer_filename = f"{image_prefix}{bbox_suffix}_infer_{run_id}.nii.gz"
-        infer_path = data_root / subject_rel / str(index) / infer_filename
+        if not infer_filepaths:
+            infer_filename = f"{image_prefix}{bbox_suffix}_infer_{run_id}.nii.gz"
+            infer_path = data_root / subject_rel / str(index) / infer_filename
+        else:
+            infer_path = infer_filepaths[int(index)]
 
         if not infer_path.exists():
             logger.warning(f"Inference output not found: {infer_path}")

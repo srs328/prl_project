@@ -405,7 +405,8 @@ def infer(run_dir, subject, data_root, process_all, subjects_file, processes):
         if not sd.exists():
             raise click.UsageError(f"Subject directory not found: {sd}")
 
-    click.echo(f"Processing {len(subject_dirs)} subject(s) using {run_dir}")
+    click.echo(f"Processing {len(subject_dirs)} subject(s) using {run_dir}:")
+    click.echo(f"\tFirst 20: [{','.join([s.name for s in subject_dirs[:20]])}]")
 
     tasks = [
         {"run_dir": run_dir, "subject_dir": sd, "data_root": data_root}
@@ -438,6 +439,59 @@ def _infer_wrapper(kwargs):
     name = kwargs["subject_dir"].name
     result = infer_subject(**kwargs)
     return name, result
+
+
+@cli.command(name="compile")
+@click.argument("dataset_name")
+@click.option(
+    "--stage",
+    "stages",
+    multiple=True,
+    help="Stage name(s) to compile. Omit for all discovered stages.",
+)
+@click.option(
+    "--output-csv",
+    type=click.Path(path_type=Path),
+    default=None,
+    help="Output CSV path (default: analysis/{dataset}_compiled_metrics.csv)",
+)
+@click.option(
+    "--params",
+    multiple=True,
+    help="Param keys to extract as columns (e.g., learning_rate, loss#weight)",
+)
+@click.option("--no-cache", is_flag=True, help="Ignore cached data, recompute from scratch")
+@click.option("--print", "print_table", is_flag=True, help="Print table to stdout")
+def compile_metrics(dataset_name, stages, output_csv, params, no_cache, print_table):
+    """Compile training metrics across grid search stages.
+
+    DATASET_NAME is the dataset (e.g., 'roi_train2').
+    """
+    from scripts.compile_run_metrics import compile_all_metrics
+    from helpers.paths import PROJECT_ROOT
+
+    stages_list = list(stages) if stages else None
+    params_list = list(params) if params else None
+
+    df = compile_all_metrics(
+        dataset_name,
+        stages=stages_list,
+        params_to_gather=params_list,
+        use_cache=not no_cache,
+    )
+
+    if df.empty:
+        click.echo("No data to compile.")
+        return
+
+    if output_csv is None:
+        output_csv = PROJECT_ROOT / "analysis" / f"{dataset_name}_compiled_metrics.csv"
+    output_csv.parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(output_csv, index=False)
+    click.echo(f"Compiled {len(df)} runs -> {output_csv}")
+
+    if print_table:
+        click.echo(df.to_string())
 
 
 if __name__ == "__main__":
