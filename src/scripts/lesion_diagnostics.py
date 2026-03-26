@@ -72,7 +72,7 @@ def _crop_from_volume(volume: np.ndarray, coords: list[int]) -> np.ndarray:
 
 
 def _get_lesion_rim(
-    index_crop: np.ndarray, infer_data: np.ndarray, lesion_id: int,
+    index_crop: np.ndarray, label_data: np.ndarray, lesion_id: int,
     n_dilate: int = 1,
 ) -> np.ndarray:
     """Get boolean mask of rim voxels belonging to a specific lesion.
@@ -82,15 +82,15 @@ def _get_lesion_rim(
     Excludes components belonging to distant neighbor lesions.
 
     Args:
-        index_crop: Cropped lstai_lesion_index (same shape as infer_data).
-        infer_data: Inference output (0=bg, 1=lesion, 2=rim).
+        index_crop: Cropped lstai_lesion_index (same shape as label_data).
+        label_data: Inference output (0=bg, 1=lesion, 2=rim).
         lesion_id: The central lesion's integer ID.
         n_dilate: Voxels to dilate the lesion footprint by.
 
     Returns:
-        Boolean mask (same shape as infer_data) of rim voxels for this lesion.
+        Boolean mask (same shape as label_data) of rim voxels for this lesion.
     """
-    rim_mask = infer_data == 2
+    rim_mask = label_data == 2
     labeled, n_components = ndimage.label(rim_mask)
 
     lesion_mask = index_crop == lesion_id
@@ -107,11 +107,11 @@ def _get_lesion_rim(
 
 
 def _count_rim_for_lesion(
-    index_crop: np.ndarray, infer_data: np.ndarray, lesion_id: int,
+    index_crop: np.ndarray, label_data: np.ndarray, lesion_id: int,
     n_dilate: int = 1,
 ) -> int:
     """Count rim voxels belonging to a specific lesion."""
-    return int(_get_lesion_rim(index_crop, infer_data, lesion_id, n_dilate).sum())
+    return int(_get_lesion_rim(index_crop, label_data, lesion_id, n_dilate).sum())
 
 
 def rim_convex_hull_volume(rim_mask: np.ndarray, voxel_sizes: tuple[float, ...]) -> float | None:
@@ -156,10 +156,9 @@ def rim_enclosing_sphere_radius(rim_mask: np.ndarray, voxel_sizes: tuple[float, 
 
 
 def count_predicted_prls(
-    subject_dir: Path,
+    case_metadata: dict,
     expand_xy: int,
     expand_z: int,
-    infer_output_dir: Path,
     data_root: Path,
     images: tuple[str, ...],
 ) -> dict:
@@ -173,8 +172,7 @@ def count_predicted_prls(
         Dict with subject name, total lesions, predicted PRL count,
         PRL lesion indices, and rim voxel counts per PRL.
     """
-    subject_dir = Path(subject_dir)
-    infer_output_dir = Path(infer_output_dir)
+    subject_dir = Path(case_metadata['image'].parent.parent)
     data_root = Path(data_root)
 
     # Load lesion index once
@@ -197,7 +195,7 @@ def count_predicted_prls(
 
     for index, coords in bounding_boxes:
         # Load inference output for this ROI
-        infer_path = infer_output_dir / subject_rel / str(index) / infer_filename
+        infer_path = None
         if not infer_path.exists():
             logger.warning(f"Inference output not found: {infer_path}")
             continue

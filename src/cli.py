@@ -127,52 +127,79 @@ def train(
     """Train a model on a dataset.
 
     DATASET_NAME is the name of the dataset (e.g., 'roi_train2').
+    If --run-dir points to an existing run, configs are loaded from disk
+    and CLI parameter overrides are ignored (with a warning).
     """
     import attrs
     from core.dataset import Dataset
     from core.experiment import Experiment
 
     ds = Dataset(dataset_name)
-    pp_config = ds.default_preprocess
-    tr_config = ds.default_training
 
-    pp_overrides = {}
-    if expand_xy is not None:
-        pp_overrides["expand_xy"] = expand_xy
-    if expand_z is not None:
-        pp_overrides["expand_z"] = expand_z
-    if images:
-        pp_overrides["images"] = images
-    if pp_overrides:
-        pp_config = attrs.evolve(pp_config, **pp_overrides)
+    # Check if run_dir already exists with saved configs
+    resolved = Path(run_dir) if run_dir else None
+    if resolved and not resolved.is_absolute():
+        resolved = ds.work_home / resolved
+    existing = resolved and (resolved / "label_config.json").exists()
 
-    tr_overrides = {}
-    if epochs is not None:
-        tr_overrides["num_epochs"] = epochs
-    if lr is not None:
-        tr_overrides["learning_rate"] = lr
-    if batch_size is not None:
-        tr_overrides["num_images_per_batch"] = batch_size
-    if num_crops_per_image is not None:
-        tr_overrides["num_crops_per_image"] = num_crops_per_image
-    if roi_size is not None:
-        tr_overrides["roi_size"] = list(roi_size)
-    if algos:
-        tr_overrides["algos"] = algos
-    if tr_overrides:
-        tr_config = attrs.evolve(tr_config, **tr_overrides)
+    if existing:
+        # --- Existing run: load saved configs from disk ---
+        exp = Experiment.from_run_dir(resolved, ds)
 
-    exp = Experiment(
-        ds,
-        pp_config,
-        tr_config,
-        run_dir=run_dir
-        or Experiment(ds, pp_config, tr_config, Path(".")).next_run_dir(),
-    )
-    exp.setup()
-    if init_only:
-        click.echo(f"Initializing {exp.run_dir}")
-        return
+        # Warn if user also passed override flags
+        has_overrides = any([
+            expand_xy is not None, expand_z is not None, images,
+            epochs is not None, lr is not None, batch_size is not None,
+            num_crops_per_image is not None, roi_size is not None, algos,
+        ])
+        if has_overrides:
+            click.echo(
+                f"Warning: {exp.run_dir.name} already exists — ignoring CLI "
+                f"overrides. Configs loaded from {exp.run_dir}/label_config.json"
+            )
+        if init_only:
+            click.echo(f"Already initialized: {exp.run_dir}")
+            return
+    else:
+        # --- New run: build from defaults + CLI overrides ---
+        pp_config = ds.default_preprocess
+        tr_config = ds.default_training
+
+        pp_overrides = {}
+        if expand_xy is not None:
+            pp_overrides["expand_xy"] = expand_xy
+        if expand_z is not None:
+            pp_overrides["expand_z"] = expand_z
+        if images:
+            pp_overrides["images"] = images
+        if pp_overrides:
+            pp_config = attrs.evolve(pp_config, **pp_overrides)
+
+        tr_overrides = {}
+        if epochs is not None:
+            tr_overrides["num_epochs"] = epochs
+        if lr is not None:
+            tr_overrides["learning_rate"] = lr
+        if batch_size is not None:
+            tr_overrides["num_images_per_batch"] = batch_size
+        if num_crops_per_image is not None:
+            tr_overrides["num_crops_per_image"] = num_crops_per_image
+        if roi_size is not None:
+            tr_overrides["roi_size"] = list(roi_size)
+        if algos:
+            tr_overrides["algos"] = algos
+        if tr_overrides:
+            tr_config = attrs.evolve(tr_config, **tr_overrides)
+
+        if not resolved:
+            resolved = Experiment(ds, pp_config, tr_config, Path(".")).next_run_dir()
+
+        exp = Experiment(ds, pp_config, tr_config, run_dir=resolved)
+        exp.setup()
+        if init_only:
+            click.echo(f"Initialized {exp.run_dir}")
+            return
+
     click.echo(f"Training {ds.name} in {exp.run_dir}")
     exp.train()
 

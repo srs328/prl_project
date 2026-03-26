@@ -12,6 +12,7 @@ from __future__ import annotations
 import pandas as pd
 from pathlib import Path
 from functools import cached_property
+import json
 
 from helpers.paths import (
     PROJECT_ROOT, DATA_ROOT, TRAIN_ROOT,
@@ -86,6 +87,18 @@ class Dataset:
     @property
     def datalist_template_path(self) -> Path:
         return self.dataset_home / "datalist_template.json"
+    
+    @property
+    def datalist_template(self) -> dict:
+        with open(self.datalist_template_path, 'r') as f:
+            datalist_template = json.load(f)
+        return datalist_template
+    
+    def subject_session(self, subid) -> str:
+        return f"sub{subid}-{self.prl_df.loc[subid, 'date_mri']}"
+        
+    def subject_dir(self, subid) -> Path:
+        return self.data_root / self.subject_session(subid)
 
     def create_datalist(self, rebuild: bool = False) -> Path | None:
         """Create datalist_template.json with stratified fold assignments.

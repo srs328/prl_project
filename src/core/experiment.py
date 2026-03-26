@@ -79,6 +79,10 @@ class Experiment:
         return self.run_dir
     
     @property
+    def name(self) -> str:
+        return str(self.run_dir.relative_to(self.dataset.work_home))
+    
+    @property
     def id(self) -> str:
         return str(self.run_dir.relative_to(self.dataset.work_home.parent))
 
@@ -133,6 +137,9 @@ class Experiment:
         if self._cases is None:
             self._cases = self._build_cases()
         return self._cases
+    
+    def subject_dir(self, subid):
+        return self.datalist
 
     def refresh_cases(self) -> None:
         """Invalidate cached cases so the next access re-scans disk."""

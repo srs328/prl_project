@@ -162,11 +162,13 @@ def _cache_path(*args) -> Path:
 # FIXME This doesn't require all the parameters it's taking
 def load_or_cache_run(
     dataset_name: str | None = None,
-    experiment_id: str | None = None,
+    experiment_name: str | None = None,
     run_dir: Path | None = None,
     use_cache: bool = True,
 ) -> dict | None:
     """Load cached run data, or compute and cache it.
+    Can pass run_dir alone or a dataset_name along with an experiment_name
+    Its redundant the way its currently written
 
     Returns a dict with keys: run_name, run_dir, cases, mlflow_aggregated,
     hyper_params, fold_data. Returns None if the run directory doesn't exist.
@@ -177,7 +179,7 @@ def load_or_cache_run(
         logger.warning(f"The provided run dir does not exist: {run_dir}")
         return None
 
-    cache_file = _cache_path(experiment_id)
+    cache_file = _cache_path(dataset_name, experiment_name)
 
     if use_cache and cache_file.exists():
         logger.debug(f"Loading cached: {cache_file.name}")
@@ -194,7 +196,7 @@ def load_or_cache_run(
         if dataset_name is None:
             raise ValueError("dataset_name is required if run_dir is omitted")
         ds = Dataset(dataset_name)
-        run_dir = ds.work_home.parent / experiment_id
+        run_dir = ds.work_home / experiment_name
 
     try:
         exp = Experiment.from_run_dir(run_dir)
@@ -240,7 +242,7 @@ def load_or_cache_run(
             fold_data_plain[k] = v
 
     result = {
-        "run_name": experiment_id,
+        "run_name": f"{dataset_name}/{experiment_name}",
         "run_dir": str(run_dir),
         "cases": cases,
         "case_performance": case_stats,
@@ -462,8 +464,9 @@ def compile_experiment_metrics(
         experiment = Experiment.from_run_dir(experiment)
 
     logger.info(f"Starting Experiment {experiment.id}")
+    #FIXME easier to pass experiment.id instead of dataset.name and experiment.name
     cached = load_or_cache_run(
-        experiment.dataset.name, experiment.id, experiment.run_dir, use_cache=use_cache
+        experiment.dataset.name, experiment.name, experiment.run_dir, use_cache=use_cache
     )
     if cached is None:
         return {"ID": experiment.id, "status": "missing"}
