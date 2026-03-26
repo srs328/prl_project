@@ -16,7 +16,9 @@ import argparse
 from pathlib import Path
 from typing import Dict, Tuple, List
 import numpy as np
+from loguru import logger
 
+from copy import deepcopy
 import nibabel as nib
 from nibabel.spatialimages import SpatialImage
 
@@ -120,16 +122,56 @@ def compute_derived_metrics(tp: int, fp: int, tn: int, fn: int) -> Dict[str, flo
     return metrics
 
 
-def analyze_dataset(data, split: str = "testing") -> Dict:
-    """
-    Analyze a dataset split (testing, training, validation).
+def compute_casewise_stats(data) -> list:
+    valid_cases = 0
 
+    results = []
+    for item in deepcopy(data):
+        lab_path = Path(item['label'])
+        inf_path = Path(item['inference'])
+
+        lab = nib.load(lab_path)
+        inf = nib.load(inf_path)
+        prl_dice = dice_score(lab.get_fdata(), inf.get_fdata(), seg1_val=2, seg2_val=2)
+        lesion_dice = dice_score(lab.get_fdata(), inf.get_fdata(), seg1_val=1, seg2_val=1)
+        # Compute confusion matrix
+        tp, fp, tn, fn = get_confusion_matrix(lab, inf)
+
+
+        # Compute metrics for this case
+        metrics = {
+            'subid': item.pop('subid'),
+            'lesion_index': item.pop('lesion_index'),
+            'split': item.pop('split'),
+            'case_type': item.pop('case_type'),
+            **item,
+            # 'fold': item.get('fold', "NA"),
+            'lesion_dice': lesion_dice,
+            'prl_dice': prl_dice,
+            'tp': tp,
+            'fp': fp,
+            'tn': tn,
+            'fn': fn,
+        }
+        metrics.update(compute_derived_metrics(tp, fp, tn, fn))
+        
+        if (tp + fp + tn + fn) == 0:
+            metrics.update({"Notes": "Something's wrong"})
+        else:
+            metrics.update({"Notes": None})
+        
+        results.append(metrics)
+
+    return results
+
+
+def analyze_dataset(data) -> Dict:
+    """
+    Analyze a set of cases.
     Returns dict with per-case and aggregated metrics.
     """
-    
 
     results = {
-        'split': split,
         'cases': [],
         'aggregated': {},
     }
@@ -157,7 +199,7 @@ def analyze_dataset(data, split: str = "testing") -> Dict:
         metrics = {
             'subid': item.get('subid'),
             'lesion_index': item.get('lesion_index'),
-            'split': split,
+            'split': item.get('split'),
             'case_type': item.get('case_type'),
             # 'fold': item.get('fold', "NA"),
             'lesion_dice': lesion_dice,
@@ -184,7 +226,7 @@ def analyze_dataset(data, split: str = "testing") -> Dict:
         results['cases'].append(metrics)
 
     if valid_cases == 0:
-        print(f"Warning: No valid cases found for {split}")
+        print("Warning: No valid cases found")
         return results
     else:
         print(f"{valid_cases} valid cases of {len(data)}")

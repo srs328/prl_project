@@ -181,18 +181,29 @@ class Experiment:
         # Resolve inference output path
         label_relative = label.relative_to(data_root)
         if case["split"] == "testing":
+            # inf_path = (
+            #     self.run_dir
+            #     / "ensemble_output"
+            #     / label_relative.with_name(f"{cfg.datalist_suffix}_ensemble.nii.gz")
+            # )
             inf_path = (
                 self.run_dir
                 / "ensemble_output"
-                / label_relative.with_name(f"{cfg.datalist_suffix}_ensemble.nii.gz")
+                / label_relative.with_name(f"{image.name.removesuffix('.nii.gz')}_ensemble.nii.gz")
             )
         else:
             # Validation: fold_predictions/fold0/...
+            # inf_path = (
+            #     self.run_dir
+            #     / "fold_predictions"
+            #     / case["split"]
+            #     / label_relative.with_name(f"{cfg.datalist_suffix}.nii.gz")
+            # )
             inf_path = (
                 self.run_dir
                 / "fold_predictions"
                 / case["split"]
-                / label_relative.with_name(f"{cfg.datalist_suffix}.nii.gz")
+                / label_relative.with_name(f"{image.name}")
             )
 
         if inf_path.exists():
@@ -423,7 +434,7 @@ class Experiment:
         return results
 
     # --- Evaluation ---
-
+    # TODO Consider removing from inside class
     def evaluate(
         self,
         test_only: bool = False,

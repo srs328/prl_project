@@ -148,3 +148,23 @@ So to me it seems like the same amount of "work" is being done per epoch, but le
 
 got it. so I will also submit the three runs that will be produced by `~/hpc/prl_project/prl_project/training/roi_train2/experiment_config_stage5.json`. So that tomorrow I have everything in front of me (i need to finalize an abstract by Friday). 
 
+
+
+ok i have updated information for you. I see your previous responses were heavily informed by old info about my labels and results, like you kept coming back to that dice and the label quality.
+
+Check out these results of hyperparameter sweeps on the new data in descending order of prl_dice (the performance from the model trained on the old data in the last row). 
+
+In the ID column, roi_train2 means new data. Everything was trained on 2 channel flair.phase image stacks unless ID has roi_train2_t1, in which case T1 was an additional 3rd channel.
+
+To calculate TP, FP, TN, FN: rim voxels (label index 2) were considered for TP, and lesion voxels (label index 1) were considered TN. Essentially:
+
+```python
+TP = np.sum((lab_data == 2) & (inf_data == 2))
+FP = np.sum((lab_data == 1) & (inf_data == 2))
+TN = np.sum((lab_data == 1) & (inf_data == 1))
+FN = np.sum((lab_data == 2) & (inf_data == 1))
+```
+
+I just aggregated these over all the cases and computed values like sensitivity and precision from the cumulative counts. But the last several columns do show mean and std of metrics derived on a case by case basis.
+
+First look carefully at what parameters I varied since some important ones were only changed in one or two runs. Columns 0-9 are the parameters. The next few columns are statistics about the number of cases and voxels, and then metrics.

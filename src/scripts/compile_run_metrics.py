@@ -159,10 +159,11 @@ def _cache_path(*args) -> Path:
     return _CACHE_DIR / f"{cache_name}.pkl"
 
 
+# FIXME This doesn't require all the parameters it's taking
 def load_or_cache_run(
-    dataset_name: str,
-    experiment_id: str,
-    run_dir: Path,
+    dataset_name: str | None = None,
+    experiment_id: str | None = None,
+    run_dir: Path | None = None,
     use_cache: bool = True,
 ) -> dict | None:
     """Load cached run data, or compute and cache it.
@@ -172,9 +173,8 @@ def load_or_cache_run(
     """
     import time
 
-    
-    if not run_dir.exists():
-        logger.warning(f"Run dir does not exist: {run_dir}")
+    if run_dir is not None and not run_dir.exists():
+        logger.warning(f"The provided run dir does not exist: {run_dir}")
         return None
 
     cache_file = _cache_path(experiment_id)
@@ -190,10 +190,14 @@ def load_or_cache_run(
         aggregate_metrics,
     )
 
-    
-    ds = Dataset(dataset_name)
+    if run_dir is None:
+        if dataset_name is None:
+            raise ValueError("dataset_name is required if run_dir is omitted")
+        ds = Dataset(dataset_name)
+        run_dir = ds.work_home.parent / experiment_id
+
     try:
-        exp = Experiment.from_run_dir(run_dir, ds)
+        exp = Experiment.from_run_dir(run_dir)
     except Exception as e:
         logger.warning(f"Could not load {run_dir}: {e}")
         return None
@@ -211,10 +215,8 @@ def load_or_cache_run(
         logger.warning(f"MLflow read failed for {run_dir}: {e}")
         fold_data = {}
         mlflow_aggregated = {}
-        
-    logger.debug(
-        f"loading mlflow took ({time.perf_counter() - t0:.2f}s)"
-    )
+
+    logger.debug(f"loading mlflow took ({time.perf_counter() - t0:.2f}s)")
 
     # Cases (the expensive part over SMB)
     t0 = time.perf_counter()
@@ -223,10 +225,12 @@ def load_or_cache_run(
     except Exception as e:
         logger.warning(f"Cases build failed for {run_dir}: {e}")
         cases = []
-    logger.debug(
-        f"Building cases took ({time.perf_counter() - t0:.2f}s)"
-    )
-    
+    logger.debug(f"Building cases took ({time.perf_counter() - t0:.2f}s)")
+
+    from scripts.compute_performance_metrics import compute_casewise_stats
+
+    case_stats = compute_casewise_stats(cases)
+
     # Convert fold_data to plain dicts for pickling
     fold_data_plain = {}
     for k, v in fold_data.items():
@@ -239,6 +243,7 @@ def load_or_cache_run(
         "run_name": experiment_id,
         "run_dir": str(run_dir),
         "cases": cases,
+        "case_performance": case_stats,
         "mlflow_aggregated": mlflow_aggregated,
         "mlflow_fold_data": fold_data_plain,
         "hyper_params": hyper_params,
@@ -259,29 +264,14 @@ def load_or_cache_run(
 # ---------------------------------------------------------------------------
 
 
-def dice_coefficients(
-    experiment_id: str,
-    cached: dict,
-) -> dict:
-    pass
-
-
-def mlflow_metrics(
+def _build_generic_row(
     experiment_id: str,
     cached: dict,
     params_to_gather: list[str] | None,
 ) -> dict:
     """Build a single row dict from cached run data."""
     row = {"ID": experiment_id}
-
     hyper_params = cached["hyper_params"]
-    aggregated = cached["mlflow_aggregated"]
-
-    # Status
-    if not aggregated:
-        row["status"] = "incomplete"
-    else:
-        row["status"] = "complete"
 
     # Extract requested params from hyper_params
     if params_to_gather:
@@ -289,6 +279,123 @@ def mlflow_metrics(
             val = extract_param(hyper_params, key)
             display_key = key.split("#")[-1]  # loss#weight -> weight
             row[display_key] = format_param_value(key, val)
+
+    return row
+
+
+def performance_metrics(
+    experiment_data: dict,
+    splits: list[str] | None = None,
+) -> dict:
+    """Aggregate cached case_performance into a single row of performance metrics.
+
+    Uses pre-computed per-case stats from cached['case_performance'] (produced by
+    compute_casewise_stats during load_or_cache_run), so no NIfTI reloading needed.
+
+    Args:
+        experiment_data: cached dict from load_or_cache_run
+        splits: which splits to include (e.g. ["testing"], ["fold0", "fold1"]).
+            Defaults to ["testing"].
+
+    Returns:
+        Flat dict suitable for one DataFrame row.
+    """
+    from scripts.compute_performance_metrics import compute_derived_metrics
+
+    if splits is None:
+        splits = ["testing"]
+
+    case_performance = experiment_data.get("case_performance", [])
+    if not case_performance:
+        return {"perf_status": "no_cases"}
+
+    # Filter to requested splits
+    cases = [c for c in case_performance if c.get("split") in splits]
+    if not cases:
+        return {"perf_status": f"no_cases_in_{','.join(splits)}"}
+
+    # Aggregate confusion matrix across valid cases
+    total_tp = total_fp = total_tn = total_fn = 0
+    valid_cases = 0
+    rim_case_count = 0
+    total_rim_voxels = 0
+    total_lesion_voxels = 0
+    lesion_case_count = 0
+    for c in cases:
+        tp, fp, tn, fn = c["tp"], c["fp"], c["tn"], c["fn"]
+        if (tp + fp + tn + fn) == 0:
+            continue
+        total_tp += tp
+        total_fp += fp
+        total_tn += tn
+        total_fn += fn
+        total_rim_voxels += tp + fn
+        total_lesion_voxels += tn + fp
+        valid_cases += 1
+        if c["case_type"] == "PRL":
+            rim_case_count += 1
+        else:
+            lesion_case_count += 1
+
+    row = {
+        "perf_status": "complete",
+        "perf_case_count": valid_cases,
+        "rim_case_count": rim_case_count,
+        "n_rim_voxels": total_rim_voxels,
+        "lesion_case_count": lesion_case_count,
+        "n_lesion_voxels": total_lesion_voxels
+    }
+
+    if valid_cases == 0:
+        row["perf_status"] = "no_valid_cases"
+        return row
+
+    # Aggregated derived metrics from summed confusion matrix
+    agg = compute_derived_metrics(total_tp, total_fp, total_tn, total_fn)
+    for k, v in agg.items():
+        row[f"perf_{k}"] = np.round(v, 4) if not np.isnan(v) else np.nan
+
+    row["perf_tp"] = total_tp
+    row["perf_fp"] = total_fp
+    row["perf_tn"] = total_tn
+    row["perf_fn"] = total_fn
+
+    # Per-case summary stats (PRL cases only — Lesion cases have NaN sensitivity)
+    prl_cases = [
+        c
+        for c in cases
+        if c.get("case_type") == "PRL" and (c["tp"] + c["fp"] + c["tn"] + c["fn"]) > 0
+    ]
+    for metric in [
+        "sensitivity",
+        "specificity",
+        "precision",
+        "f1",
+        "prl_dice",
+        "lesion_dice",
+    ]:
+        values = [c[metric] for c in prl_cases if not np.isnan(c.get(metric, np.nan))]
+        if values:
+            row[f"perf_{metric}_mean"] = np.round(np.mean(values), 4)
+            row[f"perf_{metric}_std"] = np.round(np.std(values), 4)
+
+    return row
+
+
+def mlflow_metrics(
+    experiment_data: dict,
+) -> dict:
+    """Build a single row dict from experiment_data run data."""
+    row = {}
+
+    hyper_params = experiment_data["hyper_params"]
+    aggregated = experiment_data["mlflow_aggregated"]
+
+    # Status
+    if not aggregated:
+        row["status"] = "incomplete"
+    else:
+        row["status"] = "complete"
 
     # Flatten MLflow aggregated metrics
     by_prefix = defaultdict(dict)
@@ -301,7 +408,9 @@ def mlflow_metrics(
             by_prefix["other"][renamed] = aggregated[metric_name]
 
     fold_nums = sorted(
-        k for k in (cached.get("mlflow_fold_data") or {}).keys() if isinstance(k, int)
+        k
+        for k in (experiment_data.get("mlflow_fold_data") or {}).keys()
+        if isinstance(k, int)
     )
 
     for prefix in sorted(by_prefix.keys()):
@@ -343,6 +452,7 @@ def mlflow_metrics(
 
 def compile_experiment_metrics(
     experiment: Experiment | Path | str,
+    func: Callable,
     params_to_gather: list[str] | None = None,
     use_cache: bool = True,
 ) -> dict:
@@ -357,11 +467,14 @@ def compile_experiment_metrics(
     )
     if cached is None:
         return {"ID": experiment.id, "status": "missing"}
-    return mlflow_metrics(experiment.id, cached, params_to_gather)
+
+    row = _build_generic_row(experiment.id, cached, params_to_gather)
+    return {**row, **func(cached)}
 
 
 def compile_grid_metrics(
     grid: ExperimentGrid | Path | str,
+    func: Callable,
     params_to_gather: list[str] | None = None,
     use_cache: bool = True,
     runs_to_skip: dict | None = None,
@@ -397,7 +510,7 @@ def compile_grid_metrics(
             logger.debug(f"Skipped {experiment.id} for {grid.experiment_name}")
             continue
         row = compile_experiment_metrics(
-            experiment, params_to_gather, use_cache=use_cache
+            experiment, func, params_to_gather, use_cache=use_cache
         )
         rows.append(row)
 
@@ -409,24 +522,114 @@ def compile_all_metrics(
     func: Callable,
     experiments: list[Experiment | Path | str] | None = None,
     grids: list[ExperimentGrid | Path | str] | None = None,
+    params_to_gather: list[str] | None = None,
     use_cache: bool = True,
     runs_to_skip: dict | None = None,
-    **kwargs
+    **kwargs,
 ) -> pd.DataFrame:
-    
+
     if runs_to_skip is None:
         runs_to_skip = {}
 
     data = []
     if experiments is not None:
+        logger.debug(f"experiments is: {experiments}")
+        logger.debug(f"func is: {func}")
         get_metrics = partial(
-            func,
+            compile_experiment_metrics,
+            func=func,
+            params_to_gather=params_to_gather,
             use_cache=use_cache,
-            
+            **kwargs,
         )
-        data.extend(
-            [get_metrics(experiment) for experiment in experiments]
+        data.extend([get_metrics(experiment) for experiment in experiments])
+
+    if grids is not None:
+        get_metrics = partial(
+            compile_grid_metrics,
+            func=func,
+            params_to_gather=params_to_gather,
+            use_cache=use_cache,
+            runs_to_skip=runs_to_skip,
+            **kwargs,
         )
+        for grid in grids:
+            data.extend(get_metrics(grid))
+
+    # FIXME order_columns makes the parameter columns mixed in with metric columns: parameters should come first
+    #   also order_columns was written for mlflow. It shouldnt be necessary for other functions where I have control over
+    #   order as I build the rows.
+    # result = order_columns(pd.DataFrame(data))
+    result = pd.DataFrame(data)
+    param_cols = []
+    if params_to_gather:
+        param_cols = [k.split("#")[-1] for k in params_to_gather]
+    for col in param_cols:
+        if col in result.columns:
+            result[col] = result[col].fillna("default")
+
+    return result
+
+
+def main():
+    logger.remove(0)
+    import sys
+
+    # Add a new handler to stderr with a minimum level of "INFO"
+    logger.add(sys.stderr, level="DEBUG")
+    params_to_gather = [
+        "learning_rate",
+        "crop_ratios",
+        "num_crops_per_image",
+        "batch_size",
+        "loss#__target__",
+        "loss#weight",
+        "loss#include_background",
+    ]
+
+    experiment_dict = {
+        "roi_train1": ["roi_train1_segresnet"],
+        "roi_train2": ["run1", "run2", "run3", "test_dicece_lambda/run1"],
+        "roi_train2_t1": ["test_dicece_lambda/run1"],
+    }
+
+    grid_dict = {
+        "roi_train2": [
+            "stage4_sweep_dicece_wts",
+            "stage5_sweep_dicecewt_nbatch",
+            "stage3_numcrops_bkd_constwt115",
+            "stage1_crop_lr_sweep",
+            "stage2_numcrops_dicece",
+            "test_dicece_lambda",
+        ],
+        "roi_train2_t1": ["sweep_dicecewts"],
+    }
+
+    experiments = []
+    for dataset_name, experiment_names in experiment_dict.items():
+        dataset = Dataset(dataset_name)
+        for name in experiment_names:
+            experiments.append(Experiment.from_run_dir(dataset.work_home / name))
+
+    grids = []
+    for dataset_name, grid_names in grid_dict.items():
+        dataset = Dataset(dataset_name)
+        for name in grid_names:
+            grids.append(ExperimentGrid.from_home_dir(dataset.work_home / name))
+
+    data = compile_all_metrics(
+        mlflow_metrics,
+        experiments=experiments,
+        grids=grids,
+        params_to_gather=params_to_gather,
+        use_cache=False,
+    )
+
+
+if __name__ == "__main__":
+    main()
+# ---------------------
+
 
 def compile_all_metrics0(
     experiments: list[Experiment | Path | str] | None = None,
@@ -443,11 +646,9 @@ def compile_all_metrics0(
         get_metrics = partial(
             compile_experiment_metrics,
             params_to_gather=params_to_gather,
-            use_cache=use_cache
+            use_cache=use_cache,
         )
-        data.extend(
-            [get_metrics(experiment) for experiment in experiments]
-        )
+        data.extend([get_metrics(experiment) for experiment in experiments])
 
     if grids is not None:
         get_metrics = partial(
@@ -458,7 +659,7 @@ def compile_all_metrics0(
         )
         for grid in grids:
             data.extend(get_metrics(grid))
-    
+
     result = order_columns(pd.DataFrame(data))
     param_cols = []
     if params_to_gather:
@@ -466,11 +667,10 @@ def compile_all_metrics0(
     for col in param_cols:
         if col in result.columns:
             result[col] = result[col].fillna("default")
-    
+
     return result
 
 
-    
 def discover_stages(dataset_name: str) -> list[str]:
     """Find all grid experiment directories under the dataset's work_home."""
 
@@ -484,7 +684,8 @@ def discover_stages(dataset_name: str) -> list[str]:
         ).exists():
             stages.append(d.name)
     return stages
-    
+
+
 # def compile_all_metrics0(
 #     dataset_name: str,
 #     stages: list[str] | None = None,
