@@ -107,5 +107,7 @@ def load_dataset_config(name):
     for key in ("subjects", "suffix_to_use"):
         if key in config and not Path(config[key]).is_absolute():
             config[key] = str(dataset_home / config[key])
+        else:
+            config[key] = None
 
     return config

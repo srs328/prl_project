@@ -2,7 +2,9 @@ import numpy as np
 import nibabel as nib
 import os
 
-def dice_score(seg1, seg2, seg1_val=1, seg2_val=1):
+def dice_score(seg1: os.PathLike | np.ndarray, seg2: os.PathLike | np.ndarray,
+               seg1_val: int = 1, seg2_val: int = 1):
+    """Compute Dice coefficient between two segmentations for specified label indices"""
     if isinstance(seg1, str) or isinstance(seg1, os.PathLike):
         seg1 = nib.load(seg1).get_fdata()
         seg2 = nib.load(seg2).get_fdata()

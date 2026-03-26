@@ -1,5 +1,7 @@
 # Notes
 
+Wonder if paths in  monai_config and label_config should have to be edited once I transfer from HPC to local, or if they should stay the same to so I can know where it was trained. However I already have to edit hyper_parameters.yaml (using src/scripts/fix_paths.py) oh wait that script has a way to edit label_config too
+
 Some green subjects who supposedly have at least 1 PRL don't have PRl files (check errors.log in test_train0)
 
 ## PRL Notes
