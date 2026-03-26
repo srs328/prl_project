@@ -15,7 +15,7 @@ from functools import cached_property
 
 from helpers.paths import (
     PROJECT_ROOT, DATA_ROOT, TRAIN_ROOT,
-    load_dataset_config,
+    load_config,
 )
 from core.configs import PreprocessingConfig, AlgoConfig
 from preprocessing.create_datalist import create_datalist_template
@@ -30,23 +30,30 @@ class Dataset:
       - work_home:     TRAIN_ROOT/{name} (run directories with model outputs)
       - data_root:     DATA_ROOT (subject imaging data)
     """
-
+    
+    # FIXME: potentially cleaner logic if the config.gets are all done in the Dataset.load_config
     def __init__(self, name: str):
         self.name = name
-        self.train_home = PROJECT_ROOT / "training"
-        self.dataset_home = PROJECT_ROOT / "training" / name
-        self.work_home = TRAIN_ROOT / name
-        self.data_root = DATA_ROOT
+        config = Dataset.load_config(name)
+        self.train_home = config.get("train_home", PROJECT_ROOT / "training")
+        self.dataset_home = config.get("dataset_home", 
+                                       PROJECT_ROOT / "training" / name)
+        self.work_home = config.get("work_home", TRAIN_ROOT / name)
+        self.data_root = config.get("data_root", DATA_ROOT)
 
-        config = load_dataset_config(name)
         self._config = config
 
         self.n_folds = config["n_folds"]
         self.test_split = config["test_split"]
         self.prl_df_path = Path(config["prl_df"])
         self.subjects_path = Path(config["subjects"])
-        self.suffix_to_use_path = Path(config["suffix_to_use"])
-
+        
+        # FIXME right now everything downstream might fail if suffix_to_use is None
+        #   either implement the priority function I had for if its None, or just require it
+        if config["suffix_to_use"] is not None:
+            self.suffix_to_use_path = Path(config["suffix_to_use"])
+        else:
+            self.suffix_to_use_path = None
         # Parse defaults
         defaults = config.get("defaults", {})
         self.default_preprocess = PreprocessingConfig(
@@ -100,3 +107,27 @@ class Dataset:
 
     def __repr__(self) -> str:
         return f"Dataset('{self.name}')"
+    
+    @staticmethod
+    def load_config(name):
+        """Load dataset.yaml by dataset name.
+
+        Looks up PROJECT_ROOT/training/{name}/dataset.yaml, expands tokens,
+        and resolves relative paths against the dataset's source_home directory.
+        """
+        dataset_home = PROJECT_ROOT / "training" / name
+        config_path = dataset_home / "dataset.yaml"
+        if not config_path.exists():
+            raise FileNotFoundError(
+                f"Dataset '{name}' not found: {config_path} does not exist"
+            )
+        config = load_config(config_path)
+
+        # Resolve relative paths against dataset_home
+        for key in ("subjects", "suffix_to_use"):
+            if key in config and not Path(config[key]).is_absolute():
+                config[key] = str(dataset_home / config[key])
+            else:
+                config[key] = None
+
+        return config
