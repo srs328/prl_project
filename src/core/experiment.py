@@ -80,7 +80,7 @@ class Experiment:
     
     @property
     def id(self) -> str:
-        return str(self.run_dir.relative_to(self.dataset.work_home))
+        return str(self.run_dir.relative_to(self.dataset.work_home.parent))
 
     # --- Preprocessing (moved from Dataset) ---
 

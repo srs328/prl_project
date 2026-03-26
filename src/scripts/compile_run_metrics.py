@@ -22,12 +22,16 @@ import attrs
 import numpy as np
 import pandas as pd
 from loguru import logger
+from typing import TYPE_CHECKING
 
 from helpers.paths import PROJECT_ROOT
 
 from core.experiment import Experiment
 from core.grid import ExperimentGrid
 from core.dataset import Dataset
+
+if TYPE_CHECKING:
+    from typing import Callable
 
 # TODO Think about a more sensible home for stuff like this
 EXPERIMENT_KEYS = {
@@ -135,7 +139,10 @@ def order_columns(df: pd.DataFrame) -> pd.DataFrame:
 
     ordered = []
     for cat in COLUMN_ORDER_CATEGORIES:
-        ordered.extend(sorted(cats[cat]))
+        cat_folds = [k for k in cats[cat] if "fold" in k]
+        cat_overall = set(cats[cat]) - set(cat_folds)
+        ordered.extend(list(cat_overall) + sorted(cat_folds))
+        # ordered.extend(sorted(cats[cat]))
     remaining = [c for c in df.columns if c not in ordered]
     return df[ordered + remaining]
 
@@ -163,11 +170,14 @@ def load_or_cache_run(
     Returns a dict with keys: run_name, run_dir, cases, mlflow_aggregated,
     hyper_params, fold_data. Returns None if the run directory doesn't exist.
     """
+    import time
+
+    
     if not run_dir.exists():
         logger.warning(f"Run dir does not exist: {run_dir}")
         return None
 
-    cache_file = _cache_path(dataset_name, experiment_id)
+    cache_file = _cache_path(experiment_id)
 
     if use_cache and cache_file.exists():
         logger.debug(f"Loading cached: {cache_file.name}")
@@ -180,6 +190,7 @@ def load_or_cache_run(
         aggregate_metrics,
     )
 
+    
     ds = Dataset(dataset_name)
     try:
         exp = Experiment.from_run_dir(run_dir, ds)
@@ -192,6 +203,7 @@ def load_or_cache_run(
     hyper_params = attrs.asdict(hp) if hp is not None else {}
 
     # MLflow metrics
+    t0 = time.perf_counter()
     try:
         fold_data = analyze_unified_mlruns(run_dir)
         mlflow_aggregated = dict(aggregate_metrics(fold_data)) if fold_data else {}
@@ -199,14 +211,22 @@ def load_or_cache_run(
         logger.warning(f"MLflow read failed for {run_dir}: {e}")
         fold_data = {}
         mlflow_aggregated = {}
+        
+    logger.debug(
+        f"loading mlflow took ({time.perf_counter() - t0:.2f}s)"
+    )
 
     # Cases (the expensive part over SMB)
+    t0 = time.perf_counter()
     try:
         cases = exp.cases or []
     except Exception as e:
         logger.warning(f"Cases build failed for {run_dir}: {e}")
         cases = []
-
+    logger.debug(
+        f"Building cases took ({time.perf_counter() - t0:.2f}s)"
+    )
+    
     # Convert fold_data to plain dicts for pickling
     fold_data_plain = {}
     for k, v in fold_data.items():
@@ -239,7 +259,14 @@ def load_or_cache_run(
 # ---------------------------------------------------------------------------
 
 
-def _build_row(
+def dice_coefficients(
+    experiment_id: str,
+    cached: dict,
+) -> dict:
+    pass
+
+
+def mlflow_metrics(
     experiment_id: str,
     cached: dict,
     params_to_gather: list[str] | None,
@@ -320,18 +347,17 @@ def compile_experiment_metrics(
     use_cache: bool = True,
 ) -> dict:
     """ """
-    print(type(experiment))
-    print(isinstance(experiment, Experiment))
 
     if not isinstance(experiment, Experiment):
         experiment = Experiment.from_run_dir(experiment)
 
+    logger.info(f"Starting Experiment {experiment.id}")
     cached = load_or_cache_run(
         experiment.dataset.name, experiment.id, experiment.run_dir, use_cache=use_cache
     )
     if cached is None:
         return {"ID": experiment.id, "status": "missing"}
-    return _build_row(experiment.id, cached, params_to_gather)
+    return mlflow_metrics(experiment.id, cached, params_to_gather)
 
 
 def compile_grid_metrics(
@@ -354,7 +380,7 @@ def compile_grid_metrics(
     """
     if not isinstance(grid, ExperimentGrid):
         grid = ExperimentGrid.from_home_dir(grid)
-
+    logger.info(f"Starting grid {grid.experiment_name}")
     # Auto-detect params if not specified
     if params_to_gather is None:
         params_to_gather = []
@@ -378,28 +404,31 @@ def compile_grid_metrics(
     logger.info(f"Compiled [{', '.join([r['ID'] for r in rows])}]")
     return rows
 
-    df = pd.DataFrame(rows)
-    if not df.empty:
-        df = order_columns(df)
-    return df
-
-
-def discover_stages(dataset_name: str) -> list[str]:
-    """Find all grid experiment directories under the dataset's work_home."""
-
-    work_home = Dataset(dataset_name).work_home
-    stages = []
-    for d in sorted(work_home.iterdir()):
-        if not d.is_dir():
-            continue
-        if (d / "experiment_config.yaml").exists() or (
-            d / "experiment_config.json"
-        ).exists():
-            stages.append(d.name)
-    return stages
-
 
 def compile_all_metrics(
+    func: Callable,
+    experiments: list[Experiment | Path | str] | None = None,
+    grids: list[ExperimentGrid | Path | str] | None = None,
+    use_cache: bool = True,
+    runs_to_skip: dict | None = None,
+    **kwargs
+) -> pd.DataFrame:
+    
+    if runs_to_skip is None:
+        runs_to_skip = {}
+
+    data = []
+    if experiments is not None:
+        get_metrics = partial(
+            func,
+            use_cache=use_cache,
+            
+        )
+        data.extend(
+            [get_metrics(experiment) for experiment in experiments]
+        )
+
+def compile_all_metrics0(
     experiments: list[Experiment | Path | str] | None = None,
     grids: list[ExperimentGrid | Path | str] | None = None,
     params_to_gather: list[str] | None = None,
@@ -439,7 +468,22 @@ def compile_all_metrics(
             result[col] = result[col].fillna("default")
     
     return result
+
+
     
+def discover_stages(dataset_name: str) -> list[str]:
+    """Find all grid experiment directories under the dataset's work_home."""
+
+    work_home = Dataset(dataset_name).work_home
+    stages = []
+    for d in sorted(work_home.iterdir()):
+        if not d.is_dir():
+            continue
+        if (d / "experiment_config.yaml").exists() or (
+            d / "experiment_config.json"
+        ).exists():
+            stages.append(d.name)
+    return stages
     
 # def compile_all_metrics0(
 #     dataset_name: str,
