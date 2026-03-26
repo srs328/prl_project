@@ -69,7 +69,7 @@ Scripts take a single positional `run_dir` (or dataset name) argument and derive
 
 ## Key Helpers
 
-- `src/helpers/paths.py` — `load_config()`, `load_dataset_config()`, centralized path constants
+- `src/helpers/paths.py` — `load_config()`, centralized path constants
 - `src/helpers/shell_interface.py` — `command()`, `run_if_missing()` for shell execution with dry-run support
 - `src/helpers/parallel.py` — `BetterPool` for graceful multiprocessing
 - `my_python_utils` — User's personal utility package (located at ~/python/my_python_utils.py; it's on my PYTHONPATH)

@@ -1,6 +1,14 @@
 # Notes
 
+
+cli command to initialize experiment folder with default parameters or with specified parametrs
+- Give the dataset_name
+- Give an ID (if ID is formatted like "experiment/run1", it will make subfolders; experiment.id will be experiment/run1)
+- Then I can go into the folder and change things
+
 Wonder if paths in  monai_config and label_config should have to be edited once I transfer from HPC to local, or if they should stay the same to so I can know where it was trained. However I already have to edit hyper_parameters.yaml (using src/scripts/fix_paths.py) oh wait that script has a way to edit label_config too
+
+Look closer at how experiments and grids are initialized: could be easier possibly 
 
 Some green subjects who supposedly have at least 1 PRL don't have PRl files (check errors.log in test_train0)
 
@@ -38,3 +46,5 @@ Email from Chris about the PRL labels (5/27/2025)
 >Our best bet is probably to look at the greens, but even then every subject will likely need QC.  Probably we should sit down and do some PRL teaching before doing too much further.
 
 Excel file is `PRL_labels.xlxs`
+
+

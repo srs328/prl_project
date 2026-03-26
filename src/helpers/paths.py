@@ -87,27 +87,3 @@ def load_config(config_path):
         config = json.loads(text)
 
     return expand_tokens(config)
-
-
-def load_dataset_config(name):
-    """Load dataset.yaml by dataset name.
-
-    Looks up PROJECT_ROOT/training/{name}/dataset.yaml, expands tokens,
-    and resolves relative paths against the dataset's source_home directory.
-    """
-    dataset_home = PROJECT_ROOT / "training" / name
-    config_path = dataset_home / "dataset.yaml"
-    if not config_path.exists():
-        raise FileNotFoundError(
-            f"Dataset '{name}' not found: {config_path} does not exist"
-        )
-    config = load_config(config_path)
-
-    # Resolve relative paths against dataset_home
-    for key in ("subjects", "suffix_to_use"):
-        if key in config and not Path(config[key]).is_absolute():
-            config[key] = str(dataset_home / config[key])
-        else:
-            config[key] = None
-
-    return config

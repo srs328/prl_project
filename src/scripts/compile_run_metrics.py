@@ -15,6 +15,7 @@ import pickle
 import re
 import time
 from collections import defaultdict
+from functools import partial
 from pathlib import Path
 
 import attrs
@@ -22,8 +23,13 @@ import numpy as np
 import pandas as pd
 from loguru import logger
 
-from helpers.paths import PROJECT_ROOT, TRAIN_ROOT
+from helpers.paths import PROJECT_ROOT
 
+from core.experiment import Experiment
+from core.grid import ExperimentGrid
+from core.dataset import Dataset
+
+# TODO Think about a more sensible home for stuff like this
 EXPERIMENT_KEYS = {
     "stage1": "stage1_crop_lr_sweep",
     "stage2": "stage2_numcrops_dicece",
@@ -108,8 +114,7 @@ def order_columns(df: pd.DataFrame) -> pd.DataFrame:
     """Reorder columns by semantic category and drop noisy metrics."""
     # Drop noisy columns
     cols_to_keep = [
-        c for c in df.columns
-        if not any(sub in c for sub in DROP_COLUMN_SUBSTRINGS)
+        c for c in df.columns if not any(sub in c for sub in DROP_COLUMN_SUBSTRINGS)
     ]
     df = df[cols_to_keep]
 
@@ -142,14 +147,14 @@ def order_columns(df: pd.DataFrame) -> pd.DataFrame:
 _CACHE_DIR = PROJECT_ROOT / "analysis" / ".cache"
 
 
-def _cache_path(stage_name: str, run_name: str) -> Path:
-    return _CACHE_DIR / f"{stage_name}_{run_name}.pkl"
+def _cache_path(*args) -> Path:
+    cache_name = "_".join([arg.replace("/", "_") for arg in args])
+    return _CACHE_DIR / f"{cache_name}.pkl"
 
 
 def load_or_cache_run(
     dataset_name: str,
-    stage_name: str,
-    run_name: str,
+    experiment_id: str,
     run_dir: Path,
     use_cache: bool = True,
 ) -> dict | None:
@@ -162,7 +167,7 @@ def load_or_cache_run(
         logger.warning(f"Run dir does not exist: {run_dir}")
         return None
 
-    cache_file = _cache_path(stage_name, run_name)
+    cache_file = _cache_path(dataset_name, experiment_id)
 
     if use_cache and cache_file.exists():
         logger.debug(f"Loading cached: {cache_file.name}")
@@ -170,8 +175,6 @@ def load_or_cache_run(
             return pickle.load(f)
 
     # Build from scratch
-    from core.dataset import Dataset
-    from core.experiment import Experiment
     from scripts.analyze_mlflow_runs import (
         analyze_unified_mlruns,
         aggregate_metrics,
@@ -213,7 +216,7 @@ def load_or_cache_run(
             fold_data_plain[k] = v
 
     result = {
-        "run_name": run_name,
+        "run_name": experiment_id,
         "run_dir": str(run_dir),
         "cases": cases,
         "mlflow_aggregated": mlflow_aggregated,
@@ -237,13 +240,12 @@ def load_or_cache_run(
 
 
 def _build_row(
-    stage_name: str,
-    run_name: str,
+    experiment_id: str,
     cached: dict,
     params_to_gather: list[str] | None,
 ) -> dict:
     """Build a single row dict from cached run data."""
-    row = {"stage": stage_name, "run": run_name}
+    row = {"ID": experiment_id}
 
     hyper_params = cached["hyper_params"]
     aggregated = cached["mlflow_aggregated"]
@@ -272,8 +274,7 @@ def _build_row(
             by_prefix["other"][renamed] = aggregated[metric_name]
 
     fold_nums = sorted(
-        k for k in (cached.get("mlflow_fold_data") or {}).keys()
-        if isinstance(k, int)
+        k for k in (cached.get("mlflow_fold_data") or {}).keys() if isinstance(k, int)
     )
 
     for prefix in sorted(by_prefix.keys()):
@@ -281,8 +282,11 @@ def _build_row(
             metric_data = aggregated.get(
                 # reverse-lookup original name for aggregated access
                 next(
-                    (orig for orig, data in aggregated.items()
-                     if rename_metric(orig) == metric_name),
+                    (
+                        orig
+                        for orig, data in aggregated.items()
+                        if rename_metric(orig) == metric_name
+                    ),
                     metric_name,
                 ),
                 {},
@@ -296,29 +300,46 @@ def _build_row(
                 row[f"{metric_name}_{stat}"] = np.round(stats[stat], 4)
 
             # Per-fold final/max for val_class metrics
-            if "val_class" not in metric_name and ("rim/acc" not in metric_name and "lesion/acc" not in metric_name):
+            if "val_class" not in metric_name and (
+                "rim/acc" not in metric_name and "lesion/acc" not in metric_name
+            ):
                 continue
             for fold_num in fold_nums:
                 if fold_num not in metric_data:
                     continue
                 values = metric_data[fold_num]
-                row[f"fold{fold_num}-{metric_name}_final"] = np.round(
-                    values[-1], 4
-                )
-                row[f"fold{fold_num}-{metric_name}_max"] = np.round(
-                    np.max(values), 4
-                )
+                row[f"fold{fold_num}-{metric_name}_final"] = np.round(values[-1], 4)
+                row[f"fold{fold_num}-{metric_name}_max"] = np.round(np.max(values), 4)
 
     return row
 
 
-def compile_stage_metrics(
-    dataset_name: str,
-    stage_name: str,
+def compile_experiment_metrics(
+    experiment: Experiment | Path | str,
     params_to_gather: list[str] | None = None,
     use_cache: bool = True,
-    skip_runs: dict | None = None
-) -> pd.DataFrame:
+) -> dict:
+    """ """
+    print(type(experiment))
+    print(isinstance(experiment, Experiment))
+
+    if not isinstance(experiment, Experiment):
+        experiment = Experiment.from_run_dir(experiment)
+
+    cached = load_or_cache_run(
+        experiment.dataset.name, experiment.id, experiment.run_dir, use_cache=use_cache
+    )
+    if cached is None:
+        return {"ID": experiment.id, "status": "missing"}
+    return _build_row(experiment.id, cached, params_to_gather)
+
+
+def compile_grid_metrics(
+    grid: ExperimentGrid | Path | str,
+    params_to_gather: list[str] | None = None,
+    use_cache: bool = True,
+    runs_to_skip: dict | None = None,
+) -> list[dict]:
     """Compile MLflow training metrics for all runs in a grid stage.
 
     Args:
@@ -331,19 +352,8 @@ def compile_stage_metrics(
     Returns:
         DataFrame with one row per run.
     """
-    from core.grid import ExperimentGrid
-
-    work_home = TRAIN_ROOT / dataset_name
-    config_path = work_home / stage_name / "experiment_config.yaml"
-    if not config_path.exists():
-        config_path = config_path.with_suffix(".json")
-    if not config_path.exists():
-        raise FileNotFoundError(
-            f"No experiment config found at {work_home / stage_name}"
-        )
-
-    grid = ExperimentGrid.from_config(config_path)
-    run_params_list = grid.run_params(*grid.get_info())
+    if not isinstance(grid, ExperimentGrid):
+        grid = ExperimentGrid.from_home_dir(grid)
 
     # Auto-detect params if not specified
     if params_to_gather is None:
@@ -353,135 +363,146 @@ def compile_stage_metrics(
                 params_to_gather.append(key)
 
     rows = []
-    for run_info in run_params_list:
-        rn = run_info["run_name"]
-        run_dir = work_home / stage_name / rn
-        #FIXME i didn't actually submit all the runs originally created and want to skip those here.
-        #   For now will use presence of "ensemble_output" to decide whether the run was completed
-        if not (run_dir / "ensemble_output").exists() or (skip_runs is not None and rn in skip_runs):
-            logger.debug(f"Skipped {rn} for {stage_name}")
+    for experiment in grid.experiments:
+        run_dir = experiment.run_dir
+        if not (run_dir / "ensemble_output").exists() or (
+            runs_to_skip is not None and run_dir.name in runs_to_skip
+        ):
+            logger.debug(f"Skipped {experiment.id} for {grid.experiment_name}")
             continue
-        qualified_run_name = f"{stage_name}/{rn}"
-
-        cached = load_or_cache_run(
-            dataset_name, stage_name, rn, run_dir, use_cache
+        row = compile_experiment_metrics(
+            experiment, params_to_gather, use_cache=use_cache
         )
-        if cached is None:
-            rows.append({
-                "stage": stage_name, "run": qualified_run_name, "status": "missing"
-            })
-            continue
-
-        row = _build_row(stage_name, qualified_run_name, cached, params_to_gather)
         rows.append(row)
-    logger.info(f"Compiled [{', '.join([r['run'] for r in rows])}]")
+
+    logger.info(f"Compiled [{', '.join([r['ID'] for r in rows])}]")
+    return rows
+
     df = pd.DataFrame(rows)
     if not df.empty:
         df = order_columns(df)
     return df
 
 
-def compile_standalone_run(
-    dataset_name: str,
-    label: str,
-    run_dir: Path,
-    params_to_gather: list[str] | None = None,
-    use_cache: bool = True,
-) -> pd.DataFrame:
-    """Compile metrics for a single standalone run (not part of a grid).
-
-    Args:
-        dataset_name: e.g. "roi_train2"
-        label: Display label for this run (used as stage name).
-        run_dir: Path to the run directory (absolute or relative to TRAIN_ROOT/dataset).
-        params_to_gather: Param keys to extract.
-        use_cache: Whether to use disk cache.
-    """
-    run_dir = Path(run_dir)
-    if not run_dir.is_absolute():
-        run_dir = TRAIN_ROOT / dataset_name / run_dir
-
-    run_name = run_dir.name
-    cached = load_or_cache_run(
-        dataset_name, label, run_name, run_dir, use_cache
-    )
-    if cached is None:
-        return pd.DataFrame([{"stage": label, "run": run_name, "status": "missing"}])
-
-    row = _build_row(label, run_name, cached, params_to_gather)
-    return pd.DataFrame([row])
-
-
 def discover_stages(dataset_name: str) -> list[str]:
-    """Find all grid experiment directories under TRAIN_ROOT/{dataset_name}."""
-    work_home = TRAIN_ROOT / dataset_name
+    """Find all grid experiment directories under the dataset's work_home."""
+
+    work_home = Dataset(dataset_name).work_home
     stages = []
     for d in sorted(work_home.iterdir()):
         if not d.is_dir():
             continue
-        if (d / "experiment_config.yaml").exists() or (d / "experiment_config.json").exists():
+        if (d / "experiment_config.yaml").exists() or (
+            d / "experiment_config.json"
+        ).exists():
             stages.append(d.name)
     return stages
 
 
 def compile_all_metrics(
-    dataset_name: str,
-    stages: list[str] | None = None,
+    experiments: list[Experiment | Path | str] | None = None,
+    grids: list[ExperimentGrid | Path | str] | None = None,
     params_to_gather: list[str] | None = None,
-    extra_runs: list[tuple[str, str | Path]] | None = None,
+    runs_to_skip: dict | None = None,
     use_cache: bool = True,
-    skip_runs: dict | None = None
 ) -> pd.DataFrame:
-    """Compile metrics across multiple grid stages into one DataFrame.
+    if runs_to_skip is None:
+        runs_to_skip = {}
 
-    Args:
-        dataset_name: e.g. "roi_train2"
-        stages: Stage names. If None, auto-discovers all stages.
-        params_to_gather: Union of all param keys to show.
-        extra_runs: Optional list of (label, run_dir) for standalone runs.
-        use_cache: Whether to use disk cache.
+    data = []
+    if experiments is not None:
+        get_metrics = partial(
+            compile_experiment_metrics,
+            params_to_gather=params_to_gather,
+            use_cache=use_cache
+        )
+        data.extend(
+            [get_metrics(experiment) for experiment in experiments]
+        )
 
-    Returns:
-        DataFrame with 'stage' column identifying source.
-    """
-    if stages is None:
-        stages = discover_stages(dataset_name)
-        logger.info(f"Discovered stages: {stages}")
-    if skip_runs is None:
-        skip_runs = {}
-
-    dfs = []
-    for stage in stages:
-        logger.info(f"Compiling {stage}...")
-        try:
-            df = compile_stage_metrics(
-                dataset_name, stage, params_to_gather, use_cache, skip_runs.get(stage)
-            )
-            dfs.append(df)
-        except Exception as e:
-            logger.error(f"Failed to compile {stage}: {e}")
-
-    if extra_runs:
-        for label, run_dir in extra_runs:
-            logger.info(f"Compiling standalone: {label}")
-            try:
-                df = compile_standalone_run(
-                    dataset_name, label, run_dir, params_to_gather, use_cache
-                )
-                dfs.append(df)
-            except Exception as e:
-                logger.error(f"Failed to compile {label}: {e}")
-
-    if not dfs:
-        return pd.DataFrame()
-
-    result = pd.concat(dfs, ignore_index=True)
-    # Fill missing param columns with "default" for runs that didn't vary them
+    if grids is not None:
+        get_metrics = partial(
+            compile_grid_metrics,
+            params_to_gather=params_to_gather,
+            use_cache=use_cache,
+            runs_to_skip=runs_to_skip,
+        )
+        for grid in grids:
+            data.extend(get_metrics(grid))
+    
+    result = order_columns(pd.DataFrame(data))
     param_cols = []
     if params_to_gather:
         param_cols = [k.split("#")[-1] for k in params_to_gather]
     for col in param_cols:
         if col in result.columns:
             result[col] = result[col].fillna("default")
-
+    
     return result
+    
+    
+# def compile_all_metrics0(
+#     dataset_name: str,
+#     stages: list[str] | None = None,
+#     params_to_gather: list[str] | None = None,
+#     extra_runs: list[tuple[str, str | Path]] | None = None,
+#     use_cache: bool = True,
+#     skip_runs: dict | None = None,
+# ) -> pd.DataFrame:
+#     """Compile metrics across multiple grid stages into one DataFrame.
+
+#     Args:
+#         dataset_name: e.g. "roi_train2"
+#         stages: Stage names. If None, auto-discovers all stages.
+#         params_to_gather: Union of all param keys to show.
+#         extra_runs: Optional list of (label, run_dir) for standalone runs.
+#         use_cache: Whether to use disk cache.
+
+#     Returns:
+#         DataFrame with 'stage' column identifying source.
+#     """
+#     if stages is None:
+#         stages = discover_stages(dataset_name)
+#         logger.info(f"Discovered stages: {stages}")
+#     if skip_runs is None:
+#         skip_runs = {}
+
+#     dfs = []
+
+#     # TODO Loop over grids not stages
+#     # grids =
+#     for stage in stages:
+#         logger.info(f"Compiling {stage}...")
+#         try:
+#             df = compile_grid_metrics(
+#                 dataset_name, stage, params_to_gather, use_cache, skip_runs.get(stage)
+#             )
+#             dfs.append(df)
+#         except Exception as e:
+#             logger.error(f"Failed to compile {stage}: {e}")
+
+#     if extra_runs:
+#         for label, run_dir in extra_runs:
+#             logger.info(f"Compiling standalone: {label}")
+#             try:
+#                 logger.debug(dataset_name, label, run_dir, params_to_gather, use_cache)
+#                 df = compile_standalone_run(
+#                     dataset_name, label, run_dir, params_to_gather, use_cache
+#                 )
+#                 dfs.append(df)
+#             except Exception as e:
+#                 logger.error(f"Failed to compile {label}: {e}")
+
+#     if not dfs:
+#         return pd.DataFrame()
+
+#     result = pd.concat(dfs, ignore_index=True)
+#     # Fill missing param columns with "default" for runs that didn't vary them
+#     param_cols = []
+#     if params_to_gather:
+#         param_cols = [k.split("#")[-1] for k in params_to_gather]
+#     for col in param_cols:
+#         if col in result.columns:
+#             result[col] = result[col].fillna("default")
+
+#     return result

@@ -352,10 +352,14 @@ def infer(run_dir, subject, data_root, process_all, subjects_file, processes):
     """
     import re
     from scripts.inference import infer_subject
-    from helpers.paths import DATA_ROOT
+    from helpers.paths import load_config
+    from core.dataset import Dataset
 
+    # Resolve data_root from dataset.yaml via the trained run's label_config
     if data_root is None:
-        data_root = DATA_ROOT
+        label_config = load_config(run_dir / "label_config.json")
+        ds = Dataset(label_config["dataset_name"])
+        data_root = ds.data_root
 
     # Resolve subject directories
     subject_dirs = []

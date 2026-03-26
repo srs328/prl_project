@@ -13,7 +13,9 @@ from itertools import product
 from pathlib import Path
 
 import attrs
+from functools import cached_property
 from loguru import logger
+import os
 
 from core.configs import PreprocessingConfig, AlgoConfig
 from core.dataset import Dataset
@@ -38,7 +40,7 @@ class ExperimentGrid:
     generate() automatically calls dataset.create_rois() for each unique
     combination — fixing the gap in the old HPO scripts.
     """
-
+    # TODO Make algo part of the grid definition then use that for fallback self.base_training
     def __init__(self, dataset: Dataset, param_grid: dict,
                  experiment_name: str,
                  base_preprocess: PreprocessingConfig | None = None,
@@ -49,66 +51,43 @@ class ExperimentGrid:
         self.base_preprocess = base_preprocess or dataset.default_preprocess
         self.base_training = base_training or dataset.default_training
         self.work_home = dataset.work_home / experiment_name
-
-    def get_info(self) -> tuple[dict[str], dict[str]]:
-        """Return string identifiers of each hyperparameter value
         
-        Returns a tuple containing lists of strings for the preprocessing 
-        and training parameters that were varied. If string identifiers were 
-        specified in the config, these will be returned. Otherwise, the actual 
-        parameters will be returned in string format
+    @property
+    def runs(self) -> list[dict]:
+        return self.run_params(
+            self.param_grid.get("preprocessing", {}),
+            self.param_grid.get("training", {})
+        )
+        
+    @property
+    def home(self) -> Path:
         """
-        preprocess_params = self.param_grid.get("preprocessing", {}) 
-        preprocess_param_ids = self.param_grid.get("preprocessing_ids", preprocess_params)
-        preprocess_param_ids = {
-            k: [str(item) for item in v] for k, v in preprocess_param_ids.items()
-        }
-        
-        training_params = self.param_grid.get("training", {})
-        training_param_ids = self.param_grid.get("training_ids", training_params)
-        training_param_ids = {
-            k: [str(item) for item in v] for k, v in training_param_ids.items()
-        }
-        
-        return preprocess_param_ids, training_param_ids
+        I'd prefer this name so I don't get confused with Dataset.work_home, 
+        but right now I don't want to break anything by changing self.work_home
+        """
+        return self.work_home
     
-    @staticmethod
-    def run_params(preprocess_params: dict, training_params: dict) -> list[dict]:
-        """Return a run-name → parameter mapping for the given param dicts.
+    @cached_property
+    def experiments(self) -> list[Experiment]:
+        """Create Experiment objects for every run in the grid.
 
-        Each entry has keys: 'run_name', 'preprocessing', 'training'.
-        Order is deterministic and matches the directories generate() creates.
-        No side effects — safe to call in notebooks without touching the filesystem.
-
-        Pass raw param dicts for actual values, or string-ID dicts from get_info()
-        for human-readable labels::
-
-            # actual values
-            pp = eg.param_grid.get('preprocessing', {})
-            tr = eg.param_grid.get('training', {})
-            df = pd.DataFrame(eg.run_params(pp, tr))
-
-            # string labels (from get_info)
-            pp_ids, tr_ids = eg.get_info()
-            df = pd.DataFrame(eg.run_params(pp_ids, tr_ids))
+        Pure object creation — no filesystem side effects. Useful in notebooks
+        or analysis code where you need Experiment handles without running
+        preprocessing or setup.
         """
-        pp_keys = list(preprocess_params.keys())
-        pp_combos = list(product(*[preprocess_params[k] for k in pp_keys])) if pp_keys else [()]
-
-        tr_keys = list(training_params.keys())
-        tr_combos = list(product(*[training_params[k] for k in tr_keys])) if tr_keys else [()]
-
-        runs = []
-        run_num = 1
-        for pp_combo in pp_combos:
-            for tr_combo in tr_combos:
-                runs.append({
-                    "run_name": f"run{run_num}",
-                    "preprocessing": dict(zip(pp_keys, pp_combo)),
-                    "training": dict(zip(tr_keys, tr_combo)),
-                })
-                run_num += 1
-        return runs
+        experiments = []
+        for entry in self.runs:
+            pp_config = attrs.evolve(self.base_preprocess, **entry["preprocessing"])
+            tr_config = attrs.evolve(self.base_training, **entry["training"])
+            run_dir = self.work_home / entry["run_name"]
+            exp = Experiment(
+                dataset=self.dataset,
+                preprocess_config=pp_config,
+                training_config=tr_config,
+                run_dir=run_dir,
+            )
+            experiments.append(exp)
+        return experiments
 
     def generate(self, dry_run: bool = False, prepare_data: bool = True, validate: bool = False, overwrite: bool = False) -> list[Experiment]:
         """Generate all experiment run directories from param grid.
@@ -117,19 +96,11 @@ class ExperimentGrid:
         are in the grid, creates ROIs and prepares data for each unique
         preprocessing config via a temporary Experiment.
         """
+        experiments = self.experiments
+
         # Pre-create ROIs and datalists for all unique preprocessing configs
         if prepare_data and not dry_run:
-            preprocess_params = self.param_grid.get("preprocessing", {})
-            pp_keys = list(preprocess_params.keys())
-            pp_values = [preprocess_params[k] for k in pp_keys]
-            pp_combos = list(product(*pp_values)) if pp_keys else [()]
-
-            unique_pp_configs = set()
-            for pp_combo in pp_combos:
-                pp_dict = dict(zip(pp_keys, pp_combo))
-                pp_config = attrs.evolve(self.base_preprocess, **pp_dict)
-                unique_pp_configs.add(pp_config)
-
+            unique_pp_configs = {exp.preprocess_config for exp in experiments}
             for pp_config in unique_pp_configs:
                 datalist_path = self.dataset.dataset_home / f"datalist_{pp_config.datalist_suffix}.json"
                 if not datalist_path.exists():
@@ -146,46 +117,30 @@ class ExperimentGrid:
                     self.dataset.create_datalist()
                     tmp_exp.prepare_data()
 
-        experiments = []
         manifest = {}
-
-        for entry in self.run_params(
-            self.param_grid.get("preprocessing", {}),
-            self.param_grid.get("training", {}),
-        ):
+        for exp, entry in zip(experiments, self.runs):
             run_name = entry["run_name"]
-            pp_dict  = entry["preprocessing"]
-            tr_dict  = entry["training"]
-            run_dir  = self.work_home / run_name
-
-            pp_config = attrs.evolve(self.base_preprocess, **pp_dict)
-            tr_config = attrs.evolve(self.base_training, **tr_dict)
+            pp_dict = entry["preprocessing"]
+            tr_dict = entry["training"]
 
             if dry_run:
                 print(f"\n[DRY RUN] {run_name}:")
                 if pp_dict:
                     print(f"  Preprocessing: {pp_dict}")
                 print(f"  Training: {tr_dict}")
-                print(f"  Run dir: {run_dir}")
+                print(f"  Run dir: {exp.run_dir}")
             else:
                 import time
                 t_run = time.perf_counter()
-                exp = Experiment(
-                    dataset=self.dataset,
-                    preprocess_config=pp_config,
-                    training_config=tr_config,
-                    run_dir=run_dir,
-                )
                 exp.setup(validate=validate, overwrite=overwrite)
                 elapsed = time.perf_counter() - t_run
                 logger.debug(f"generate: {run_name} setup took {elapsed:.2f}s")
-                experiments.append(exp)
-                print(f"Generated {run_name} in {run_dir}")
+                print(f"Generated {run_name} in {exp.run_dir}")
 
             manifest[run_name] = {
                 "preprocessing_params": pp_dict,
                 "training_params": tr_dict,
-                "run_dir": str(run_dir),
+                "run_dir": str(exp.run_dir),
             }
 
         # Write manifest
@@ -428,8 +383,69 @@ echo "Training in $run_dir completed with exit code $?"
         )
         
     @classmethod
-    def from_manifest(cls, manifest_path: Path):
-        pass
+    def from_home_dir(cls, work_home: os.PathLike):
+        config_path = Path(work_home) / "experiment_config.yaml"
+        return cls.from_config(config_path)
+    
+    def get_info(self) -> tuple[dict[str], dict[str]]:
+        """Return string identifiers of each hyperparameter value
+        
+        Returns a tuple containing lists of strings for the preprocessing 
+        and training parameters that were varied. If string identifiers were 
+        specified in the config, these will be returned. Otherwise, the actual 
+        parameters will be returned in string format
+        """
+        preprocess_params = self.param_grid.get("preprocessing", {}) 
+        preprocess_param_ids = self.param_grid.get("preprocessing_ids", preprocess_params)
+        preprocess_param_ids = {
+            k: [str(item) for item in v] for k, v in preprocess_param_ids.items()
+        }
+        
+        training_params = self.param_grid.get("training", {})
+        training_param_ids = self.param_grid.get("training_ids", training_params)
+        training_param_ids = {
+            k: [str(item) for item in v] for k, v in training_param_ids.items()
+        }
+        
+        return preprocess_param_ids, training_param_ids
+
+    @staticmethod
+    def run_params(preprocess_params: dict, training_params: dict) -> list[dict]:
+        """Return a run-name → parameter mapping for the given param dicts.
+
+        Each entry has keys: 'run_name', 'preprocessing', 'training'.
+        Order is deterministic and matches the directories generate() creates.
+        No side effects — safe to call in notebooks without touching the filesystem.
+
+        Pass raw param dicts for actual values, or string-ID dicts from get_info()
+        for human-readable labels::
+
+            # actual values
+            pp = eg.param_grid.get('preprocessing', {})
+            tr = eg.param_grid.get('training', {})
+            df = pd.DataFrame(eg.run_params(pp, tr))
+
+            # string labels (from get_info)
+            pp_ids, tr_ids = eg.get_info()
+            df = pd.DataFrame(eg.run_params(pp_ids, tr_ids))
+        """
+        pp_keys = list(preprocess_params.keys())
+        pp_combos = list(product(*[preprocess_params[k] for k in pp_keys])) if pp_keys else [()]
+
+        tr_keys = list(training_params.keys())
+        tr_combos = list(product(*[training_params[k] for k in tr_keys])) if tr_keys else [()]
+
+        runs = []
+        run_num = 1
+        for pp_combo in pp_combos:
+            for tr_combo in tr_combos:
+                runs.append({
+                    "run_name": f"run{run_num}",
+                    "preprocessing": dict(zip(pp_keys, pp_combo)),
+                    "training": dict(zip(tr_keys, tr_combo)),
+                })
+                run_num += 1
+        return runs
 
     def __repr__(self) -> str:
         return (

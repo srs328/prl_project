@@ -19,7 +19,7 @@ import nibabel as nib
 import numpy as np
 from loguru import logger
 
-from helpers.paths import load_config, DATA_ROOT
+from helpers.paths import load_config
 from helpers.shell_interface import command, run_if_missing
 
 # Reuse the same shell scripts as the training pipeline
@@ -391,6 +391,7 @@ def infer_subject(
         Path to the final full-brain inference output.
     """
     from core.configs import PreprocessingConfig
+    from core.dataset import Dataset
 
     run_dir = Path(run_dir)
     subject_dir = Path(subject_dir)
@@ -401,16 +402,15 @@ def infer_subject(
     expand_z = label_config["expand_z"]
     images = tuple(label_config.get("images", ["flair", "phase"]))
 
-    # Resolve data_root
+    # Resolve data_root from dataset.yaml (env var is fallback inside Dataset)
+    dataset_name = label_config["dataset_name"]
+    ds = Dataset(dataset_name)
     if data_root is None:
-        data_root = DATA_ROOT
+        data_root = ds.data_root
     data_root = Path(data_root)
 
     # Derive run identifier for output filename
-    dataset_name = label_config["dataset_name"]
-    from helpers.paths import TRAIN_ROOT
-    dataset_work_home = TRAIN_ROOT / dataset_name
-    run_id = _derive_run_id(run_dir, dataset_work_home)
+    run_id = _derive_run_id(run_dir, ds.work_home)
 
     logger.info(
         f"Inferring on {subject_dir.name} using run '{run_id}' "

@@ -29,8 +29,8 @@ def main():
         help="Path to run directory. If not provided, auto-increments to next available run<N>",
     )
     parser.add_argument(
-        "--dataset", type=str, default="roi_train2",
-        help="Dataset name (default: roi_train2)",
+        "--dataset", type=str, default="roi_train2_t1",
+        help="Dataset name (default: roi_train2_t1)",
     )
     args = parser.parse_args()
 

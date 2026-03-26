@@ -277,7 +277,8 @@ def print_diagnostics(results: dict) -> None:
 if __name__ == "__main__":
     import argparse
 
-    from helpers.paths import load_config, DATA_ROOT
+    from helpers.paths import load_config
+    from core.dataset import Dataset
 
     parser = argparse.ArgumentParser(
         description="Run inference diagnostics on a subject"
@@ -286,7 +287,7 @@ if __name__ == "__main__":
     parser.add_argument("subject_dir", type=Path, help="Subject directory")
     parser.add_argument(
         "--data-root", type=Path, default=None,
-        help="Data root override (default: PRL_DATA_ROOT)",
+        help="Data root override (default: dataset.yaml data_root)",
     )
     args = parser.parse_args()
 
@@ -295,7 +296,8 @@ if __name__ == "__main__":
     expand_z = label_config["expand_z"]
     images = tuple(label_config.get("images", ["flair", "phase"]))
 
-    data_root = args.data_root or DATA_ROOT
+    ds = Dataset(label_config["dataset_name"])
+    data_root = args.data_root or ds.data_root
     subject_dir = args.subject_dir
     if not subject_dir.is_absolute():
         subject_dir = data_root / subject_dir

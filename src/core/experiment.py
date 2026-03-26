@@ -21,10 +21,10 @@ from typing import TYPE_CHECKING
 from loguru import logger
 
 from core.configs import PreprocessingConfig, AlgoConfig
+from core.dataset import Dataset
 
 if TYPE_CHECKING:
     import pandas as pd
-    from core.dataset import Dataset
     
 class Experiment:
     """A single training run with fixed hyperparameters.
@@ -72,6 +72,15 @@ class Experiment:
                 hyper_params_file = fold_dir / "configs/hyper_parameters.yaml"
                 params = AlgoConfig.load_from_yaml(hyper_params_file)
                 return params
+    
+    @property
+    def work_home(self) -> Path:
+        """To be consistent with naming pattern used in Dataset and ExperimentGrid"""
+        return self.run_dir
+    
+    @property
+    def id(self) -> str:
+        return str(self.run_dir.relative_to(self.dataset.work_home))
 
     # --- Preprocessing (moved from Dataset) ---
 
@@ -489,7 +498,7 @@ class Experiment:
     # --- Class methods ---
 
     @classmethod
-    def from_run_dir(cls, run_dir: Path, dataset: Dataset) -> Experiment:
+    def from_run_dir(cls, run_dir: Path, dataset: Dataset | None = None) -> Experiment:
         """Reconstruct an Experiment from an existing run directory.
 
         Reads label_config.json and monai_config.json from the run_dir
@@ -500,11 +509,15 @@ class Experiment:
 
         run_dir = Path(run_dir)
         if not run_dir.is_absolute():
+            if dataset is None:
+                raise ValueError(
+                    "run_dir must be an absolute path if dataset is not provided."
+                )    
             run_dir = dataset.work_home / run_dir
 
         label_config = load_config(run_dir / "label_config.json")
         monai_config = load_config(run_dir / "monai_config.json")
-
+        
         preprocess_config = PreprocessingConfig(
             expand_xy=label_config["expand_xy"],
             expand_z=label_config["expand_z"],
@@ -513,7 +526,10 @@ class Experiment:
 
         train_param = monai_config.get("train_param", {})
         training_config = AlgoConfig.from_dict(train_param)
-
+        
+        if dataset is None:
+            dataset = Dataset(label_config['dataset_name'])
+        
         return cls(
             dataset=dataset,
             preprocess_config=preprocess_config,
@@ -529,7 +545,7 @@ class Experiment:
         return self.dataset.work_home / f"run{run_num}"
 
     def __repr__(self) -> str:
-        return f"Experiment(run_dir={self.run_dir}, dataset={self.dataset.name})"
+        return f"Experiment(id={self.id}, run_dir={self.run_dir}, dataset={self.dataset.name})"
 
 
 def resolve_case_type(t_case):
