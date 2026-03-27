@@ -483,7 +483,7 @@ class Experiment:
 
         # Process testing first
         if "testing" in by_split:
-            results = analyze_dataset(by_split["testing"], split="testing")
+            results = analyze_dataset(by_split["testing"])
             if results.get("aggregated"):
                 all_results["testing"] = results
                 if print_results:
@@ -500,7 +500,7 @@ class Experiment:
                 if split_name == "testing":
                     continue
                 results = analyze_dataset(
-                    by_split[split_name], split=f"validation {split_name}"
+                    by_split[split_name]
                 )
                 if results.get("aggregated"):
                     all_results[f"validation {split_name}"] = results

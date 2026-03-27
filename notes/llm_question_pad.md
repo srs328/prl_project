@@ -178,3 +178,17 @@ I need to submit an abstract tomorrow for a conference, but I only need prelimin
 
 Write it into here:
 /home/srs-9/Projects/prl_project/notebooks/classifying_prl.py
+
+## Sweeping DiceCELoss Weights further
+
+| Run | DiceCELoss Weights |
+| --- | ------------------- |
+| stage6_sweep_dicece_wts/run1 | $torch.tensor([1.0, 1.0, 10.0]) |
+| stage6_sweep_dicece_wts/run2 | $torch.tensor([1.0, 2.0, 10.0]) |
+| stage6_sweep_dicece_wts/run3 | $torch.tensor([1.0, 1.0, 15.0]) |
+| stage6_sweep_dicece_wts/run4 | $torch.tensor([1.0, 3.0, 15.0]) |
+
+
+## Classification
+
+Ok here's what I did for classification. 

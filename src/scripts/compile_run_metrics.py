@@ -43,6 +43,8 @@ EXPERIMENT_KEYS = {
     "lambda_test": "test_dicece_lambda",
 }
 
+ANALYSIS_DIR = PROJECT_ROOT / "analysis"
+
 # ---------------------------------------------------------------------------
 # Parameter display
 # ---------------------------------------------------------------------------
@@ -158,8 +160,55 @@ def _cache_path(*args) -> Path:
     cache_name = "_".join([arg.replace("/", "_") for arg in args])
     return _CACHE_DIR / f"{cache_name}.pkl"
 
+#? Wonder if I should define this here instead of importing from compute_performance_metrics
+# def compute_casewise_stats(data) -> list:
+#     from copy import deepcopy
+#     import nibabel as nib
+#     from helpers.utils import dice_score
+#     valid_cases = 0
 
-# FIXME This doesn't require all the parameters it's taking
+#     results = []
+#     for item in deepcopy(data):
+#         lab_path = Path(item['label'])
+#         inf_path = Path(item['inference'])
+
+#         lab = nib.load(lab_path)
+#         inf = nib.load(inf_path)
+#         prl_dice = dice_score(lab.get_fdata(), inf.get_fdata(), seg1_val=2, seg2_val=2)
+#         lesion_dice = dice_score(lab.get_fdata(), inf.get_fdata(), seg1_val=1, seg2_val=1)
+#         # Compute confusion matrix
+#         tp, fp, tn, fn = get_confusion_matrix(lab, inf)
+
+
+#         # Compute metrics for this case
+#         metrics = {
+#             'subid': item.pop('subid'),
+#             'lesion_index': item.pop('lesion_index'),
+#             'split': item.pop('split'),
+#             'case_type': item.pop('case_type'),
+#             **item,
+#             # 'fold': item.get('fold', "NA"),
+#             'lesion_dice': lesion_dice,
+#             'prl_dice': prl_dice,
+#             'tp': tp,
+#             'fp': fp,
+#             'tn': tn,
+#             'fn': fn,
+#         }
+#         metrics.update(compute_derived_metrics(tp, fp, tn, fn))
+        
+#         if (tp + fp + tn + fn) == 0:
+#             metrics.update({"Notes": "Something's wrong"})
+#         else:
+#             metrics.update({"Notes": None})
+        
+#         results.append(metrics)
+
+#     return results
+
+
+
+# TODO refactor caching from the heavy computation logic 
 def load_or_cache_run(
     dataset_name: str | None = None,
     experiment_name: str | None = None,
@@ -574,6 +623,7 @@ def compile_all_metrics(
     return result
 
 
+# just an example of how I'd use it in a notebook
 def main():
     logger.remove(0)
     import sys
@@ -585,27 +635,31 @@ def main():
         "crop_ratios",
         "num_crops_per_image",
         "batch_size",
-        "loss#__target__",
-        "loss#weight",
+        "loss#_target_",
         "loss#include_background",
+        "loss#weight",
+        "loss#lambda_dice",
+        "loss#lambda_ce",
+        "expand_xy"
     ]
 
     experiment_dict = {
         "roi_train1": ["roi_train1_segresnet"],
-        "roi_train2": ["run1", "run2", "run3", "test_dicece_lambda/run1"],
-        "roi_train2_t1": ["test_dicece_lambda/run1"],
+        "roi_train2": ["run1", "run2", "run3", "test_dicece_lambda/run1", "stage7_expand/run1", "stage7_expand/run2"],
+        "roi_train2_t1": ["test_dicece_lambda/run1"]
     }
 
     grid_dict = {
         "roi_train2": [
+            "stage6_sweep_dicece_wts",
             "stage4_sweep_dicece_wts",
             "stage5_sweep_dicecewt_nbatch",
             "stage3_numcrops_bkd_constwt115",
             "stage1_crop_lr_sweep",
             "stage2_numcrops_dicece",
-            "test_dicece_lambda",
+            "test_dicece_lambda"
         ],
-        "roi_train2_t1": ["sweep_dicecewts"],
+        "roi_train2_t1": ["sweep_dicecewts"]
     }
 
     experiments = []
@@ -621,59 +675,31 @@ def main():
             grids.append(ExperimentGrid.from_home_dir(dataset.work_home / name))
 
     data = compile_all_metrics(
-        mlflow_metrics,
+        performance_metrics,
         experiments=experiments,
         grids=grids,
         params_to_gather=params_to_gather,
         use_cache=False,
     )
-
+    data.sort_values(by="perf_prl_dice_mean", ascending=False).to_csv(ANALYSIS_DIR / "hpo_performance_metrics.csv", index=False)
+    
+    data = compile_all_metrics(
+    performance_metrics,
+    experiments=experiments,
+    grids=grids, 
+    params_to_gather=params_to_gather, 
+    use_cache=True)
 
 if __name__ == "__main__":
     main()
+    
+    
 # ---------------------
+# Snippets to keep just in case
+# ----------------------
 
-
-def compile_all_metrics0(
-    experiments: list[Experiment | Path | str] | None = None,
-    grids: list[ExperimentGrid | Path | str] | None = None,
-    params_to_gather: list[str] | None = None,
-    runs_to_skip: dict | None = None,
-    use_cache: bool = True,
-) -> pd.DataFrame:
-    if runs_to_skip is None:
-        runs_to_skip = {}
-
-    data = []
-    if experiments is not None:
-        get_metrics = partial(
-            compile_experiment_metrics,
-            params_to_gather=params_to_gather,
-            use_cache=use_cache,
-        )
-        data.extend([get_metrics(experiment) for experiment in experiments])
-
-    if grids is not None:
-        get_metrics = partial(
-            compile_grid_metrics,
-            params_to_gather=params_to_gather,
-            use_cache=use_cache,
-            runs_to_skip=runs_to_skip,
-        )
-        for grid in grids:
-            data.extend(get_metrics(grid))
-
-    result = order_columns(pd.DataFrame(data))
-    param_cols = []
-    if params_to_gather:
-        param_cols = [k.split("#")[-1] for k in params_to_gather]
-    for col in param_cols:
-        if col in result.columns:
-            result[col] = result[col].fillna("default")
-
-    return result
-
-
+# This doesn't fit with how I've been using the interface, but keeping it in case
+#   it becomes handy later
 def discover_stages(dataset_name: str) -> list[str]:
     """Find all grid experiment directories under the dataset's work_home."""
 
@@ -688,69 +714,3 @@ def discover_stages(dataset_name: str) -> list[str]:
             stages.append(d.name)
     return stages
 
-
-# def compile_all_metrics0(
-#     dataset_name: str,
-#     stages: list[str] | None = None,
-#     params_to_gather: list[str] | None = None,
-#     extra_runs: list[tuple[str, str | Path]] | None = None,
-#     use_cache: bool = True,
-#     skip_runs: dict | None = None,
-# ) -> pd.DataFrame:
-#     """Compile metrics across multiple grid stages into one DataFrame.
-
-#     Args:
-#         dataset_name: e.g. "roi_train2"
-#         stages: Stage names. If None, auto-discovers all stages.
-#         params_to_gather: Union of all param keys to show.
-#         extra_runs: Optional list of (label, run_dir) for standalone runs.
-#         use_cache: Whether to use disk cache.
-
-#     Returns:
-#         DataFrame with 'stage' column identifying source.
-#     """
-#     if stages is None:
-#         stages = discover_stages(dataset_name)
-#         logger.info(f"Discovered stages: {stages}")
-#     if skip_runs is None:
-#         skip_runs = {}
-
-#     dfs = []
-
-#     # TODO Loop over grids not stages
-#     # grids =
-#     for stage in stages:
-#         logger.info(f"Compiling {stage}...")
-#         try:
-#             df = compile_grid_metrics(
-#                 dataset_name, stage, params_to_gather, use_cache, skip_runs.get(stage)
-#             )
-#             dfs.append(df)
-#         except Exception as e:
-#             logger.error(f"Failed to compile {stage}: {e}")
-
-#     if extra_runs:
-#         for label, run_dir in extra_runs:
-#             logger.info(f"Compiling standalone: {label}")
-#             try:
-#                 logger.debug(dataset_name, label, run_dir, params_to_gather, use_cache)
-#                 df = compile_standalone_run(
-#                     dataset_name, label, run_dir, params_to_gather, use_cache
-#                 )
-#                 dfs.append(df)
-#             except Exception as e:
-#                 logger.error(f"Failed to compile {label}: {e}")
-
-#     if not dfs:
-#         return pd.DataFrame()
-
-#     result = pd.concat(dfs, ignore_index=True)
-#     # Fill missing param columns with "default" for runs that didn't vary them
-#     param_cols = []
-#     if params_to_gather:
-#         param_cols = [k.split("#")[-1] for k in params_to_gather]
-#     for col in param_cols:
-#         if col in result.columns:
-#             result[col] = result[col].fillna("default")
-
-#     return result

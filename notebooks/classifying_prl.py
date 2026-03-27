@@ -22,7 +22,7 @@ from sklearn.pipeline import Pipeline
 # ---------------------------------------------------------------------------
 
 CSV = "/home/srs-9/Projects/prl_project/analysis/prl_image_stats-roi_train2_stage3_numcrops_bkd_constwt115_run2.csv"
-CSV_inf = "/home/srs-9/Projects/prl_project/analysis/prl_inference_defprobposs_image_stats-roi_train2_stage3_numcrops_bkd_constwt115_run2.csv"
+CSV_inf = "/home/srs-9/Projects/prl_project/analysis/prl_inference_image_stats-roi_train2_stage3_numcrops_bkd_constwt115_run2.csv"
 
 
 # Features to use — extend this list when radiomics arrive
@@ -65,28 +65,28 @@ TEST_SIZE = 0.25            # fraction held out
 RANDOM_STATE = 42
 CV_FOLDS = 5
 
+df = pd.read_csv(CSV)
+df = df[df['has_iron_infer']]
+
+df_inf = pd.read_csv(CSV_inf)
+df_inf = df_inf[df_inf['has_iron_infer']]
+
 # %%
 # ---------------------------------------------------------------------------
 # Load & prepare
 # ---------------------------------------------------------------------------
 
-df = pd.read_csv(CSV)
-df = df[df['has_iron_infer']]
-print(f"Loaded {len(df)} rows | {df[TARGET].value_counts().to_dict()}")
+model_df = df_inf.copy()
+print(f"Loaded {len(model_df)} rows | {model_df[TARGET].value_counts().to_dict()}")
 
-X = df[FEATURES].values
-y = (df[TARGET] == POS_LABEL).astype(int).values   # 1 = PRL, 0 = Lesion
+X = model_df[FEATURES].values
+y = (model_df[TARGET] == POS_LABEL).astype(int).values   # 1 = PRL, 0 = Lesion
 
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=TEST_SIZE, stratify=y, random_state=RANDOM_STATE
 )
 print(f"Train: {len(y_train)} ({y_train.sum()} PRL) | Test: {len(y_test)} ({y_test.sum()} PRL)")
 
-
-# %%
-# ---------------------------------------------------------------------------
-# Model
-# ---------------------------------------------------------------------------
 
 model = Pipeline([
     ("imputer", SimpleImputer(strategy="constant", fill_value=0)),   # hull/sphere NaN when <4 rim voxels
@@ -100,7 +100,7 @@ model = Pipeline([
 
 model.fit(X_train, y_train)
 
-# %%
+# %% [markdown]
 # ---------------------------------------------------------------------------
 # Test-set evaluation
 # ---------------------------------------------------------------------------
