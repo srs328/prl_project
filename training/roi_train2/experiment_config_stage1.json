@@ -1,0 +1,13 @@
+{
+  "train_home": "${PROJECT_ROOT}/training",
+  "dataset_name": "roi_train2",
+  "experiment_name": "stage1_crop_lr_sweep",
+  "base_label_config": "label_config.jsonc",
+  "base_monai_config": "monai_config.jsonc",
+  "param_grid": {
+    "monai": {
+      "train_param.crop_ratios": [null, [1, 1, 4], [1, 1, 8]],
+      "train_param.learning_rate": [0.0001, 0.0002, 0.0005]
+    }
+  }
+}

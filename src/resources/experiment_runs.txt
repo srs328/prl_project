@@ -1,0 +1,14 @@
+# Experiment run directories - one per line.
+# Lines starting with # are comments. Blank lines are ignored.
+# Each path should point to a top-level run directory that contains mlruns/.
+#
+# Example:
+#   /media/smbshare/srs-9/prl_project/training/roi_train2/run1
+#   /media/smbshare/srs-9/prl_project/training/roi_train2/run2
+#   /media/smbshare/srs-9/prl_project/training/roi_train2/run3
+
+/media/smbshare/srs-9/prl_project/training/roi_train1_segresnet
+/media/smbshare/srs-9/prl_project/training/roi_train2/run1
+/media/smbshare/srs-9/prl_project/training/roi_train2/run2
+/media/smbshare/srs-9/prl_project/training/roi_train2/run3
+

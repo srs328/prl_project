@@ -1,0 +1,6746 @@
+{
+    "training": [
+        {
+            "subid": 1136,
+            "lesion_index": 5,
+            "fold": 4,
+            "image": "sub1136-20171109/5",
+            "label": "sub1136-20171109/5/prl_label_CH_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 1,
+            "fold": 0,
+            "image": "sub1038-20161031/1",
+            "label": "sub1038-20161031/1/prl_label_CH_"
+        },
+        {
+            "subid": 1131,
+            "lesion_index": 1,
+            "fold": 1,
+            "image": "sub1131-20161209/1",
+            "label": "sub1131-20161209/1/prl_label_LR_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 11,
+            "fold": 2,
+            "image": "sub1044-20170317/11",
+            "label": "sub1044-20170317/11/prl_label_CH_"
+        },
+        {
+            "subid": 1529,
+            "lesion_index": 2,
+            "fold": 3,
+            "image": "sub1529-20170119/2",
+            "label": "sub1529-20170119/2/prl_label_LR_"
+        },
+        {
+            "subid": 1011,
+            "lesion_index": 3,
+            "fold": 4,
+            "image": "sub1011-20180911/3",
+            "label": "sub1011-20180911/3/prl_label_SRS_CH_"
+        },
+        {
+            "subid": 1011,
+            "lesion_index": 12,
+            "fold": 0,
+            "image": "sub1011-20180911/12",
+            "label": "sub1011-20180911/12/prl_label_SRS_CH_"
+        },
+        {
+            "subid": 1358,
+            "lesion_index": 1,
+            "fold": 1,
+            "image": "sub1358-20170311/1",
+            "label": "sub1358-20170311/1/prl_label_LR_"
+        },
+        {
+            "subid": 1136,
+            "lesion_index": 3,
+            "fold": 2,
+            "image": "sub1136-20171109/3",
+            "label": "sub1136-20171109/3/prl_label_CH_"
+        },
+        {
+            "subid": 1348,
+            "lesion_index": 6,
+            "fold": 3,
+            "image": "sub1348-20181009/6",
+            "label": "sub1348-20181009/6/prl_label_SRS_"
+        },
+        {
+            "subid": 1011,
+            "lesion_index": 6,
+            "fold": 4,
+            "image": "sub1011-20180911/6",
+            "label": "sub1011-20180911/6/prl_label_SRS_CH_"
+        },
+        {
+            "subid": 1358,
+            "lesion_index": 2,
+            "fold": 0,
+            "image": "sub1358-20170311/2",
+            "label": "sub1358-20170311/2/prl_label_LR_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 3,
+            "fold": 1,
+            "image": "sub1076-20170912/3",
+            "label": "sub1076-20170912/3/prl_label_CH_SRS_"
+        },
+        {
+            "subid": 1215,
+            "lesion_index": 2,
+            "fold": 2,
+            "image": "sub1215-20180429/2",
+            "label": "sub1215-20180429/2/prl_label_CH_"
+        },
+        {
+            "subid": 2026,
+            "lesion_index": 2,
+            "fold": 3,
+            "image": "sub2026-20160917/2",
+            "label": "sub2026-20160917/2/prl_label_CH_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 1,
+            "fold": 4,
+            "image": "sub1125-20160919/1",
+            "label": "sub1125-20160919/1/prl_label_CH_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 16,
+            "fold": 0,
+            "image": "sub1076-20170912/16",
+            "label": "sub1076-20170912/16/prl_label_CH_SRS_"
+        },
+        {
+            "subid": 1529,
+            "lesion_index": 6,
+            "fold": 1,
+            "image": "sub1529-20170119/6",
+            "label": "sub1529-20170119/6/prl_label_LR_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 1,
+            "fold": 2,
+            "image": "sub1080-20180416/1",
+            "label": "sub1080-20180416/1/prl_label_SRS_"
+        },
+        {
+            "subid": 1011,
+            "lesion_index": 4,
+            "fold": 3,
+            "image": "sub1011-20180911/4",
+            "label": "sub1011-20180911/4/prl_label_SRS_CH_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 1,
+            "fold": 4,
+            "image": "sub1050-20170624/1",
+            "label": "sub1050-20170624/1/prl_label_CH_"
+        },
+        {
+            "subid": 1010,
+            "lesion_index": 1,
+            "fold": 0,
+            "image": "sub1010-20180208/1",
+            "label": "sub1010-20180208/1/prl_label_CH_"
+        },
+        {
+            "subid": 1078,
+            "lesion_index": 8,
+            "fold": 1,
+            "image": "sub1078-20180412/8",
+            "label": "sub1078-20180412/8/prl_label_CH_"
+        },
+        {
+            "subid": 2041,
+            "lesion_index": 5,
+            "fold": 2,
+            "image": "sub2041-20170515/5",
+            "label": "sub2041-20170515/5/prl_label_SRS_CH_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 6,
+            "fold": 3,
+            "image": "sub1050-20170624/6",
+            "label": "sub1050-20170624/6/prl_label_CH_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 57,
+            "fold": 4,
+            "image": "sub1044-20170317/57",
+            "label": "sub1044-20170317/57/prl_label_CH_"
+        },
+        {
+            "subid": 1074,
+            "lesion_index": 1,
+            "fold": 0,
+            "image": "sub1074-20190518/1",
+            "label": "sub1074-20190518/1/prl_label_CH_"
+        },
+        {
+            "subid": 1396,
+            "lesion_index": 1,
+            "fold": 1,
+            "image": "sub1396-20170126/1",
+            "label": "sub1396-20170126/1/prl_label_LR_"
+        },
+        {
+            "subid": 1078,
+            "lesion_index": 2,
+            "fold": 2,
+            "image": "sub1078-20180412/2",
+            "label": "sub1078-20180412/2/prl_label_CH_"
+        },
+        {
+            "subid": 1010,
+            "lesion_index": 4,
+            "fold": 3,
+            "image": "sub1010-20180208/4",
+            "label": "sub1010-20180208/4/prl_label_CH_"
+        },
+        {
+            "subid": 1010,
+            "lesion_index": 3,
+            "fold": 4,
+            "image": "sub1010-20180208/3",
+            "label": "sub1010-20180208/3/prl_label_CH_"
+        },
+        {
+            "subid": 1033,
+            "lesion_index": 2,
+            "fold": 0,
+            "image": "sub1033-20171117/2",
+            "label": "sub1033-20171117/2/prl_label_LR_"
+        },
+        {
+            "subid": 1215,
+            "lesion_index": 3,
+            "fold": 1,
+            "image": "sub1215-20180429/3",
+            "label": "sub1215-20180429/3/prl_label_CH_"
+        },
+        {
+            "subid": 2041,
+            "lesion_index": 3,
+            "fold": 2,
+            "image": "sub2041-20170515/3",
+            "label": "sub2041-20170515/3/prl_label_SRS_CH_"
+        },
+        {
+            "subid": 1298,
+            "lesion_index": 1,
+            "fold": 3,
+            "image": "sub1298-20190506/1",
+            "label": "sub1298-20190506/1/prl_label_LR_"
+        },
+        {
+            "subid": 2026,
+            "lesion_index": 1,
+            "fold": 4,
+            "image": "sub2026-20160917/1",
+            "label": "sub2026-20160917/1/prl_label_CH_"
+        },
+        {
+            "subid": 1011,
+            "lesion_index": 1,
+            "fold": 0,
+            "image": "sub1011-20180911/1",
+            "label": "sub1011-20180911/1/prl_label_SRS_CH_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 2,
+            "fold": 1,
+            "image": "sub1124-20160929/2",
+            "label": "sub1124-20160929/2/prl_label_LR_"
+        },
+        {
+            "subid": 2041,
+            "lesion_index": 8,
+            "fold": 2,
+            "image": "sub2041-20170515/8",
+            "label": "sub2041-20170515/8/prl_label_SRS_CH_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 64,
+            "fold": 3,
+            "image": "sub1125-20160919/64",
+            "label": "sub1125-20160919/64/lesion_"
+        },
+        {
+            "subid": 1078,
+            "lesion_index": 17,
+            "fold": 4,
+            "image": "sub1078-20180412/17",
+            "label": "sub1078-20180412/17/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 31,
+            "fold": 0,
+            "image": "sub1124-20160929/31",
+            "label": "sub1124-20160929/31/lesion_"
+        },
+        {
+            "subid": 1348,
+            "lesion_index": 8,
+            "fold": 1,
+            "image": "sub1348-20181009/8",
+            "label": "sub1348-20181009/8/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 28,
+            "fold": 2,
+            "image": "sub1125-20160919/28",
+            "label": "sub1125-20160919/28/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 37,
+            "fold": 3,
+            "image": "sub1124-20160929/37",
+            "label": "sub1124-20160929/37/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 39,
+            "fold": 4,
+            "image": "sub1125-20160919/39",
+            "label": "sub1125-20160919/39/lesion_"
+        },
+        {
+            "subid": 1298,
+            "lesion_index": 12,
+            "fold": 0,
+            "image": "sub1298-20190506/12",
+            "label": "sub1298-20190506/12/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 64,
+            "fold": 1,
+            "image": "sub1050-20170624/64",
+            "label": "sub1050-20170624/64/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 85,
+            "fold": 2,
+            "image": "sub1125-20160919/85",
+            "label": "sub1125-20160919/85/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 22,
+            "fold": 3,
+            "image": "sub1125-20160919/22",
+            "label": "sub1125-20160919/22/lesion_"
+        },
+        {
+            "subid": 1011,
+            "lesion_index": 30,
+            "fold": 4,
+            "image": "sub1011-20180911/30",
+            "label": "sub1011-20180911/30/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 89,
+            "fold": 0,
+            "image": "sub1125-20160919/89",
+            "label": "sub1125-20160919/89/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 10,
+            "fold": 1,
+            "image": "sub1050-20170624/10",
+            "label": "sub1050-20170624/10/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 61,
+            "fold": 2,
+            "image": "sub1125-20160919/61",
+            "label": "sub1125-20160919/61/lesion_"
+        },
+        {
+            "subid": 1529,
+            "lesion_index": 1,
+            "fold": 3,
+            "image": "sub1529-20170119/1",
+            "label": "sub1529-20170119/1/lesion_"
+        },
+        {
+            "subid": 1010,
+            "lesion_index": 9,
+            "fold": 4,
+            "image": "sub1010-20180208/9",
+            "label": "sub1010-20180208/9/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 96,
+            "fold": 0,
+            "image": "sub1050-20170624/96",
+            "label": "sub1050-20170624/96/lesion_"
+        },
+        {
+            "subid": 2131,
+            "lesion_index": 18,
+            "fold": 1,
+            "image": "sub2131-20190117/18",
+            "label": "sub2131-20190117/18/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 69,
+            "fold": 2,
+            "image": "sub1125-20160919/69",
+            "label": "sub1125-20160919/69/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 88,
+            "fold": 3,
+            "image": "sub1038-20161031/88",
+            "label": "sub1038-20161031/88/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 21,
+            "fold": 4,
+            "image": "sub1080-20180416/21",
+            "label": "sub1080-20180416/21/lesion_"
+        },
+        {
+            "subid": 2131,
+            "lesion_index": 23,
+            "fold": 0,
+            "image": "sub2131-20190117/23",
+            "label": "sub2131-20190117/23/lesion_"
+        },
+        {
+            "subid": 1215,
+            "lesion_index": 25,
+            "fold": 1,
+            "image": "sub1215-20180429/25",
+            "label": "sub1215-20180429/25/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 33,
+            "fold": 2,
+            "image": "sub1044-20170317/33",
+            "label": "sub1044-20170317/33/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 63,
+            "fold": 3,
+            "image": "sub1038-20161031/63",
+            "label": "sub1038-20161031/63/lesion_"
+        },
+        {
+            "subid": 1298,
+            "lesion_index": 15,
+            "fold": 4,
+            "image": "sub1298-20190506/15",
+            "label": "sub1298-20190506/15/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 54,
+            "fold": 0,
+            "image": "sub1076-20170912/54",
+            "label": "sub1076-20170912/54/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 18,
+            "fold": 1,
+            "image": "sub1124-20160929/18",
+            "label": "sub1124-20160929/18/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 45,
+            "fold": 2,
+            "image": "sub1080-20180416/45",
+            "label": "sub1080-20180416/45/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 86,
+            "fold": 3,
+            "image": "sub1038-20161031/86",
+            "label": "sub1038-20161031/86/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 8,
+            "fold": 4,
+            "image": "sub1293-20161129/8",
+            "label": "sub1293-20161129/8/lesion_"
+        },
+        {
+            "subid": 1529,
+            "lesion_index": 29,
+            "fold": 0,
+            "image": "sub1529-20170119/29",
+            "label": "sub1529-20170119/29/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 52,
+            "fold": 1,
+            "image": "sub1125-20160919/52",
+            "label": "sub1125-20160919/52/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 80,
+            "fold": 2,
+            "image": "sub1050-20170624/80",
+            "label": "sub1050-20170624/80/lesion_"
+        },
+        {
+            "subid": 1529,
+            "lesion_index": 7,
+            "fold": 3,
+            "image": "sub1529-20170119/7",
+            "label": "sub1529-20170119/7/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 19,
+            "fold": 4,
+            "image": "sub1076-20170912/19",
+            "label": "sub1076-20170912/19/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 68,
+            "fold": 0,
+            "image": "sub1050-20170624/68",
+            "label": "sub1050-20170624/68/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 41,
+            "fold": 1,
+            "image": "sub1125-20160919/41",
+            "label": "sub1125-20160919/41/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 36,
+            "fold": 2,
+            "image": "sub1293-20161129/36",
+            "label": "sub1293-20161129/36/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 45,
+            "fold": 3,
+            "image": "sub1293-20161129/45",
+            "label": "sub1293-20161129/45/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 42,
+            "fold": 4,
+            "image": "sub1125-20160919/42",
+            "label": "sub1125-20160919/42/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 86,
+            "fold": 0,
+            "image": "sub1050-20170624/86",
+            "label": "sub1050-20170624/86/lesion_"
+        },
+        {
+            "subid": 1131,
+            "lesion_index": 3,
+            "fold": 1,
+            "image": "sub1131-20161209/3",
+            "label": "sub1131-20161209/3/lesion_"
+        },
+        {
+            "subid": 1396,
+            "lesion_index": 3,
+            "fold": 2,
+            "image": "sub1396-20170126/3",
+            "label": "sub1396-20170126/3/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 24,
+            "fold": 3,
+            "image": "sub1044-20170317/24",
+            "label": "sub1044-20170317/24/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 11,
+            "fold": 4,
+            "image": "sub1125-20160919/11",
+            "label": "sub1125-20160919/11/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 19,
+            "fold": 0,
+            "image": "sub1125-20160919/19",
+            "label": "sub1125-20160919/19/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 44,
+            "fold": 1,
+            "image": "sub1125-20160919/44",
+            "label": "sub1125-20160919/44/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 12,
+            "fold": 2,
+            "image": "sub1080-20180416/12",
+            "label": "sub1080-20180416/12/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 5,
+            "fold": 3,
+            "image": "sub1080-20180416/5",
+            "label": "sub1080-20180416/5/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 52,
+            "fold": 4,
+            "image": "sub1080-20180416/52",
+            "label": "sub1080-20180416/52/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 54,
+            "fold": 0,
+            "image": "sub1080-20180416/54",
+            "label": "sub1080-20180416/54/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 45,
+            "fold": 1,
+            "image": "sub1050-20170624/45",
+            "label": "sub1050-20170624/45/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 42,
+            "fold": 2,
+            "image": "sub1293-20161129/42",
+            "label": "sub1293-20161129/42/lesion_"
+        },
+        {
+            "subid": 1396,
+            "lesion_index": 6,
+            "fold": 3,
+            "image": "sub1396-20170126/6",
+            "label": "sub1396-20170126/6/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 39,
+            "fold": 4,
+            "image": "sub1050-20170624/39",
+            "label": "sub1050-20170624/39/lesion_"
+        },
+        {
+            "subid": 1396,
+            "lesion_index": 7,
+            "fold": 0,
+            "image": "sub1396-20170126/7",
+            "label": "sub1396-20170126/7/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 16,
+            "fold": 1,
+            "image": "sub1038-20161031/16",
+            "label": "sub1038-20161031/16/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 12,
+            "fold": 2,
+            "image": "sub1125-20160919/12",
+            "label": "sub1125-20160919/12/lesion_"
+        },
+        {
+            "subid": 2026,
+            "lesion_index": 4,
+            "fold": 3,
+            "image": "sub2026-20160917/4",
+            "label": "sub2026-20160917/4/lesion_"
+        },
+        {
+            "subid": 1131,
+            "lesion_index": 6,
+            "fold": 4,
+            "image": "sub1131-20161209/6",
+            "label": "sub1131-20161209/6/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 33,
+            "fold": 0,
+            "image": "sub1293-20161129/33",
+            "label": "sub1293-20161129/33/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 19,
+            "fold": 1,
+            "image": "sub1044-20170317/19",
+            "label": "sub1044-20170317/19/lesion_"
+        },
+        {
+            "subid": 1529,
+            "lesion_index": 26,
+            "fold": 2,
+            "image": "sub1529-20170119/26",
+            "label": "sub1529-20170119/26/lesion_"
+        },
+        {
+            "subid": 1078,
+            "lesion_index": 30,
+            "fold": 3,
+            "image": "sub1078-20180412/30",
+            "label": "sub1078-20180412/30/lesion_"
+        },
+        {
+            "subid": 1078,
+            "lesion_index": 13,
+            "fold": 4,
+            "image": "sub1078-20180412/13",
+            "label": "sub1078-20180412/13/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 18,
+            "fold": 0,
+            "image": "sub1293-20161129/18",
+            "label": "sub1293-20161129/18/lesion_"
+        },
+        {
+            "subid": 1298,
+            "lesion_index": 10,
+            "fold": 1,
+            "image": "sub1298-20190506/10",
+            "label": "sub1298-20190506/10/lesion_"
+        },
+        {
+            "subid": 1529,
+            "lesion_index": 41,
+            "fold": 2,
+            "image": "sub1529-20170119/41",
+            "label": "sub1529-20170119/41/lesion_"
+        },
+        {
+            "subid": 2041,
+            "lesion_index": 38,
+            "fold": 3,
+            "image": "sub2041-20170515/38",
+            "label": "sub2041-20170515/38/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 62,
+            "fold": 4,
+            "image": "sub1125-20160919/62",
+            "label": "sub1125-20160919/62/lesion_"
+        },
+        {
+            "subid": 1215,
+            "lesion_index": 6,
+            "fold": 0,
+            "image": "sub1215-20180429/6",
+            "label": "sub1215-20180429/6/lesion_"
+        },
+        {
+            "subid": 1011,
+            "lesion_index": 22,
+            "fold": 1,
+            "image": "sub1011-20180911/22",
+            "label": "sub1011-20180911/22/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 32,
+            "fold": 2,
+            "image": "sub1080-20180416/32",
+            "label": "sub1080-20180416/32/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 20,
+            "fold": 3,
+            "image": "sub1076-20170912/20",
+            "label": "sub1076-20170912/20/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 28,
+            "fold": 4,
+            "image": "sub1076-20170912/28",
+            "label": "sub1076-20170912/28/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 11,
+            "fold": 0,
+            "image": "sub1124-20160929/11",
+            "label": "sub1124-20160929/11/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 18,
+            "fold": 1,
+            "image": "sub1038-20161031/18",
+            "label": "sub1038-20161031/18/lesion_"
+        },
+        {
+            "subid": 1396,
+            "lesion_index": 18,
+            "fold": 2,
+            "image": "sub1396-20170126/18",
+            "label": "sub1396-20170126/18/lesion_"
+        },
+        {
+            "subid": 1529,
+            "lesion_index": 21,
+            "fold": 3,
+            "image": "sub1529-20170119/21",
+            "label": "sub1529-20170119/21/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 39,
+            "fold": 4,
+            "image": "sub1124-20160929/39",
+            "label": "sub1124-20160929/39/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 81,
+            "fold": 0,
+            "image": "sub1050-20170624/81",
+            "label": "sub1050-20170624/81/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 104,
+            "fold": 1,
+            "image": "sub1050-20170624/104",
+            "label": "sub1050-20170624/104/lesion_"
+        },
+        {
+            "subid": 2041,
+            "lesion_index": 21,
+            "fold": 2,
+            "image": "sub2041-20170515/21",
+            "label": "sub2041-20170515/21/lesion_"
+        },
+        {
+            "subid": 1010,
+            "lesion_index": 16,
+            "fold": 3,
+            "image": "sub1010-20180208/16",
+            "label": "sub1010-20180208/16/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 47,
+            "fold": 4,
+            "image": "sub1125-20160919/47",
+            "label": "sub1125-20160919/47/lesion_"
+        },
+        {
+            "subid": 1529,
+            "lesion_index": 10,
+            "fold": 0,
+            "image": "sub1529-20170119/10",
+            "label": "sub1529-20170119/10/lesion_"
+        },
+        {
+            "subid": 1348,
+            "lesion_index": 3,
+            "fold": 1,
+            "image": "sub1348-20181009/3",
+            "label": "sub1348-20181009/3/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 78,
+            "fold": 2,
+            "image": "sub1038-20161031/78",
+            "label": "sub1038-20161031/78/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 78,
+            "fold": 3,
+            "image": "sub1125-20160919/78",
+            "label": "sub1125-20160919/78/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 44,
+            "fold": 4,
+            "image": "sub1076-20170912/44",
+            "label": "sub1076-20170912/44/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 65,
+            "fold": 0,
+            "image": "sub1050-20170624/65",
+            "label": "sub1050-20170624/65/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 55,
+            "fold": 1,
+            "image": "sub1050-20170624/55",
+            "label": "sub1050-20170624/55/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 48,
+            "fold": 2,
+            "image": "sub1125-20160919/48",
+            "label": "sub1125-20160919/48/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 40,
+            "fold": 3,
+            "image": "sub1044-20170317/40",
+            "label": "sub1044-20170317/40/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 12,
+            "fold": 4,
+            "image": "sub1124-20160929/12",
+            "label": "sub1124-20160929/12/lesion_"
+        },
+        {
+            "subid": 1396,
+            "lesion_index": 12,
+            "fold": 0,
+            "image": "sub1396-20170126/12",
+            "label": "sub1396-20170126/12/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 32,
+            "fold": 1,
+            "image": "sub1076-20170912/32",
+            "label": "sub1076-20170912/32/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 66,
+            "fold": 2,
+            "image": "sub1044-20170317/66",
+            "label": "sub1044-20170317/66/lesion_"
+        },
+        {
+            "subid": 1011,
+            "lesion_index": 13,
+            "fold": 3,
+            "image": "sub1011-20180911/13",
+            "label": "sub1011-20180911/13/lesion_"
+        },
+        {
+            "subid": 1011,
+            "lesion_index": 5,
+            "fold": 4,
+            "image": "sub1011-20180911/5",
+            "label": "sub1011-20180911/5/lesion_"
+        },
+        {
+            "subid": 1078,
+            "lesion_index": 28,
+            "fold": 0,
+            "image": "sub1078-20180412/28",
+            "label": "sub1078-20180412/28/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 2,
+            "fold": 1,
+            "image": "sub1293-20161129/2",
+            "label": "sub1293-20161129/2/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 40,
+            "fold": 2,
+            "image": "sub1076-20170912/40",
+            "label": "sub1076-20170912/40/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 81,
+            "fold": 3,
+            "image": "sub1038-20161031/81",
+            "label": "sub1038-20161031/81/lesion_"
+        },
+        {
+            "subid": 1033,
+            "lesion_index": 16,
+            "fold": 4,
+            "image": "sub1033-20171117/16",
+            "label": "sub1033-20171117/16/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 50,
+            "fold": 0,
+            "image": "sub1044-20170317/50",
+            "label": "sub1044-20170317/50/lesion_"
+        },
+        {
+            "subid": 1033,
+            "lesion_index": 19,
+            "fold": 1,
+            "image": "sub1033-20171117/19",
+            "label": "sub1033-20171117/19/lesion_"
+        },
+        {
+            "subid": 2041,
+            "lesion_index": 26,
+            "fold": 2,
+            "image": "sub2041-20170515/26",
+            "label": "sub2041-20170515/26/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 25,
+            "fold": 3,
+            "image": "sub1076-20170912/25",
+            "label": "sub1076-20170912/25/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 41,
+            "fold": 4,
+            "image": "sub1044-20170317/41",
+            "label": "sub1044-20170317/41/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 7,
+            "fold": 0,
+            "image": "sub1076-20170912/7",
+            "label": "sub1076-20170912/7/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 38,
+            "fold": 1,
+            "image": "sub1293-20161129/38",
+            "label": "sub1293-20161129/38/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 36,
+            "fold": 2,
+            "image": "sub1076-20170912/36",
+            "label": "sub1076-20170912/36/lesion_"
+        },
+        {
+            "subid": 1136,
+            "lesion_index": 10,
+            "fold": 3,
+            "image": "sub1136-20171109/10",
+            "label": "sub1136-20171109/10/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 47,
+            "fold": 4,
+            "image": "sub1124-20160929/47",
+            "label": "sub1124-20160929/47/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 16,
+            "fold": 0,
+            "image": "sub1125-20160919/16",
+            "label": "sub1125-20160919/16/lesion_"
+        },
+        {
+            "subid": 1529,
+            "lesion_index": 8,
+            "fold": 1,
+            "image": "sub1529-20170119/8",
+            "label": "sub1529-20170119/8/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 52,
+            "fold": 2,
+            "image": "sub1050-20170624/52",
+            "label": "sub1050-20170624/52/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 44,
+            "fold": 3,
+            "image": "sub1293-20161129/44",
+            "label": "sub1293-20161129/44/lesion_"
+        },
+        {
+            "subid": 1078,
+            "lesion_index": 23,
+            "fold": 4,
+            "image": "sub1078-20180412/23",
+            "label": "sub1078-20180412/23/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 62,
+            "fold": 0,
+            "image": "sub1038-20161031/62",
+            "label": "sub1038-20161031/62/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 5,
+            "fold": 1,
+            "image": "sub1293-20161129/5",
+            "label": "sub1293-20161129/5/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 17,
+            "fold": 2,
+            "image": "sub1038-20161031/17",
+            "label": "sub1038-20161031/17/lesion_"
+        },
+        {
+            "subid": 1010,
+            "lesion_index": 11,
+            "fold": 3,
+            "image": "sub1010-20180208/11",
+            "label": "sub1010-20180208/11/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 32,
+            "fold": 4,
+            "image": "sub1050-20170624/32",
+            "label": "sub1050-20170624/32/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 37,
+            "fold": 0,
+            "image": "sub1125-20160919/37",
+            "label": "sub1125-20160919/37/lesion_"
+        },
+        {
+            "subid": 1529,
+            "lesion_index": 44,
+            "fold": 1,
+            "image": "sub1529-20170119/44",
+            "label": "sub1529-20170119/44/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 50,
+            "fold": 2,
+            "image": "sub1080-20180416/50",
+            "label": "sub1080-20180416/50/lesion_"
+        },
+        {
+            "subid": 1011,
+            "lesion_index": 18,
+            "fold": 3,
+            "image": "sub1011-20180911/18",
+            "label": "sub1011-20180911/18/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 26,
+            "fold": 4,
+            "image": "sub1038-20161031/26",
+            "label": "sub1038-20161031/26/lesion_"
+        },
+        {
+            "subid": 1215,
+            "lesion_index": 5,
+            "fold": 0,
+            "image": "sub1215-20180429/5",
+            "label": "sub1215-20180429/5/lesion_"
+        },
+        {
+            "subid": 1298,
+            "lesion_index": 21,
+            "fold": 1,
+            "image": "sub1298-20190506/21",
+            "label": "sub1298-20190506/21/lesion_"
+        },
+        {
+            "subid": 2026,
+            "lesion_index": 8,
+            "fold": 2,
+            "image": "sub2026-20160917/8",
+            "label": "sub2026-20160917/8/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 59,
+            "fold": 3,
+            "image": "sub1050-20170624/59",
+            "label": "sub1050-20170624/59/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 69,
+            "fold": 4,
+            "image": "sub1044-20170317/69",
+            "label": "sub1044-20170317/69/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 48,
+            "fold": 0,
+            "image": "sub1076-20170912/48",
+            "label": "sub1076-20170912/48/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 47,
+            "fold": 1,
+            "image": "sub1038-20161031/47",
+            "label": "sub1038-20161031/47/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 36,
+            "fold": 2,
+            "image": "sub1124-20160929/36",
+            "label": "sub1124-20160929/36/lesion_"
+        },
+        {
+            "subid": 2041,
+            "lesion_index": 39,
+            "fold": 3,
+            "image": "sub2041-20170515/39",
+            "label": "sub2041-20170515/39/lesion_"
+        },
+        {
+            "subid": 1358,
+            "lesion_index": 5,
+            "fold": 4,
+            "image": "sub1358-20170311/5",
+            "label": "sub1358-20170311/5/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 101,
+            "fold": 0,
+            "image": "sub1050-20170624/101",
+            "label": "sub1050-20170624/101/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 7,
+            "fold": 1,
+            "image": "sub1124-20160929/7",
+            "label": "sub1124-20160929/7/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 98,
+            "fold": 2,
+            "image": "sub1125-20160919/98",
+            "label": "sub1125-20160919/98/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 43,
+            "fold": 3,
+            "image": "sub1038-20161031/43",
+            "label": "sub1038-20161031/43/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 34,
+            "fold": 4,
+            "image": "sub1044-20170317/34",
+            "label": "sub1044-20170317/34/lesion_"
+        },
+        {
+            "subid": 2041,
+            "lesion_index": 17,
+            "fold": 0,
+            "image": "sub2041-20170515/17",
+            "label": "sub2041-20170515/17/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 79,
+            "fold": 1,
+            "image": "sub1050-20170624/79",
+            "label": "sub1050-20170624/79/lesion_"
+        },
+        {
+            "subid": 1136,
+            "lesion_index": 8,
+            "fold": 2,
+            "image": "sub1136-20171109/8",
+            "label": "sub1136-20171109/8/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 8,
+            "fold": 3,
+            "image": "sub1080-20180416/8",
+            "label": "sub1080-20180416/8/lesion_"
+        },
+        {
+            "subid": 1078,
+            "lesion_index": 27,
+            "fold": 4,
+            "image": "sub1078-20180412/27",
+            "label": "sub1078-20180412/27/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 4,
+            "fold": 0,
+            "image": "sub1125-20160919/4",
+            "label": "sub1125-20160919/4/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 71,
+            "fold": 1,
+            "image": "sub1125-20160919/71",
+            "label": "sub1125-20160919/71/lesion_"
+        },
+        {
+            "subid": 1136,
+            "lesion_index": 9,
+            "fold": 2,
+            "image": "sub1136-20171109/9",
+            "label": "sub1136-20171109/9/lesion_"
+        },
+        {
+            "subid": 1348,
+            "lesion_index": 5,
+            "fold": 3,
+            "image": "sub1348-20181009/5",
+            "label": "sub1348-20181009/5/lesion_"
+        },
+        {
+            "subid": 2131,
+            "lesion_index": 15,
+            "fold": 4,
+            "image": "sub2131-20190117/15",
+            "label": "sub2131-20190117/15/lesion_"
+        },
+        {
+            "subid": 1011,
+            "lesion_index": 29,
+            "fold": 0,
+            "image": "sub1011-20180911/29",
+            "label": "sub1011-20180911/29/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 48,
+            "fold": 1,
+            "image": "sub1080-20180416/48",
+            "label": "sub1080-20180416/48/lesion_"
+        },
+        {
+            "subid": 1010,
+            "lesion_index": 15,
+            "fold": 2,
+            "image": "sub1010-20180208/15",
+            "label": "sub1010-20180208/15/lesion_"
+        },
+        {
+            "subid": 1529,
+            "lesion_index": 16,
+            "fold": 3,
+            "image": "sub1529-20170119/16",
+            "label": "sub1529-20170119/16/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 103,
+            "fold": 4,
+            "image": "sub1125-20160919/103",
+            "label": "sub1125-20160919/103/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 20,
+            "fold": 0,
+            "image": "sub1080-20180416/20",
+            "label": "sub1080-20180416/20/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 55,
+            "fold": 1,
+            "image": "sub1044-20170317/55",
+            "label": "sub1044-20170317/55/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 20,
+            "fold": 2,
+            "image": "sub1038-20161031/20",
+            "label": "sub1038-20161031/20/lesion_"
+        },
+        {
+            "subid": 1298,
+            "lesion_index": 16,
+            "fold": 3,
+            "image": "sub1298-20190506/16",
+            "label": "sub1298-20190506/16/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 49,
+            "fold": 4,
+            "image": "sub1050-20170624/49",
+            "label": "sub1050-20170624/49/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 8,
+            "fold": 0,
+            "image": "sub1038-20161031/8",
+            "label": "sub1038-20161031/8/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 8,
+            "fold": 1,
+            "image": "sub1044-20170317/8",
+            "label": "sub1044-20170317/8/lesion_"
+        },
+        {
+            "subid": 1078,
+            "lesion_index": 7,
+            "fold": 2,
+            "image": "sub1078-20180412/7",
+            "label": "sub1078-20180412/7/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 77,
+            "fold": 3,
+            "image": "sub1050-20170624/77",
+            "label": "sub1050-20170624/77/lesion_"
+        },
+        {
+            "subid": 2026,
+            "lesion_index": 6,
+            "fold": 4,
+            "image": "sub2026-20160917/6",
+            "label": "sub2026-20160917/6/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 35,
+            "fold": 0,
+            "image": "sub1044-20170317/35",
+            "label": "sub1044-20170317/35/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 49,
+            "fold": 1,
+            "image": "sub1124-20160929/49",
+            "label": "sub1124-20160929/49/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 50,
+            "fold": 2,
+            "image": "sub1124-20160929/50",
+            "label": "sub1124-20160929/50/lesion_"
+        },
+        {
+            "subid": 2041,
+            "lesion_index": 29,
+            "fold": 3,
+            "image": "sub2041-20170515/29",
+            "label": "sub2041-20170515/29/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 39,
+            "fold": 4,
+            "image": "sub1293-20161129/39",
+            "label": "sub1293-20161129/39/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 70,
+            "fold": 0,
+            "image": "sub1125-20160919/70",
+            "label": "sub1125-20160919/70/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 60,
+            "fold": 1,
+            "image": "sub1044-20170317/60",
+            "label": "sub1044-20170317/60/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 64,
+            "fold": 2,
+            "image": "sub1293-20161129/64",
+            "label": "sub1293-20161129/64/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 67,
+            "fold": 3,
+            "image": "sub1044-20170317/67",
+            "label": "sub1044-20170317/67/lesion_"
+        },
+        {
+            "subid": 2131,
+            "lesion_index": 10,
+            "fold": 4,
+            "image": "sub2131-20190117/10",
+            "label": "sub2131-20190117/10/lesion_"
+        },
+        {
+            "subid": 1529,
+            "lesion_index": 33,
+            "fold": 0,
+            "image": "sub1529-20170119/33",
+            "label": "sub1529-20170119/33/lesion_"
+        },
+        {
+            "subid": 1011,
+            "lesion_index": 2,
+            "fold": 1,
+            "image": "sub1011-20180911/2",
+            "label": "sub1011-20180911/2/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 39,
+            "fold": 2,
+            "image": "sub1038-20161031/39",
+            "label": "sub1038-20161031/39/lesion_"
+        },
+        {
+            "subid": 1298,
+            "lesion_index": 24,
+            "fold": 3,
+            "image": "sub1298-20190506/24",
+            "label": "sub1298-20190506/24/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 42,
+            "fold": 4,
+            "image": "sub1080-20180416/42",
+            "label": "sub1080-20180416/42/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 76,
+            "fold": 0,
+            "image": "sub1050-20170624/76",
+            "label": "sub1050-20170624/76/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 67,
+            "fold": 1,
+            "image": "sub1038-20161031/67",
+            "label": "sub1038-20161031/67/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 37,
+            "fold": 2,
+            "image": "sub1076-20170912/37",
+            "label": "sub1076-20170912/37/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 4,
+            "fold": 3,
+            "image": "sub1076-20170912/4",
+            "label": "sub1076-20170912/4/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 55,
+            "fold": 4,
+            "image": "sub1038-20161031/55",
+            "label": "sub1038-20161031/55/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 22,
+            "fold": 0,
+            "image": "sub1080-20180416/22",
+            "label": "sub1080-20180416/22/lesion_"
+        },
+        {
+            "subid": 1010,
+            "lesion_index": 8,
+            "fold": 1,
+            "image": "sub1010-20180208/8",
+            "label": "sub1010-20180208/8/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 39,
+            "fold": 2,
+            "image": "sub1076-20170912/39",
+            "label": "sub1076-20170912/39/lesion_"
+        },
+        {
+            "subid": 1298,
+            "lesion_index": 26,
+            "fold": 3,
+            "image": "sub1298-20190506/26",
+            "label": "sub1298-20190506/26/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 22,
+            "fold": 4,
+            "image": "sub1044-20170317/22",
+            "label": "sub1044-20170317/22/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 30,
+            "fold": 0,
+            "image": "sub1080-20180416/30",
+            "label": "sub1080-20180416/30/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 28,
+            "fold": 1,
+            "image": "sub1050-20170624/28",
+            "label": "sub1050-20170624/28/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 41,
+            "fold": 2,
+            "image": "sub1293-20161129/41",
+            "label": "sub1293-20161129/41/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 52,
+            "fold": 3,
+            "image": "sub1293-20161129/52",
+            "label": "sub1293-20161129/52/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 58,
+            "fold": 4,
+            "image": "sub1038-20161031/58",
+            "label": "sub1038-20161031/58/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 34,
+            "fold": 0,
+            "image": "sub1125-20160919/34",
+            "label": "sub1125-20160919/34/lesion_"
+        },
+        {
+            "subid": 1010,
+            "lesion_index": 10,
+            "fold": 1,
+            "image": "sub1010-20180208/10",
+            "label": "sub1010-20180208/10/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 15,
+            "fold": 2,
+            "image": "sub1038-20161031/15",
+            "label": "sub1038-20161031/15/lesion_"
+        },
+        {
+            "subid": 1348,
+            "lesion_index": 19,
+            "fold": 3,
+            "image": "sub1348-20181009/19",
+            "label": "sub1348-20181009/19/lesion_"
+        },
+        {
+            "subid": 1215,
+            "lesion_index": 27,
+            "fold": 4,
+            "image": "sub1215-20180429/27",
+            "label": "sub1215-20180429/27/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 9,
+            "fold": 0,
+            "image": "sub1125-20160919/9",
+            "label": "sub1125-20160919/9/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 75,
+            "fold": 1,
+            "image": "sub1050-20170624/75",
+            "label": "sub1050-20170624/75/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 3,
+            "fold": 2,
+            "image": "sub1124-20160929/3",
+            "label": "sub1124-20160929/3/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 12,
+            "fold": 3,
+            "image": "sub1293-20161129/12",
+            "label": "sub1293-20161129/12/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 53,
+            "fold": 4,
+            "image": "sub1124-20160929/53",
+            "label": "sub1124-20160929/53/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 32,
+            "fold": 0,
+            "image": "sub1125-20160919/32",
+            "label": "sub1125-20160919/32/lesion_"
+        },
+        {
+            "subid": 2041,
+            "lesion_index": 33,
+            "fold": 1,
+            "image": "sub2041-20170515/33",
+            "label": "sub2041-20170515/33/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 6,
+            "fold": 2,
+            "image": "sub1124-20160929/6",
+            "label": "sub1124-20160929/6/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 6,
+            "fold": 3,
+            "image": "sub1038-20161031/6",
+            "label": "sub1038-20161031/6/lesion_"
+        },
+        {
+            "subid": 1011,
+            "lesion_index": 26,
+            "fold": 4,
+            "image": "sub1011-20180911/26",
+            "label": "sub1011-20180911/26/lesion_"
+        },
+        {
+            "subid": 1529,
+            "lesion_index": 3,
+            "fold": 0,
+            "image": "sub1529-20170119/3",
+            "label": "sub1529-20170119/3/lesion_"
+        },
+        {
+            "subid": 1078,
+            "lesion_index": 24,
+            "fold": 1,
+            "image": "sub1078-20180412/24",
+            "label": "sub1078-20180412/24/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 7,
+            "fold": 2,
+            "image": "sub1293-20161129/7",
+            "label": "sub1293-20161129/7/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 13,
+            "fold": 3,
+            "image": "sub1080-20180416/13",
+            "label": "sub1080-20180416/13/lesion_"
+        },
+        {
+            "subid": 1011,
+            "lesion_index": 10,
+            "fold": 4,
+            "image": "sub1011-20180911/10",
+            "label": "sub1011-20180911/10/lesion_"
+        },
+        {
+            "subid": 1215,
+            "lesion_index": 12,
+            "fold": 0,
+            "image": "sub1215-20180429/12",
+            "label": "sub1215-20180429/12/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 38,
+            "fold": 1,
+            "image": "sub1038-20161031/38",
+            "label": "sub1038-20161031/38/lesion_"
+        },
+        {
+            "subid": 1298,
+            "lesion_index": 20,
+            "fold": 2,
+            "image": "sub1298-20190506/20",
+            "label": "sub1298-20190506/20/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 70,
+            "fold": 3,
+            "image": "sub1038-20161031/70",
+            "label": "sub1038-20161031/70/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 38,
+            "fold": 4,
+            "image": "sub1050-20170624/38",
+            "label": "sub1050-20170624/38/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 13,
+            "fold": 0,
+            "image": "sub1124-20160929/13",
+            "label": "sub1124-20160929/13/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 15,
+            "fold": 1,
+            "image": "sub1050-20170624/15",
+            "label": "sub1050-20170624/15/lesion_"
+        },
+        {
+            "subid": 1529,
+            "lesion_index": 30,
+            "fold": 2,
+            "image": "sub1529-20170119/30",
+            "label": "sub1529-20170119/30/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 20,
+            "fold": 3,
+            "image": "sub1044-20170317/20",
+            "label": "sub1044-20170317/20/lesion_"
+        },
+        {
+            "subid": 1298,
+            "lesion_index": 4,
+            "fold": 4,
+            "image": "sub1298-20190506/4",
+            "label": "sub1298-20190506/4/lesion_"
+        },
+        {
+            "subid": 2041,
+            "lesion_index": 36,
+            "fold": 0,
+            "image": "sub2041-20170515/36",
+            "label": "sub2041-20170515/36/lesion_"
+        },
+        {
+            "subid": 1298,
+            "lesion_index": 7,
+            "fold": 1,
+            "image": "sub1298-20190506/7",
+            "label": "sub1298-20190506/7/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 54,
+            "fold": 2,
+            "image": "sub1050-20170624/54",
+            "label": "sub1050-20170624/54/lesion_"
+        },
+        {
+            "subid": 2131,
+            "lesion_index": 27,
+            "fold": 3,
+            "image": "sub2131-20190117/27",
+            "label": "sub2131-20190117/27/lesion_"
+        },
+        {
+            "subid": 1348,
+            "lesion_index": 16,
+            "fold": 4,
+            "image": "sub1348-20181009/16",
+            "label": "sub1348-20181009/16/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 103,
+            "fold": 0,
+            "image": "sub1050-20170624/103",
+            "label": "sub1050-20170624/103/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 25,
+            "fold": 1,
+            "image": "sub1038-20161031/25",
+            "label": "sub1038-20161031/25/lesion_"
+        },
+        {
+            "subid": 2041,
+            "lesion_index": 12,
+            "fold": 2,
+            "image": "sub2041-20170515/12",
+            "label": "sub2041-20170515/12/lesion_"
+        },
+        {
+            "subid": 1215,
+            "lesion_index": 16,
+            "fold": 3,
+            "image": "sub1215-20180429/16",
+            "label": "sub1215-20180429/16/lesion_"
+        },
+        {
+            "subid": 2026,
+            "lesion_index": 13,
+            "fold": 4,
+            "image": "sub2026-20160917/13",
+            "label": "sub2026-20160917/13/lesion_"
+        },
+        {
+            "subid": 1215,
+            "lesion_index": 18,
+            "fold": 0,
+            "image": "sub1215-20180429/18",
+            "label": "sub1215-20180429/18/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 66,
+            "fold": 1,
+            "image": "sub1050-20170624/66",
+            "label": "sub1050-20170624/66/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 17,
+            "fold": 2,
+            "image": "sub1125-20160919/17",
+            "label": "sub1125-20160919/17/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 10,
+            "fold": 3,
+            "image": "sub1080-20180416/10",
+            "label": "sub1080-20180416/10/lesion_"
+        },
+        {
+            "subid": 2026,
+            "lesion_index": 3,
+            "fold": 4,
+            "image": "sub2026-20160917/3",
+            "label": "sub2026-20160917/3/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 40,
+            "fold": 0,
+            "image": "sub1050-20170624/40",
+            "label": "sub1050-20170624/40/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 24,
+            "fold": 1,
+            "image": "sub1050-20170624/24",
+            "label": "sub1050-20170624/24/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 18,
+            "fold": 2,
+            "image": "sub1125-20160919/18",
+            "label": "sub1125-20160919/18/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 87,
+            "fold": 3,
+            "image": "sub1050-20170624/87",
+            "label": "sub1050-20170624/87/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 7,
+            "fold": 4,
+            "image": "sub1080-20180416/7",
+            "label": "sub1080-20180416/7/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 44,
+            "fold": 0,
+            "image": "sub1050-20170624/44",
+            "label": "sub1050-20170624/44/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 52,
+            "fold": 1,
+            "image": "sub1076-20170912/52",
+            "label": "sub1076-20170912/52/lesion_"
+        },
+        {
+            "subid": 1348,
+            "lesion_index": 22,
+            "fold": 2,
+            "image": "sub1348-20181009/22",
+            "label": "sub1348-20181009/22/lesion_"
+        },
+        {
+            "subid": 2131,
+            "lesion_index": 7,
+            "fold": 3,
+            "image": "sub2131-20190117/7",
+            "label": "sub2131-20190117/7/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 64,
+            "fold": 4,
+            "image": "sub1038-20161031/64",
+            "label": "sub1038-20161031/64/lesion_"
+        },
+        {
+            "subid": 1131,
+            "lesion_index": 5,
+            "fold": 0,
+            "image": "sub1131-20161209/5",
+            "label": "sub1131-20161209/5/lesion_"
+        },
+        {
+            "subid": 1215,
+            "lesion_index": 22,
+            "fold": 1,
+            "image": "sub1215-20180429/22",
+            "label": "sub1215-20180429/22/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 57,
+            "fold": 2,
+            "image": "sub1125-20160919/57",
+            "label": "sub1125-20160919/57/lesion_"
+        },
+        {
+            "subid": 1529,
+            "lesion_index": 13,
+            "fold": 3,
+            "image": "sub1529-20170119/13",
+            "label": "sub1529-20170119/13/lesion_"
+        },
+        {
+            "subid": 1348,
+            "lesion_index": 15,
+            "fold": 4,
+            "image": "sub1348-20181009/15",
+            "label": "sub1348-20181009/15/lesion_"
+        },
+        {
+            "subid": 1010,
+            "lesion_index": 18,
+            "fold": 0,
+            "image": "sub1010-20180208/18",
+            "label": "sub1010-20180208/18/lesion_"
+        },
+        {
+            "subid": 1348,
+            "lesion_index": 7,
+            "fold": 1,
+            "image": "sub1348-20181009/7",
+            "label": "sub1348-20181009/7/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 62,
+            "fold": 2,
+            "image": "sub1293-20161129/62",
+            "label": "sub1293-20161129/62/lesion_"
+        },
+        {
+            "subid": 1011,
+            "lesion_index": 25,
+            "fold": 3,
+            "image": "sub1011-20180911/25",
+            "label": "sub1011-20180911/25/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 106,
+            "fold": 4,
+            "image": "sub1125-20160919/106",
+            "label": "sub1125-20160919/106/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 49,
+            "fold": 0,
+            "image": "sub1038-20161031/49",
+            "label": "sub1038-20161031/49/lesion_"
+        },
+        {
+            "subid": 1529,
+            "lesion_index": 37,
+            "fold": 1,
+            "image": "sub1529-20170119/37",
+            "label": "sub1529-20170119/37/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 59,
+            "fold": 2,
+            "image": "sub1044-20170317/59",
+            "label": "sub1044-20170317/59/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 41,
+            "fold": 3,
+            "image": "sub1076-20170912/41",
+            "label": "sub1076-20170912/41/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 41,
+            "fold": 4,
+            "image": "sub1080-20180416/41",
+            "label": "sub1080-20180416/41/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 45,
+            "fold": 0,
+            "image": "sub1044-20170317/45",
+            "label": "sub1044-20170317/45/lesion_"
+        },
+        {
+            "subid": 2041,
+            "lesion_index": 10,
+            "fold": 1,
+            "image": "sub2041-20170515/10",
+            "label": "sub2041-20170515/10/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 94,
+            "fold": 2,
+            "image": "sub1050-20170624/94",
+            "label": "sub1050-20170624/94/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 50,
+            "fold": 3,
+            "image": "sub1125-20160919/50",
+            "label": "sub1125-20160919/50/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 48,
+            "fold": 4,
+            "image": "sub1293-20161129/48",
+            "label": "sub1293-20161129/48/lesion_"
+        },
+        {
+            "subid": 1298,
+            "lesion_index": 25,
+            "fold": 0,
+            "image": "sub1298-20190506/25",
+            "label": "sub1298-20190506/25/lesion_"
+        },
+        {
+            "subid": 1074,
+            "lesion_index": 4,
+            "fold": 1,
+            "image": "sub1074-20190518/4",
+            "label": "sub1074-20190518/4/lesion_"
+        },
+        {
+            "subid": 1215,
+            "lesion_index": 24,
+            "fold": 2,
+            "image": "sub1215-20180429/24",
+            "label": "sub1215-20180429/24/lesion_"
+        },
+        {
+            "subid": 2041,
+            "lesion_index": 4,
+            "fold": 3,
+            "image": "sub2041-20170515/4",
+            "label": "sub2041-20170515/4/lesion_"
+        },
+        {
+            "subid": 2026,
+            "lesion_index": 7,
+            "fold": 4,
+            "image": "sub2026-20160917/7",
+            "label": "sub2026-20160917/7/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 29,
+            "fold": 0,
+            "image": "sub1080-20180416/29",
+            "label": "sub1080-20180416/29/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 59,
+            "fold": 1,
+            "image": "sub1293-20161129/59",
+            "label": "sub1293-20161129/59/lesion_"
+        },
+        {
+            "subid": 2041,
+            "lesion_index": 35,
+            "fold": 2,
+            "image": "sub2041-20170515/35",
+            "label": "sub2041-20170515/35/lesion_"
+        },
+        {
+            "subid": 2131,
+            "lesion_index": 3,
+            "fold": 3,
+            "image": "sub2131-20190117/3",
+            "label": "sub2131-20190117/3/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 49,
+            "fold": 4,
+            "image": "sub1076-20170912/49",
+            "label": "sub1076-20170912/49/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 4,
+            "fold": 0,
+            "image": "sub1050-20170624/4",
+            "label": "sub1050-20170624/4/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 91,
+            "fold": 1,
+            "image": "sub1050-20170624/91",
+            "label": "sub1050-20170624/91/lesion_"
+        },
+        {
+            "subid": 1033,
+            "lesion_index": 10,
+            "fold": 2,
+            "image": "sub1033-20171117/10",
+            "label": "sub1033-20171117/10/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 51,
+            "fold": 3,
+            "image": "sub1044-20170317/51",
+            "label": "sub1044-20170317/51/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 2,
+            "fold": 4,
+            "image": "sub1080-20180416/2",
+            "label": "sub1080-20180416/2/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 7,
+            "fold": 0,
+            "image": "sub1050-20170624/7",
+            "label": "sub1050-20170624/7/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 69,
+            "fold": 1,
+            "image": "sub1038-20161031/69",
+            "label": "sub1038-20161031/69/lesion_"
+        },
+        {
+            "subid": 1078,
+            "lesion_index": 18,
+            "fold": 2,
+            "image": "sub1078-20180412/18",
+            "label": "sub1078-20180412/18/lesion_"
+        },
+        {
+            "subid": 1348,
+            "lesion_index": 23,
+            "fold": 3,
+            "image": "sub1348-20181009/23",
+            "label": "sub1348-20181009/23/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 17,
+            "fold": 4,
+            "image": "sub1293-20161129/17",
+            "label": "sub1293-20161129/17/lesion_"
+        },
+        {
+            "subid": 2041,
+            "lesion_index": 25,
+            "fold": 0,
+            "image": "sub2041-20170515/25",
+            "label": "sub2041-20170515/25/lesion_"
+        },
+        {
+            "subid": 2041,
+            "lesion_index": 28,
+            "fold": 1,
+            "image": "sub2041-20170515/28",
+            "label": "sub2041-20170515/28/lesion_"
+        },
+        {
+            "subid": 2041,
+            "lesion_index": 37,
+            "fold": 2,
+            "image": "sub2041-20170515/37",
+            "label": "sub2041-20170515/37/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 58,
+            "fold": 3,
+            "image": "sub1293-20161129/58",
+            "label": "sub1293-20161129/58/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 14,
+            "fold": 4,
+            "image": "sub1124-20160929/14",
+            "label": "sub1124-20160929/14/lesion_"
+        },
+        {
+            "subid": 1529,
+            "lesion_index": 19,
+            "fold": 0,
+            "image": "sub1529-20170119/19",
+            "label": "sub1529-20170119/19/lesion_"
+        },
+        {
+            "subid": 2026,
+            "lesion_index": 14,
+            "fold": 1,
+            "image": "sub2026-20160917/14",
+            "label": "sub2026-20160917/14/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 49,
+            "fold": 2,
+            "image": "sub1080-20180416/49",
+            "label": "sub1080-20180416/49/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 82,
+            "fold": 3,
+            "image": "sub1125-20160919/82",
+            "label": "sub1125-20160919/82/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 12,
+            "fold": 4,
+            "image": "sub1076-20170912/12",
+            "label": "sub1076-20170912/12/lesion_"
+        },
+        {
+            "subid": 1348,
+            "lesion_index": 11,
+            "fold": 0,
+            "image": "sub1348-20181009/11",
+            "label": "sub1348-20181009/11/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 32,
+            "fold": 1,
+            "image": "sub1038-20161031/32",
+            "label": "sub1038-20161031/32/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 48,
+            "fold": 2,
+            "image": "sub1038-20161031/48",
+            "label": "sub1038-20161031/48/lesion_"
+        },
+        {
+            "subid": 1396,
+            "lesion_index": 5,
+            "fold": 3,
+            "image": "sub1396-20170126/5",
+            "label": "sub1396-20170126/5/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 29,
+            "fold": 4,
+            "image": "sub1124-20160929/29",
+            "label": "sub1124-20160929/29/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 12,
+            "fold": 0,
+            "image": "sub1050-20170624/12",
+            "label": "sub1050-20170624/12/lesion_"
+        },
+        {
+            "subid": 1529,
+            "lesion_index": 25,
+            "fold": 1,
+            "image": "sub1529-20170119/25",
+            "label": "sub1529-20170119/25/lesion_"
+        },
+        {
+            "subid": 2131,
+            "lesion_index": 25,
+            "fold": 2,
+            "image": "sub2131-20190117/25",
+            "label": "sub2131-20190117/25/lesion_"
+        },
+        {
+            "subid": 1010,
+            "lesion_index": 7,
+            "fold": 3,
+            "image": "sub1010-20180208/7",
+            "label": "sub1010-20180208/7/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 89,
+            "fold": 4,
+            "image": "sub1050-20170624/89",
+            "label": "sub1050-20170624/89/lesion_"
+        },
+        {
+            "subid": 1348,
+            "lesion_index": 30,
+            "fold": 0,
+            "image": "sub1348-20181009/30",
+            "label": "sub1348-20181009/30/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 45,
+            "fold": 1,
+            "image": "sub1038-20161031/45",
+            "label": "sub1038-20161031/45/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 10,
+            "fold": 2,
+            "image": "sub1293-20161129/10",
+            "label": "sub1293-20161129/10/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 33,
+            "fold": 3,
+            "image": "sub1080-20180416/33",
+            "label": "sub1080-20180416/33/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 63,
+            "fold": 4,
+            "image": "sub1293-20161129/63",
+            "label": "sub1293-20161129/63/lesion_"
+        },
+        {
+            "subid": 2041,
+            "lesion_index": 11,
+            "fold": 0,
+            "image": "sub2041-20170515/11",
+            "label": "sub2041-20170515/11/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 32,
+            "fold": 1,
+            "image": "sub1124-20160929/32",
+            "label": "sub1124-20160929/32/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 56,
+            "fold": 2,
+            "image": "sub1050-20170624/56",
+            "label": "sub1050-20170624/56/lesion_"
+        },
+        {
+            "subid": 1074,
+            "lesion_index": 2,
+            "fold": 3,
+            "image": "sub1074-20190518/2",
+            "label": "sub1074-20190518/2/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 40,
+            "fold": 4,
+            "image": "sub1080-20180416/40",
+            "label": "sub1080-20180416/40/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 26,
+            "fold": 0,
+            "image": "sub1044-20170317/26",
+            "label": "sub1044-20170317/26/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 97,
+            "fold": 1,
+            "image": "sub1050-20170624/97",
+            "label": "sub1050-20170624/97/lesion_"
+        },
+        {
+            "subid": 1011,
+            "lesion_index": 14,
+            "fold": 2,
+            "image": "sub1011-20180911/14",
+            "label": "sub1011-20180911/14/lesion_"
+        },
+        {
+            "subid": 1033,
+            "lesion_index": 18,
+            "fold": 3,
+            "image": "sub1033-20171117/18",
+            "label": "sub1033-20171117/18/lesion_"
+        },
+        {
+            "subid": 2131,
+            "lesion_index": 24,
+            "fold": 4,
+            "image": "sub2131-20190117/24",
+            "label": "sub2131-20190117/24/lesion_"
+        },
+        {
+            "subid": 1298,
+            "lesion_index": 19,
+            "fold": 0,
+            "image": "sub1298-20190506/19",
+            "label": "sub1298-20190506/19/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 81,
+            "fold": 1,
+            "image": "sub1125-20160919/81",
+            "label": "sub1125-20160919/81/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 72,
+            "fold": 2,
+            "image": "sub1050-20170624/72",
+            "label": "sub1050-20170624/72/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 17,
+            "fold": 3,
+            "image": "sub1050-20170624/17",
+            "label": "sub1050-20170624/17/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 72,
+            "fold": 4,
+            "image": "sub1125-20160919/72",
+            "label": "sub1125-20160919/72/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 47,
+            "fold": 0,
+            "image": "sub1044-20170317/47",
+            "label": "sub1044-20170317/47/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 72,
+            "fold": 1,
+            "image": "sub1038-20161031/72",
+            "label": "sub1038-20161031/72/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 51,
+            "fold": 2,
+            "image": "sub1124-20160929/51",
+            "label": "sub1124-20160929/51/lesion_"
+        },
+        {
+            "subid": 1074,
+            "lesion_index": 5,
+            "fold": 3,
+            "image": "sub1074-20190518/5",
+            "label": "sub1074-20190518/5/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 35,
+            "fold": 4,
+            "image": "sub1050-20170624/35",
+            "label": "sub1050-20170624/35/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 22,
+            "fold": 0,
+            "image": "sub1050-20170624/22",
+            "label": "sub1050-20170624/22/lesion_"
+        },
+        {
+            "subid": 1529,
+            "lesion_index": 32,
+            "fold": 1,
+            "image": "sub1529-20170119/32",
+            "label": "sub1529-20170119/32/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 57,
+            "fold": 2,
+            "image": "sub1293-20161129/57",
+            "label": "sub1293-20161129/57/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 20,
+            "fold": 3,
+            "image": "sub1124-20160929/20",
+            "label": "sub1124-20160929/20/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 23,
+            "fold": 4,
+            "image": "sub1080-20180416/23",
+            "label": "sub1080-20180416/23/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 48,
+            "fold": 0,
+            "image": "sub1124-20160929/48",
+            "label": "sub1124-20160929/48/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 17,
+            "fold": 1,
+            "image": "sub1080-20180416/17",
+            "label": "sub1080-20180416/17/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 69,
+            "fold": 2,
+            "image": "sub1050-20170624/69",
+            "label": "sub1050-20170624/69/lesion_"
+        },
+        {
+            "subid": 1011,
+            "lesion_index": 31,
+            "fold": 3,
+            "image": "sub1011-20180911/31",
+            "label": "sub1011-20180911/31/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 37,
+            "fold": 4,
+            "image": "sub1044-20170317/37",
+            "label": "sub1044-20170317/37/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 93,
+            "fold": 0,
+            "image": "sub1050-20170624/93",
+            "label": "sub1050-20170624/93/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 68,
+            "fold": 1,
+            "image": "sub1044-20170317/68",
+            "label": "sub1044-20170317/68/lesion_"
+        },
+        {
+            "subid": 1136,
+            "lesion_index": 4,
+            "fold": 2,
+            "image": "sub1136-20171109/4",
+            "label": "sub1136-20171109/4/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 19,
+            "fold": 3,
+            "image": "sub1038-20161031/19",
+            "label": "sub1038-20161031/19/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 25,
+            "fold": 4,
+            "image": "sub1044-20170317/25",
+            "label": "sub1044-20170317/25/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 46,
+            "fold": 0,
+            "image": "sub1124-20160929/46",
+            "label": "sub1124-20160929/46/lesion_"
+        },
+        {
+            "subid": 2131,
+            "lesion_index": 19,
+            "fold": 1,
+            "image": "sub2131-20190117/19",
+            "label": "sub2131-20190117/19/lesion_"
+        },
+        {
+            "subid": 1011,
+            "lesion_index": 24,
+            "fold": 2,
+            "image": "sub1011-20180911/24",
+            "label": "sub1011-20180911/24/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 3,
+            "fold": 3,
+            "image": "sub1044-20170317/3",
+            "label": "sub1044-20170317/3/lesion_"
+        },
+        {
+            "subid": 1215,
+            "lesion_index": 10,
+            "fold": 4,
+            "image": "sub1215-20180429/10",
+            "label": "sub1215-20180429/10/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 65,
+            "fold": 0,
+            "image": "sub1125-20160919/65",
+            "label": "sub1125-20160919/65/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 8,
+            "fold": 1,
+            "image": "sub1125-20160919/8",
+            "label": "sub1125-20160919/8/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 84,
+            "fold": 2,
+            "image": "sub1038-20161031/84",
+            "label": "sub1038-20161031/84/lesion_"
+        },
+        {
+            "subid": 1078,
+            "lesion_index": 4,
+            "fold": 3,
+            "image": "sub1078-20180412/4",
+            "label": "sub1078-20180412/4/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 82,
+            "fold": 4,
+            "image": "sub1038-20161031/82",
+            "label": "sub1038-20161031/82/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 21,
+            "fold": 0,
+            "image": "sub1124-20160929/21",
+            "label": "sub1124-20160929/21/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 49,
+            "fold": 1,
+            "image": "sub1293-20161129/49",
+            "label": "sub1293-20161129/49/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 17,
+            "fold": 2,
+            "image": "sub1076-20170912/17",
+            "label": "sub1076-20170912/17/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 52,
+            "fold": 3,
+            "image": "sub1124-20160929/52",
+            "label": "sub1124-20160929/52/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 5,
+            "fold": 4,
+            "image": "sub1125-20160919/5",
+            "label": "sub1125-20160919/5/lesion_"
+        },
+        {
+            "subid": 1010,
+            "lesion_index": 2,
+            "fold": 0,
+            "image": "sub1010-20180208/2",
+            "label": "sub1010-20180208/2/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 39,
+            "fold": 1,
+            "image": "sub1044-20170317/39",
+            "label": "sub1044-20170317/39/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 51,
+            "fold": 2,
+            "image": "sub1080-20180416/51",
+            "label": "sub1080-20180416/51/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 25,
+            "fold": 3,
+            "image": "sub1050-20170624/25",
+            "label": "sub1050-20170624/25/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 10,
+            "fold": 4,
+            "image": "sub1044-20170317/10",
+            "label": "sub1044-20170317/10/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 84,
+            "fold": 0,
+            "image": "sub1125-20160919/84",
+            "label": "sub1125-20160919/84/lesion_"
+        },
+        {
+            "subid": 1078,
+            "lesion_index": 14,
+            "fold": 1,
+            "image": "sub1078-20180412/14",
+            "label": "sub1078-20180412/14/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 73,
+            "fold": 2,
+            "image": "sub1038-20161031/73",
+            "label": "sub1038-20161031/73/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 29,
+            "fold": 3,
+            "image": "sub1125-20160919/29",
+            "label": "sub1125-20160919/29/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 30,
+            "fold": 4,
+            "image": "sub1076-20170912/30",
+            "label": "sub1076-20170912/30/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 56,
+            "fold": 0,
+            "image": "sub1038-20161031/56",
+            "label": "sub1038-20161031/56/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 6,
+            "fold": 1,
+            "image": "sub1125-20160919/6",
+            "label": "sub1125-20160919/6/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 65,
+            "fold": 2,
+            "image": "sub1044-20170317/65",
+            "label": "sub1044-20170317/65/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 58,
+            "fold": 3,
+            "image": "sub1050-20170624/58",
+            "label": "sub1050-20170624/58/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 47,
+            "fold": 4,
+            "image": "sub1076-20170912/47",
+            "label": "sub1076-20170912/47/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 8,
+            "fold": 0,
+            "image": "sub1076-20170912/8",
+            "label": "sub1076-20170912/8/lesion_"
+        },
+        {
+            "subid": 1131,
+            "lesion_index": 4,
+            "fold": 1,
+            "image": "sub1131-20161209/4",
+            "label": "sub1131-20161209/4/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 5,
+            "fold": 2,
+            "image": "sub1038-20161031/5",
+            "label": "sub1038-20161031/5/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 21,
+            "fold": 3,
+            "image": "sub1050-20170624/21",
+            "label": "sub1050-20170624/21/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 93,
+            "fold": 4,
+            "image": "sub1125-20160919/93",
+            "label": "sub1125-20160919/93/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 5,
+            "fold": 0,
+            "image": "sub1076-20170912/5",
+            "label": "sub1076-20170912/5/lesion_"
+        },
+        {
+            "subid": 1136,
+            "lesion_index": 1,
+            "fold": 1,
+            "image": "sub1136-20171109/1",
+            "label": "sub1136-20171109/1/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 54,
+            "fold": 2,
+            "image": "sub1293-20161129/54",
+            "label": "sub1293-20161129/54/lesion_"
+        },
+        {
+            "subid": 2131,
+            "lesion_index": 12,
+            "fold": 3,
+            "image": "sub2131-20190117/12",
+            "label": "sub2131-20190117/12/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 2,
+            "fold": 4,
+            "image": "sub1125-20160919/2",
+            "label": "sub1125-20160919/2/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 34,
+            "fold": 0,
+            "image": "sub1293-20161129/34",
+            "label": "sub1293-20161129/34/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 24,
+            "fold": 1,
+            "image": "sub1125-20160919/24",
+            "label": "sub1125-20160919/24/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 79,
+            "fold": 2,
+            "image": "sub1038-20161031/79",
+            "label": "sub1038-20161031/79/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 107,
+            "fold": 3,
+            "image": "sub1125-20160919/107",
+            "label": "sub1125-20160919/107/lesion_"
+        },
+        {
+            "subid": 2026,
+            "lesion_index": 11,
+            "fold": 4,
+            "image": "sub2026-20160917/11",
+            "label": "sub2026-20160917/11/lesion_"
+        },
+        {
+            "subid": 2026,
+            "lesion_index": 5,
+            "fold": 0,
+            "image": "sub2026-20160917/5",
+            "label": "sub2026-20160917/5/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 31,
+            "fold": 1,
+            "image": "sub1044-20170317/31",
+            "label": "sub1044-20170317/31/lesion_"
+        },
+        {
+            "subid": 1136,
+            "lesion_index": 7,
+            "fold": 2,
+            "image": "sub1136-20171109/7",
+            "label": "sub1136-20171109/7/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 14,
+            "fold": 3,
+            "image": "sub1080-20180416/14",
+            "label": "sub1080-20180416/14/lesion_"
+        },
+        {
+            "subid": 2041,
+            "lesion_index": 18,
+            "fold": 4,
+            "image": "sub2041-20170515/18",
+            "label": "sub2041-20170515/18/lesion_"
+        },
+        {
+            "subid": 1010,
+            "lesion_index": 12,
+            "fold": 0,
+            "image": "sub1010-20180208/12",
+            "label": "sub1010-20180208/12/lesion_"
+        },
+        {
+            "subid": 1078,
+            "lesion_index": 11,
+            "fold": 1,
+            "image": "sub1078-20180412/11",
+            "label": "sub1078-20180412/11/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 24,
+            "fold": 2,
+            "image": "sub1293-20161129/24",
+            "label": "sub1293-20161129/24/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 12,
+            "fold": 3,
+            "image": "sub1038-20161031/12",
+            "label": "sub1038-20161031/12/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 4,
+            "fold": 4,
+            "image": "sub1044-20170317/4",
+            "label": "sub1044-20170317/4/lesion_"
+        },
+        {
+            "subid": 1010,
+            "lesion_index": 20,
+            "fold": 0,
+            "image": "sub1010-20180208/20",
+            "label": "sub1010-20180208/20/lesion_"
+        },
+        {
+            "subid": 1033,
+            "lesion_index": 17,
+            "fold": 1,
+            "image": "sub1033-20171117/17",
+            "label": "sub1033-20171117/17/lesion_"
+        },
+        {
+            "subid": 1348,
+            "lesion_index": 20,
+            "fold": 2,
+            "image": "sub1348-20181009/20",
+            "label": "sub1348-20181009/20/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 60,
+            "fold": 3,
+            "image": "sub1293-20161129/60",
+            "label": "sub1293-20161129/60/lesion_"
+        },
+        {
+            "subid": 2026,
+            "lesion_index": 22,
+            "fold": 4,
+            "image": "sub2026-20160917/22",
+            "label": "sub2026-20160917/22/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 68,
+            "fold": 0,
+            "image": "sub1038-20161031/68",
+            "label": "sub1038-20161031/68/lesion_"
+        },
+        {
+            "subid": 1078,
+            "lesion_index": 29,
+            "fold": 1,
+            "image": "sub1078-20180412/29",
+            "label": "sub1078-20180412/29/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 3,
+            "fold": 2,
+            "image": "sub1050-20170624/3",
+            "label": "sub1050-20170624/3/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 55,
+            "fold": 3,
+            "image": "sub1293-20161129/55",
+            "label": "sub1293-20161129/55/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 83,
+            "fold": 4,
+            "image": "sub1038-20161031/83",
+            "label": "sub1038-20161031/83/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 5,
+            "fold": 0,
+            "image": "sub1044-20170317/5",
+            "label": "sub1044-20170317/5/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 35,
+            "fold": 1,
+            "image": "sub1080-20180416/35",
+            "label": "sub1080-20180416/35/lesion_"
+        },
+        {
+            "subid": 2026,
+            "lesion_index": 17,
+            "fold": 2,
+            "image": "sub2026-20160917/17",
+            "label": "sub2026-20160917/17/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 14,
+            "fold": 3,
+            "image": "sub1076-20170912/14",
+            "label": "sub1076-20170912/14/lesion_"
+        },
+        {
+            "subid": 1348,
+            "lesion_index": 18,
+            "fold": 4,
+            "image": "sub1348-20181009/18",
+            "label": "sub1348-20181009/18/lesion_"
+        },
+        {
+            "subid": 1215,
+            "lesion_index": 7,
+            "fold": 0,
+            "image": "sub1215-20180429/7",
+            "label": "sub1215-20180429/7/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 46,
+            "fold": 1,
+            "image": "sub1038-20161031/46",
+            "label": "sub1038-20161031/46/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 46,
+            "fold": 2,
+            "image": "sub1080-20180416/46",
+            "label": "sub1080-20180416/46/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 48,
+            "fold": 3,
+            "image": "sub1044-20170317/48",
+            "label": "sub1044-20170317/48/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 67,
+            "fold": 4,
+            "image": "sub1125-20160919/67",
+            "label": "sub1125-20160919/67/lesion_"
+        },
+        {
+            "subid": 1010,
+            "lesion_index": 21,
+            "fold": 0,
+            "image": "sub1010-20180208/21",
+            "label": "sub1010-20180208/21/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 50,
+            "fold": 1,
+            "image": "sub1076-20170912/50",
+            "label": "sub1076-20170912/50/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 25,
+            "fold": 2,
+            "image": "sub1125-20160919/25",
+            "label": "sub1125-20160919/25/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 11,
+            "fold": 3,
+            "image": "sub1080-20180416/11",
+            "label": "sub1080-20180416/11/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 6,
+            "fold": 4,
+            "image": "sub1293-20161129/6",
+            "label": "sub1293-20161129/6/lesion_"
+        },
+        {
+            "subid": 2041,
+            "lesion_index": 7,
+            "fold": 0,
+            "image": "sub2041-20170515/7",
+            "label": "sub2041-20170515/7/lesion_"
+        },
+        {
+            "subid": 1215,
+            "lesion_index": 1,
+            "fold": 1,
+            "image": "sub1215-20180429/1",
+            "label": "sub1215-20180429/1/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 35,
+            "fold": 2,
+            "image": "sub1124-20160929/35",
+            "label": "sub1124-20160929/35/lesion_"
+        },
+        {
+            "subid": 1033,
+            "lesion_index": 8,
+            "fold": 3,
+            "image": "sub1033-20171117/8",
+            "label": "sub1033-20171117/8/lesion_"
+        },
+        {
+            "subid": 1348,
+            "lesion_index": 13,
+            "fold": 4,
+            "image": "sub1348-20181009/13",
+            "label": "sub1348-20181009/13/lesion_"
+        },
+        {
+            "subid": 1010,
+            "lesion_index": 14,
+            "fold": 0,
+            "image": "sub1010-20180208/14",
+            "label": "sub1010-20180208/14/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 41,
+            "fold": 1,
+            "image": "sub1050-20170624/41",
+            "label": "sub1050-20170624/41/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 15,
+            "fold": 2,
+            "image": "sub1125-20160919/15",
+            "label": "sub1125-20160919/15/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 34,
+            "fold": 3,
+            "image": "sub1038-20161031/34",
+            "label": "sub1038-20161031/34/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 23,
+            "fold": 4,
+            "image": "sub1038-20161031/23",
+            "label": "sub1038-20161031/23/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 85,
+            "fold": 0,
+            "image": "sub1038-20161031/85",
+            "label": "sub1038-20161031/85/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 42,
+            "fold": 1,
+            "image": "sub1044-20170317/42",
+            "label": "sub1044-20170317/42/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 97,
+            "fold": 2,
+            "image": "sub1125-20160919/97",
+            "label": "sub1125-20160919/97/lesion_"
+        },
+        {
+            "subid": 1010,
+            "lesion_index": 5,
+            "fold": 3,
+            "image": "sub1010-20180208/5",
+            "label": "sub1010-20180208/5/lesion_"
+        },
+        {
+            "subid": 2131,
+            "lesion_index": 5,
+            "fold": 4,
+            "image": "sub2131-20190117/5",
+            "label": "sub2131-20190117/5/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 87,
+            "fold": 0,
+            "image": "sub1125-20160919/87",
+            "label": "sub1125-20160919/87/lesion_"
+        },
+        {
+            "subid": 2041,
+            "lesion_index": 13,
+            "fold": 1,
+            "image": "sub2041-20170515/13",
+            "label": "sub2041-20170515/13/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 11,
+            "fold": 2,
+            "image": "sub1050-20170624/11",
+            "label": "sub1050-20170624/11/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 34,
+            "fold": 3,
+            "image": "sub1076-20170912/34",
+            "label": "sub1076-20170912/34/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 24,
+            "fold": 4,
+            "image": "sub1124-20160929/24",
+            "label": "sub1124-20160929/24/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 38,
+            "fold": 0,
+            "image": "sub1076-20170912/38",
+            "label": "sub1076-20170912/38/lesion_"
+        },
+        {
+            "subid": 2026,
+            "lesion_index": 16,
+            "fold": 1,
+            "image": "sub2026-20160917/16",
+            "label": "sub2026-20160917/16/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 32,
+            "fold": 2,
+            "image": "sub1044-20170317/32",
+            "label": "sub1044-20170317/32/lesion_"
+        },
+        {
+            "subid": 1215,
+            "lesion_index": 23,
+            "fold": 3,
+            "image": "sub1215-20180429/23",
+            "label": "sub1215-20180429/23/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 33,
+            "fold": 4,
+            "image": "sub1076-20170912/33",
+            "label": "sub1076-20170912/33/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 87,
+            "fold": 0,
+            "image": "sub1038-20161031/87",
+            "label": "sub1038-20161031/87/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 51,
+            "fold": 1,
+            "image": "sub1125-20160919/51",
+            "label": "sub1125-20160919/51/lesion_"
+        },
+        {
+            "subid": 1396,
+            "lesion_index": 2,
+            "fold": 2,
+            "image": "sub1396-20170126/2",
+            "label": "sub1396-20170126/2/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 71,
+            "fold": 3,
+            "image": "sub1050-20170624/71",
+            "label": "sub1050-20170624/71/lesion_"
+        },
+        {
+            "subid": 1011,
+            "lesion_index": 27,
+            "fold": 4,
+            "image": "sub1011-20180911/27",
+            "label": "sub1011-20180911/27/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 47,
+            "fold": 0,
+            "image": "sub1050-20170624/47",
+            "label": "sub1050-20170624/47/lesion_"
+        },
+        {
+            "subid": 1136,
+            "lesion_index": 2,
+            "fold": 1,
+            "image": "sub1136-20171109/2",
+            "label": "sub1136-20171109/2/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 42,
+            "fold": 2,
+            "image": "sub1124-20160929/42",
+            "label": "sub1124-20160929/42/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 15,
+            "fold": 3,
+            "image": "sub1293-20161129/15",
+            "label": "sub1293-20161129/15/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 12,
+            "fold": 4,
+            "image": "sub1044-20170317/12",
+            "label": "sub1044-20170317/12/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 18,
+            "fold": 0,
+            "image": "sub1076-20170912/18",
+            "label": "sub1076-20170912/18/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 31,
+            "fold": 1,
+            "image": "sub1076-20170912/31",
+            "label": "sub1076-20170912/31/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 48,
+            "fold": 2,
+            "image": "sub1050-20170624/48",
+            "label": "sub1050-20170624/48/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 56,
+            "fold": 3,
+            "image": "sub1293-20161129/56",
+            "label": "sub1293-20161129/56/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 29,
+            "fold": 4,
+            "image": "sub1076-20170912/29",
+            "label": "sub1076-20170912/29/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 27,
+            "fold": 0,
+            "image": "sub1076-20170912/27",
+            "label": "sub1076-20170912/27/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 72,
+            "fold": 1,
+            "image": "sub1293-20161129/72",
+            "label": "sub1293-20161129/72/lesion_"
+        },
+        {
+            "subid": 1078,
+            "lesion_index": 3,
+            "fold": 2,
+            "image": "sub1078-20180412/3",
+            "label": "sub1078-20180412/3/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 100,
+            "fold": 3,
+            "image": "sub1050-20170624/100",
+            "label": "sub1050-20170624/100/lesion_"
+        },
+        {
+            "subid": 2026,
+            "lesion_index": 9,
+            "fold": 4,
+            "image": "sub2026-20160917/9",
+            "label": "sub2026-20160917/9/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 54,
+            "fold": 0,
+            "image": "sub1044-20170317/54",
+            "label": "sub1044-20170317/54/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 40,
+            "fold": 1,
+            "image": "sub1038-20161031/40",
+            "label": "sub1038-20161031/40/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 4,
+            "fold": 2,
+            "image": "sub1080-20180416/4",
+            "label": "sub1080-20180416/4/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 37,
+            "fold": 3,
+            "image": "sub1293-20161129/37",
+            "label": "sub1293-20161129/37/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 43,
+            "fold": 4,
+            "image": "sub1080-20180416/43",
+            "label": "sub1080-20180416/43/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 11,
+            "fold": 0,
+            "image": "sub1293-20161129/11",
+            "label": "sub1293-20161129/11/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 59,
+            "fold": 1,
+            "image": "sub1038-20161031/59",
+            "label": "sub1038-20161031/59/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 27,
+            "fold": 2,
+            "image": "sub1050-20170624/27",
+            "label": "sub1050-20170624/27/lesion_"
+        },
+        {
+            "subid": 2026,
+            "lesion_index": 19,
+            "fold": 3,
+            "image": "sub2026-20160917/19",
+            "label": "sub2026-20160917/19/lesion_"
+        },
+        {
+            "subid": 1011,
+            "lesion_index": 9,
+            "fold": 4,
+            "image": "sub1011-20180911/9",
+            "label": "sub1011-20180911/9/lesion_"
+        },
+        {
+            "subid": 2131,
+            "lesion_index": 22,
+            "fold": 0,
+            "image": "sub2131-20190117/22",
+            "label": "sub2131-20190117/22/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 50,
+            "fold": 1,
+            "image": "sub1293-20161129/50",
+            "label": "sub1293-20161129/50/lesion_"
+        },
+        {
+            "subid": 2041,
+            "lesion_index": 41,
+            "fold": 2,
+            "image": "sub2041-20170515/41",
+            "label": "sub2041-20170515/41/lesion_"
+        },
+        {
+            "subid": 2131,
+            "lesion_index": 13,
+            "fold": 3,
+            "image": "sub2131-20190117/13",
+            "label": "sub2131-20190117/13/lesion_"
+        },
+        {
+            "subid": 1033,
+            "lesion_index": 9,
+            "fold": 4,
+            "image": "sub1033-20171117/9",
+            "label": "sub1033-20171117/9/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 43,
+            "fold": 0,
+            "image": "sub1076-20170912/43",
+            "label": "sub1076-20170912/43/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 20,
+            "fold": 1,
+            "image": "sub1293-20161129/20",
+            "label": "sub1293-20161129/20/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 75,
+            "fold": 2,
+            "image": "sub1293-20161129/75",
+            "label": "sub1293-20161129/75/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 5,
+            "fold": 3,
+            "image": "sub1050-20170624/5",
+            "label": "sub1050-20170624/5/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 29,
+            "fold": 4,
+            "image": "sub1293-20161129/29",
+            "label": "sub1293-20161129/29/lesion_"
+        },
+        {
+            "subid": 1078,
+            "lesion_index": 6,
+            "fold": 0,
+            "image": "sub1078-20180412/6",
+            "label": "sub1078-20180412/6/lesion_"
+        },
+        {
+            "subid": 1010,
+            "lesion_index": 19,
+            "fold": 1,
+            "image": "sub1010-20180208/19",
+            "label": "sub1010-20180208/19/lesion_"
+        },
+        {
+            "subid": 2041,
+            "lesion_index": 6,
+            "fold": 2,
+            "image": "sub2041-20170515/6",
+            "label": "sub2041-20170515/6/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 4,
+            "fold": 3,
+            "image": "sub1124-20160929/4",
+            "label": "sub1124-20160929/4/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 63,
+            "fold": 4,
+            "image": "sub1050-20170624/63",
+            "label": "sub1050-20170624/63/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 99,
+            "fold": 0,
+            "image": "sub1125-20160919/99",
+            "label": "sub1125-20160919/99/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 50,
+            "fold": 1,
+            "image": "sub1038-20161031/50",
+            "label": "sub1038-20161031/50/lesion_"
+        },
+        {
+            "subid": 1033,
+            "lesion_index": 7,
+            "fold": 2,
+            "image": "sub1033-20171117/7",
+            "label": "sub1033-20171117/7/lesion_"
+        },
+        {
+            "subid": 1078,
+            "lesion_index": 21,
+            "fold": 3,
+            "image": "sub1078-20180412/21",
+            "label": "sub1078-20180412/21/lesion_"
+        },
+        {
+            "subid": 1078,
+            "lesion_index": 5,
+            "fold": 4,
+            "image": "sub1078-20180412/5",
+            "label": "sub1078-20180412/5/lesion_"
+        },
+        {
+            "subid": 1529,
+            "lesion_index": 43,
+            "fold": 0,
+            "image": "sub1529-20170119/43",
+            "label": "sub1529-20170119/43/lesion_"
+        },
+        {
+            "subid": 1358,
+            "lesion_index": 3,
+            "fold": 1,
+            "image": "sub1358-20170311/3",
+            "label": "sub1358-20170311/3/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 33,
+            "fold": 2,
+            "image": "sub1038-20161031/33",
+            "label": "sub1038-20161031/33/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 31,
+            "fold": 3,
+            "image": "sub1293-20161129/31",
+            "label": "sub1293-20161129/31/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 71,
+            "fold": 4,
+            "image": "sub1038-20161031/71",
+            "label": "sub1038-20161031/71/lesion_"
+        },
+        {
+            "subid": 1529,
+            "lesion_index": 12,
+            "fold": 0,
+            "image": "sub1529-20170119/12",
+            "label": "sub1529-20170119/12/lesion_"
+        },
+        {
+            "subid": 1010,
+            "lesion_index": 28,
+            "fold": 1,
+            "image": "sub1010-20180208/28",
+            "label": "sub1010-20180208/28/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 62,
+            "fold": 2,
+            "image": "sub1050-20170624/62",
+            "label": "sub1050-20170624/62/lesion_"
+        },
+        {
+            "subid": 1348,
+            "lesion_index": 27,
+            "fold": 3,
+            "image": "sub1348-20181009/27",
+            "label": "sub1348-20181009/27/lesion_"
+        },
+        {
+            "subid": 1078,
+            "lesion_index": 20,
+            "fold": 4,
+            "image": "sub1078-20180412/20",
+            "label": "sub1078-20180412/20/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 13,
+            "fold": 0,
+            "image": "sub1293-20161129/13",
+            "label": "sub1293-20161129/13/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 6,
+            "fold": 1,
+            "image": "sub1080-20180416/6",
+            "label": "sub1080-20180416/6/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 37,
+            "fold": 2,
+            "image": "sub1050-20170624/37",
+            "label": "sub1050-20170624/37/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 8,
+            "fold": 3,
+            "image": "sub1124-20160929/8",
+            "label": "sub1124-20160929/8/lesion_"
+        },
+        {
+            "subid": 1033,
+            "lesion_index": 15,
+            "fold": 4,
+            "image": "sub1033-20171117/15",
+            "label": "sub1033-20171117/15/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 74,
+            "fold": 0,
+            "image": "sub1125-20160919/74",
+            "label": "sub1125-20160919/74/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 35,
+            "fold": 1,
+            "image": "sub1125-20160919/35",
+            "label": "sub1125-20160919/35/lesion_"
+        },
+        {
+            "subid": 2131,
+            "lesion_index": 4,
+            "fold": 2,
+            "image": "sub2131-20190117/4",
+            "label": "sub2131-20190117/4/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 24,
+            "fold": 3,
+            "image": "sub1080-20180416/24",
+            "label": "sub1080-20180416/24/lesion_"
+        },
+        {
+            "subid": 1529,
+            "lesion_index": 39,
+            "fold": 4,
+            "image": "sub1529-20170119/39",
+            "label": "sub1529-20170119/39/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 62,
+            "fold": 0,
+            "image": "sub1044-20170317/62",
+            "label": "sub1044-20170317/62/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 26,
+            "fold": 1,
+            "image": "sub1076-20170912/26",
+            "label": "sub1076-20170912/26/lesion_"
+        },
+        {
+            "subid": 1033,
+            "lesion_index": 3,
+            "fold": 2,
+            "image": "sub1033-20171117/3",
+            "label": "sub1033-20171117/3/lesion_"
+        },
+        {
+            "subid": 1215,
+            "lesion_index": 20,
+            "fold": 3,
+            "image": "sub1215-20180429/20",
+            "label": "sub1215-20180429/20/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 83,
+            "fold": 4,
+            "image": "sub1125-20160919/83",
+            "label": "sub1125-20160919/83/lesion_"
+        },
+        {
+            "subid": 1529,
+            "lesion_index": 31,
+            "fold": 0,
+            "image": "sub1529-20170119/31",
+            "label": "sub1529-20170119/31/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 3,
+            "fold": 1,
+            "image": "sub1125-20160919/3",
+            "label": "sub1125-20160919/3/lesion_"
+        },
+        {
+            "subid": 1529,
+            "lesion_index": 34,
+            "fold": 2,
+            "image": "sub1529-20170119/34",
+            "label": "sub1529-20170119/34/lesion_"
+        },
+        {
+            "subid": 2131,
+            "lesion_index": 20,
+            "fold": 3,
+            "image": "sub2131-20190117/20",
+            "label": "sub2131-20190117/20/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 77,
+            "fold": 4,
+            "image": "sub1125-20160919/77",
+            "label": "sub1125-20160919/77/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 36,
+            "fold": 0,
+            "image": "sub1050-20170624/36",
+            "label": "sub1050-20170624/36/lesion_"
+        },
+        {
+            "subid": 1011,
+            "lesion_index": 21,
+            "fold": 1,
+            "image": "sub1011-20180911/21",
+            "label": "sub1011-20180911/21/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 65,
+            "fold": 2,
+            "image": "sub1293-20161129/65",
+            "label": "sub1293-20161129/65/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 13,
+            "fold": 3,
+            "image": "sub1044-20170317/13",
+            "label": "sub1044-20170317/13/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 55,
+            "fold": 4,
+            "image": "sub1125-20160919/55",
+            "label": "sub1125-20160919/55/lesion_"
+        },
+        {
+            "subid": 1348,
+            "lesion_index": 10,
+            "fold": 0,
+            "image": "sub1348-20181009/10",
+            "label": "sub1348-20181009/10/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 21,
+            "fold": 1,
+            "image": "sub1293-20161129/21",
+            "label": "sub1293-20161129/21/lesion_"
+        },
+        {
+            "subid": 1011,
+            "lesion_index": 15,
+            "fold": 2,
+            "image": "sub1011-20180911/15",
+            "label": "sub1011-20180911/15/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 31,
+            "fold": 3,
+            "image": "sub1050-20170624/31",
+            "label": "sub1050-20170624/31/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 52,
+            "fold": 4,
+            "image": "sub1044-20170317/52",
+            "label": "sub1044-20170317/52/lesion_"
+        },
+        {
+            "subid": 1298,
+            "lesion_index": 2,
+            "fold": 0,
+            "image": "sub1298-20190506/2",
+            "label": "sub1298-20190506/2/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 19,
+            "fold": 1,
+            "image": "sub1080-20180416/19",
+            "label": "sub1080-20180416/19/lesion_"
+        },
+        {
+            "subid": 1529,
+            "lesion_index": 35,
+            "fold": 2,
+            "image": "sub1529-20170119/35",
+            "label": "sub1529-20170119/35/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 34,
+            "fold": 3,
+            "image": "sub1050-20170624/34",
+            "label": "sub1050-20170624/34/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 70,
+            "fold": 4,
+            "image": "sub1050-20170624/70",
+            "label": "sub1050-20170624/70/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 7,
+            "fold": 0,
+            "image": "sub1044-20170317/7",
+            "label": "sub1044-20170317/7/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 74,
+            "fold": 1,
+            "image": "sub1050-20170624/74",
+            "label": "sub1050-20170624/74/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 89,
+            "fold": 2,
+            "image": "sub1038-20161031/89",
+            "label": "sub1038-20161031/89/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 27,
+            "fold": 3,
+            "image": "sub1080-20180416/27",
+            "label": "sub1080-20180416/27/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 26,
+            "fold": 4,
+            "image": "sub1125-20160919/26",
+            "label": "sub1125-20160919/26/lesion_"
+        },
+        {
+            "subid": 2041,
+            "lesion_index": 24,
+            "fold": 0,
+            "image": "sub2041-20170515/24",
+            "label": "sub2041-20170515/24/lesion_"
+        },
+        {
+            "subid": 1033,
+            "lesion_index": 4,
+            "fold": 1,
+            "image": "sub1033-20171117/4",
+            "label": "sub1033-20171117/4/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 27,
+            "fold": 2,
+            "image": "sub1038-20161031/27",
+            "label": "sub1038-20161031/27/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 86,
+            "fold": 3,
+            "image": "sub1125-20160919/86",
+            "label": "sub1125-20160919/86/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 41,
+            "fold": 4,
+            "image": "sub1038-20161031/41",
+            "label": "sub1038-20161031/41/lesion_"
+        },
+        {
+            "subid": 1348,
+            "lesion_index": 12,
+            "fold": 0,
+            "image": "sub1348-20181009/12",
+            "label": "sub1348-20181009/12/lesion_"
+        },
+        {
+            "subid": 1396,
+            "lesion_index": 14,
+            "fold": 1,
+            "image": "sub1396-20170126/14",
+            "label": "sub1396-20170126/14/lesion_"
+        },
+        {
+            "subid": 2041,
+            "lesion_index": 30,
+            "fold": 2,
+            "image": "sub2041-20170515/30",
+            "label": "sub2041-20170515/30/lesion_"
+        },
+        {
+            "subid": 1298,
+            "lesion_index": 13,
+            "fold": 3,
+            "image": "sub1298-20190506/13",
+            "label": "sub1298-20190506/13/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 57,
+            "fold": 4,
+            "image": "sub1038-20161031/57",
+            "label": "sub1038-20161031/57/lesion_"
+        },
+        {
+            "subid": 1033,
+            "lesion_index": 12,
+            "fold": 0,
+            "image": "sub1033-20171117/12",
+            "label": "sub1033-20171117/12/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 8,
+            "fold": 1,
+            "image": "sub1050-20170624/8",
+            "label": "sub1050-20170624/8/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 5,
+            "fold": 2,
+            "image": "sub1124-20160929/5",
+            "label": "sub1124-20160929/5/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 46,
+            "fold": 3,
+            "image": "sub1125-20160919/46",
+            "label": "sub1125-20160919/46/lesion_"
+        },
+        {
+            "subid": 1033,
+            "lesion_index": 11,
+            "fold": 4,
+            "image": "sub1033-20171117/11",
+            "label": "sub1033-20171117/11/lesion_"
+        },
+        {
+            "subid": 1011,
+            "lesion_index": 17,
+            "fold": 0,
+            "image": "sub1011-20180911/17",
+            "label": "sub1011-20180911/17/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 29,
+            "fold": 1,
+            "image": "sub1050-20170624/29",
+            "label": "sub1050-20170624/29/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 14,
+            "fold": 2,
+            "image": "sub1050-20170624/14",
+            "label": "sub1050-20170624/14/lesion_"
+        },
+        {
+            "subid": 1529,
+            "lesion_index": 27,
+            "fold": 3,
+            "image": "sub1529-20170119/27",
+            "label": "sub1529-20170119/27/lesion_"
+        },
+        {
+            "subid": 2041,
+            "lesion_index": 15,
+            "fold": 4,
+            "image": "sub2041-20170515/15",
+            "label": "sub2041-20170515/15/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 88,
+            "fold": 0,
+            "image": "sub1125-20160919/88",
+            "label": "sub1125-20160919/88/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 30,
+            "fold": 1,
+            "image": "sub1050-20170624/30",
+            "label": "sub1050-20170624/30/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 70,
+            "fold": 2,
+            "image": "sub1044-20170317/70",
+            "label": "sub1044-20170317/70/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 40,
+            "fold": 3,
+            "image": "sub1125-20160919/40",
+            "label": "sub1125-20160919/40/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 78,
+            "fold": 4,
+            "image": "sub1293-20161129/78",
+            "label": "sub1293-20161129/78/lesion_"
+        },
+        {
+            "subid": 2131,
+            "lesion_index": 9,
+            "fold": 0,
+            "image": "sub2131-20190117/9",
+            "label": "sub2131-20190117/9/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 91,
+            "fold": 1,
+            "image": "sub1125-20160919/91",
+            "label": "sub1125-20160919/91/lesion_"
+        },
+        {
+            "subid": 2026,
+            "lesion_index": 12,
+            "fold": 2,
+            "image": "sub2026-20160917/12",
+            "label": "sub2026-20160917/12/lesion_"
+        },
+        {
+            "subid": 1396,
+            "lesion_index": 10,
+            "fold": 3,
+            "image": "sub1396-20170126/10",
+            "label": "sub1396-20170126/10/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 44,
+            "fold": 4,
+            "image": "sub1044-20170317/44",
+            "label": "sub1044-20170317/44/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 98,
+            "fold": 0,
+            "image": "sub1050-20170624/98",
+            "label": "sub1050-20170624/98/lesion_"
+        },
+        {
+            "subid": 1358,
+            "lesion_index": 4,
+            "fold": 1,
+            "image": "sub1358-20170311/4",
+            "label": "sub1358-20170311/4/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 36,
+            "fold": 2,
+            "image": "sub1038-20161031/36",
+            "label": "sub1038-20161031/36/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 29,
+            "fold": 3,
+            "image": "sub1038-20161031/29",
+            "label": "sub1038-20161031/29/lesion_"
+        },
+        {
+            "subid": 1011,
+            "lesion_index": 19,
+            "fold": 4,
+            "image": "sub1011-20180911/19",
+            "label": "sub1011-20180911/19/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 11,
+            "fold": 0,
+            "image": "sub1038-20161031/11",
+            "label": "sub1038-20161031/11/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 63,
+            "fold": 1,
+            "image": "sub1044-20170317/63",
+            "label": "sub1044-20170317/63/lesion_"
+        },
+        {
+            "subid": 2041,
+            "lesion_index": 2,
+            "fold": 2,
+            "image": "sub2041-20170515/2",
+            "label": "sub2041-20170515/2/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 10,
+            "fold": 3,
+            "image": "sub1076-20170912/10",
+            "label": "sub1076-20170912/10/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 7,
+            "fold": 4,
+            "image": "sub1125-20160919/7",
+            "label": "sub1125-20160919/7/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 35,
+            "fold": 0,
+            "image": "sub1076-20170912/35",
+            "label": "sub1076-20170912/35/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 23,
+            "fold": 1,
+            "image": "sub1125-20160919/23",
+            "label": "sub1125-20160919/23/lesion_"
+        },
+        {
+            "subid": 1396,
+            "lesion_index": 20,
+            "fold": 2,
+            "image": "sub1396-20170126/20",
+            "label": "sub1396-20170126/20/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 40,
+            "fold": 3,
+            "image": "sub1124-20160929/40",
+            "label": "sub1124-20160929/40/lesion_"
+        },
+        {
+            "subid": 1078,
+            "lesion_index": 19,
+            "fold": 4,
+            "image": "sub1078-20180412/19",
+            "label": "sub1078-20180412/19/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 6,
+            "fold": 0,
+            "image": "sub1044-20170317/6",
+            "label": "sub1044-20170317/6/lesion_"
+        },
+        {
+            "subid": 1078,
+            "lesion_index": 16,
+            "fold": 1,
+            "image": "sub1078-20180412/16",
+            "label": "sub1078-20180412/16/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 15,
+            "fold": 2,
+            "image": "sub1044-20170317/15",
+            "label": "sub1044-20170317/15/lesion_"
+        },
+        {
+            "subid": 1074,
+            "lesion_index": 6,
+            "fold": 3,
+            "image": "sub1074-20190518/6",
+            "label": "sub1074-20190518/6/lesion_"
+        },
+        {
+            "subid": 1529,
+            "lesion_index": 24,
+            "fold": 4,
+            "image": "sub1529-20170119/24",
+            "label": "sub1529-20170119/24/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 66,
+            "fold": 0,
+            "image": "sub1293-20161129/66",
+            "label": "sub1293-20161129/66/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 18,
+            "fold": 1,
+            "image": "sub1080-20180416/18",
+            "label": "sub1080-20180416/18/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 9,
+            "fold": 2,
+            "image": "sub1076-20170912/9",
+            "label": "sub1076-20170912/9/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 18,
+            "fold": 3,
+            "image": "sub1050-20170624/18",
+            "label": "sub1050-20170624/18/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 27,
+            "fold": 4,
+            "image": "sub1293-20161129/27",
+            "label": "sub1293-20161129/27/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 60,
+            "fold": 0,
+            "image": "sub1038-20161031/60",
+            "label": "sub1038-20161031/60/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 6,
+            "fold": 1,
+            "image": "sub1076-20170912/6",
+            "label": "sub1076-20170912/6/lesion_"
+        },
+        {
+            "subid": 1033,
+            "lesion_index": 13,
+            "fold": 2,
+            "image": "sub1033-20171117/13",
+            "label": "sub1033-20171117/13/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 88,
+            "fold": 3,
+            "image": "sub1050-20170624/88",
+            "label": "sub1050-20170624/88/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 34,
+            "fold": 4,
+            "image": "sub1124-20160929/34",
+            "label": "sub1124-20160929/34/lesion_"
+        },
+        {
+            "subid": 1078,
+            "lesion_index": 26,
+            "fold": 0,
+            "image": "sub1078-20180412/26",
+            "label": "sub1078-20180412/26/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 28,
+            "fold": 1,
+            "image": "sub1293-20161129/28",
+            "label": "sub1293-20161129/28/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 68,
+            "fold": 2,
+            "image": "sub1293-20161129/68",
+            "label": "sub1293-20161129/68/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 15,
+            "fold": 3,
+            "image": "sub1080-20180416/15",
+            "label": "sub1080-20180416/15/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 57,
+            "fold": 4,
+            "image": "sub1050-20170624/57",
+            "label": "sub1050-20170624/57/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 74,
+            "fold": 0,
+            "image": "sub1293-20161129/74",
+            "label": "sub1293-20161129/74/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 1,
+            "fold": 1,
+            "image": "sub1076-20170912/1",
+            "label": "sub1076-20170912/1/lesion_"
+        },
+        {
+            "subid": 1010,
+            "lesion_index": 26,
+            "fold": 2,
+            "image": "sub1010-20180208/26",
+            "label": "sub1010-20180208/26/lesion_"
+        },
+        {
+            "subid": 1215,
+            "lesion_index": 13,
+            "fold": 3,
+            "image": "sub1215-20180429/13",
+            "label": "sub1215-20180429/13/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 53,
+            "fold": 4,
+            "image": "sub1080-20180416/53",
+            "label": "sub1080-20180416/53/lesion_"
+        },
+        {
+            "subid": 2131,
+            "lesion_index": 8,
+            "fold": 0,
+            "image": "sub2131-20190117/8",
+            "label": "sub2131-20190117/8/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 77,
+            "fold": 1,
+            "image": "sub1293-20161129/77",
+            "label": "sub1293-20161129/77/lesion_"
+        },
+        {
+            "subid": 1348,
+            "lesion_index": 31,
+            "fold": 2,
+            "image": "sub1348-20181009/31",
+            "label": "sub1348-20181009/31/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 46,
+            "fold": 3,
+            "image": "sub1293-20161129/46",
+            "label": "sub1293-20161129/46/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 13,
+            "fold": 4,
+            "image": "sub1125-20160919/13",
+            "label": "sub1125-20160919/13/lesion_"
+        },
+        {
+            "subid": 2131,
+            "lesion_index": 17,
+            "fold": 0,
+            "image": "sub2131-20190117/17",
+            "label": "sub2131-20190117/17/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 14,
+            "fold": 1,
+            "image": "sub1044-20170317/14",
+            "label": "sub1044-20170317/14/lesion_"
+        },
+        {
+            "subid": 1215,
+            "lesion_index": 14,
+            "fold": 2,
+            "image": "sub1215-20180429/14",
+            "label": "sub1215-20180429/14/lesion_"
+        },
+        {
+            "subid": 1078,
+            "lesion_index": 22,
+            "fold": 3,
+            "image": "sub1078-20180412/22",
+            "label": "sub1078-20180412/22/lesion_"
+        },
+        {
+            "subid": 1396,
+            "lesion_index": 17,
+            "fold": 4,
+            "image": "sub1396-20170126/17",
+            "label": "sub1396-20170126/17/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 26,
+            "fold": 0,
+            "image": "sub1124-20160929/26",
+            "label": "sub1124-20160929/26/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 76,
+            "fold": 1,
+            "image": "sub1038-20161031/76",
+            "label": "sub1038-20161031/76/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 25,
+            "fold": 2,
+            "image": "sub1080-20180416/25",
+            "label": "sub1080-20180416/25/lesion_"
+        },
+        {
+            "subid": 2041,
+            "lesion_index": 9,
+            "fold": 3,
+            "image": "sub2041-20170515/9",
+            "label": "sub2041-20170515/9/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 45,
+            "fold": 4,
+            "image": "sub1076-20170912/45",
+            "label": "sub1076-20170912/45/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 65,
+            "fold": 0,
+            "image": "sub1038-20161031/65",
+            "label": "sub1038-20161031/65/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 26,
+            "fold": 1,
+            "image": "sub1293-20161129/26",
+            "label": "sub1293-20161129/26/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 60,
+            "fold": 2,
+            "image": "sub1050-20170624/60",
+            "label": "sub1050-20170624/60/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 9,
+            "fold": 3,
+            "image": "sub1124-20160929/9",
+            "label": "sub1124-20160929/9/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 61,
+            "fold": 4,
+            "image": "sub1044-20170317/61",
+            "label": "sub1044-20170317/61/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 10,
+            "fold": 0,
+            "image": "sub1124-20160929/10",
+            "label": "sub1124-20160929/10/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 92,
+            "fold": 1,
+            "image": "sub1125-20160919/92",
+            "label": "sub1125-20160919/92/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 39,
+            "fold": 2,
+            "image": "sub1080-20180416/39",
+            "label": "sub1080-20180416/39/lesion_"
+        },
+        {
+            "subid": 1348,
+            "lesion_index": 9,
+            "fold": 3,
+            "image": "sub1348-20181009/9",
+            "label": "sub1348-20181009/9/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 28,
+            "fold": 4,
+            "image": "sub1124-20160929/28",
+            "label": "sub1124-20160929/28/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 17,
+            "fold": 0,
+            "image": "sub1044-20170317/17",
+            "label": "sub1044-20170317/17/lesion_"
+        },
+        {
+            "subid": 1348,
+            "lesion_index": 14,
+            "fold": 1,
+            "image": "sub1348-20181009/14",
+            "label": "sub1348-20181009/14/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 30,
+            "fold": 2,
+            "image": "sub1124-20160929/30",
+            "label": "sub1124-20160929/30/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 58,
+            "fold": 3,
+            "image": "sub1125-20160919/58",
+            "label": "sub1125-20160919/58/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 14,
+            "fold": 4,
+            "image": "sub1125-20160919/14",
+            "label": "sub1125-20160919/14/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 101,
+            "fold": 0,
+            "image": "sub1125-20160919/101",
+            "label": "sub1125-20160919/101/lesion_"
+        },
+        {
+            "subid": 1011,
+            "lesion_index": 20,
+            "fold": 1,
+            "image": "sub1011-20180911/20",
+            "label": "sub1011-20180911/20/lesion_"
+        },
+        {
+            "subid": 1033,
+            "lesion_index": 1,
+            "fold": 2,
+            "image": "sub1033-20171117/1",
+            "label": "sub1033-20171117/1/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 23,
+            "fold": 3,
+            "image": "sub1293-20161129/23",
+            "label": "sub1293-20161129/23/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 43,
+            "fold": 4,
+            "image": "sub1050-20170624/43",
+            "label": "sub1050-20170624/43/lesion_"
+        },
+        {
+            "subid": 1348,
+            "lesion_index": 26,
+            "fold": 0,
+            "image": "sub1348-20181009/26",
+            "label": "sub1348-20181009/26/lesion_"
+        },
+        {
+            "subid": 1348,
+            "lesion_index": 4,
+            "fold": 1,
+            "image": "sub1348-20181009/4",
+            "label": "sub1348-20181009/4/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 36,
+            "fold": 2,
+            "image": "sub1080-20180416/36",
+            "label": "sub1080-20180416/36/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 36,
+            "fold": 3,
+            "image": "sub1044-20170317/36",
+            "label": "sub1044-20170317/36/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 13,
+            "fold": 4,
+            "image": "sub1076-20170912/13",
+            "label": "sub1076-20170912/13/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 20,
+            "fold": 0,
+            "image": "sub1125-20160919/20",
+            "label": "sub1125-20160919/20/lesion_"
+        },
+        {
+            "subid": 1529,
+            "lesion_index": 22,
+            "fold": 1,
+            "image": "sub1529-20170119/22",
+            "label": "sub1529-20170119/22/lesion_"
+        },
+        {
+            "subid": 2041,
+            "lesion_index": 27,
+            "fold": 2,
+            "image": "sub2041-20170515/27",
+            "label": "sub2041-20170515/27/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 92,
+            "fold": 3,
+            "image": "sub1050-20170624/92",
+            "label": "sub1050-20170624/92/lesion_"
+        },
+        {
+            "subid": 1011,
+            "lesion_index": 28,
+            "fold": 4,
+            "image": "sub1011-20180911/28",
+            "label": "sub1011-20180911/28/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 33,
+            "fold": 0,
+            "image": "sub1125-20160919/33",
+            "label": "sub1125-20160919/33/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 42,
+            "fold": 1,
+            "image": "sub1076-20170912/42",
+            "label": "sub1076-20170912/42/lesion_"
+        },
+        {
+            "subid": 1529,
+            "lesion_index": 28,
+            "fold": 2,
+            "image": "sub1529-20170119/28",
+            "label": "sub1529-20170119/28/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 23,
+            "fold": 3,
+            "image": "sub1076-20170912/23",
+            "label": "sub1076-20170912/23/lesion_"
+        },
+        {
+            "subid": 1529,
+            "lesion_index": 4,
+            "fold": 4,
+            "image": "sub1529-20170119/4",
+            "label": "sub1529-20170119/4/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 29,
+            "fold": 0,
+            "image": "sub1044-20170317/29",
+            "label": "sub1044-20170317/29/lesion_"
+        },
+        {
+            "subid": 2026,
+            "lesion_index": 20,
+            "fold": 1,
+            "image": "sub2026-20160917/20",
+            "label": "sub2026-20160917/20/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 17,
+            "fold": 2,
+            "image": "sub1124-20160929/17",
+            "label": "sub1124-20160929/17/lesion_"
+        },
+        {
+            "subid": 1010,
+            "lesion_index": 23,
+            "fold": 3,
+            "image": "sub1010-20180208/23",
+            "label": "sub1010-20180208/23/lesion_"
+        },
+        {
+            "subid": 1078,
+            "lesion_index": 31,
+            "fold": 4,
+            "image": "sub1078-20180412/31",
+            "label": "sub1078-20180412/31/lesion_"
+        },
+        {
+            "subid": 2041,
+            "lesion_index": 32,
+            "fold": 0,
+            "image": "sub2041-20170515/32",
+            "label": "sub2041-20170515/32/lesion_"
+        },
+        {
+            "subid": 2131,
+            "lesion_index": 16,
+            "fold": 1,
+            "image": "sub2131-20190117/16",
+            "label": "sub2131-20190117/16/lesion_"
+        },
+        {
+            "subid": 2131,
+            "lesion_index": 14,
+            "fold": 2,
+            "image": "sub2131-20190117/14",
+            "label": "sub2131-20190117/14/lesion_"
+        },
+        {
+            "subid": 1298,
+            "lesion_index": 22,
+            "fold": 3,
+            "image": "sub1298-20190506/22",
+            "label": "sub1298-20190506/22/lesion_"
+        },
+        {
+            "subid": 1215,
+            "lesion_index": 8,
+            "fold": 4,
+            "image": "sub1215-20180429/8",
+            "label": "sub1215-20180429/8/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 21,
+            "fold": 0,
+            "image": "sub1044-20170317/21",
+            "label": "sub1044-20170317/21/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 25,
+            "fold": 1,
+            "image": "sub1124-20160929/25",
+            "label": "sub1124-20160929/25/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 54,
+            "fold": 2,
+            "image": "sub1038-20161031/54",
+            "label": "sub1038-20161031/54/lesion_"
+        },
+        {
+            "subid": 1131,
+            "lesion_index": 8,
+            "fold": 3,
+            "image": "sub1131-20161209/8",
+            "label": "sub1131-20161209/8/lesion_"
+        },
+        {
+            "subid": 1396,
+            "lesion_index": 9,
+            "fold": 4,
+            "image": "sub1396-20170126/9",
+            "label": "sub1396-20170126/9/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 26,
+            "fold": 0,
+            "image": "sub1080-20180416/26",
+            "label": "sub1080-20180416/26/lesion_"
+        },
+        {
+            "subid": 1396,
+            "lesion_index": 19,
+            "fold": 1,
+            "image": "sub1396-20170126/19",
+            "label": "sub1396-20170126/19/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 14,
+            "fold": 2,
+            "image": "sub1038-20161031/14",
+            "label": "sub1038-20161031/14/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 73,
+            "fold": 3,
+            "image": "sub1293-20161129/73",
+            "label": "sub1293-20161129/73/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 27,
+            "fold": 4,
+            "image": "sub1044-20170317/27",
+            "label": "sub1044-20170317/27/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 9,
+            "fold": 0,
+            "image": "sub1080-20180416/9",
+            "label": "sub1080-20180416/9/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 9,
+            "fold": 1,
+            "image": "sub1038-20161031/9",
+            "label": "sub1038-20161031/9/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 51,
+            "fold": 2,
+            "image": "sub1293-20161129/51",
+            "label": "sub1293-20161129/51/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 73,
+            "fold": 3,
+            "image": "sub1050-20170624/73",
+            "label": "sub1050-20170624/73/lesion_"
+        },
+        {
+            "subid": 2041,
+            "lesion_index": 20,
+            "fold": 4,
+            "image": "sub2041-20170515/20",
+            "label": "sub2041-20170515/20/lesion_"
+        },
+        {
+            "subid": 1348,
+            "lesion_index": 29,
+            "fold": 0,
+            "image": "sub1348-20181009/29",
+            "label": "sub1348-20181009/29/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 46,
+            "fold": 1,
+            "image": "sub1050-20170624/46",
+            "label": "sub1050-20170624/46/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 2,
+            "fold": 2,
+            "image": "sub1050-20170624/2",
+            "label": "sub1050-20170624/2/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 10,
+            "fold": 3,
+            "image": "sub1038-20161031/10",
+            "label": "sub1038-20161031/10/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 46,
+            "fold": 4,
+            "image": "sub1044-20170317/46",
+            "label": "sub1044-20170317/46/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 95,
+            "fold": 0,
+            "image": "sub1125-20160919/95",
+            "label": "sub1125-20160919/95/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 28,
+            "fold": 1,
+            "image": "sub1044-20170317/28",
+            "label": "sub1044-20170317/28/lesion_"
+        },
+        {
+            "subid": 1396,
+            "lesion_index": 15,
+            "fold": 2,
+            "image": "sub1396-20170126/15",
+            "label": "sub1396-20170126/15/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 33,
+            "fold": 3,
+            "image": "sub1124-20160929/33",
+            "label": "sub1124-20160929/33/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 56,
+            "fold": 4,
+            "image": "sub1125-20160919/56",
+            "label": "sub1125-20160919/56/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 32,
+            "fold": 0,
+            "image": "sub1293-20161129/32",
+            "label": "sub1293-20161129/32/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 3,
+            "fold": 1,
+            "image": "sub1038-20161031/3",
+            "label": "sub1038-20161031/3/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 77,
+            "fold": 2,
+            "image": "sub1038-20161031/77",
+            "label": "sub1038-20161031/77/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 16,
+            "fold": 3,
+            "image": "sub1050-20170624/16",
+            "label": "sub1050-20170624/16/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 94,
+            "fold": 4,
+            "image": "sub1125-20160919/94",
+            "label": "sub1125-20160919/94/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 53,
+            "fold": 0,
+            "image": "sub1076-20170912/53",
+            "label": "sub1076-20170912/53/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 9,
+            "fold": 1,
+            "image": "sub1044-20170317/9",
+            "label": "sub1044-20170317/9/lesion_"
+        },
+        {
+            "subid": 1215,
+            "lesion_index": 15,
+            "fold": 2,
+            "image": "sub1215-20180429/15",
+            "label": "sub1215-20180429/15/lesion_"
+        },
+        {
+            "subid": 1298,
+            "lesion_index": 14,
+            "fold": 3,
+            "image": "sub1298-20190506/14",
+            "label": "sub1298-20190506/14/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 38,
+            "fold": 4,
+            "image": "sub1044-20170317/38",
+            "label": "sub1044-20170317/38/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 26,
+            "fold": 0,
+            "image": "sub1050-20170624/26",
+            "label": "sub1050-20170624/26/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 68,
+            "fold": 1,
+            "image": "sub1125-20160919/68",
+            "label": "sub1125-20160919/68/lesion_"
+        },
+        {
+            "subid": 2131,
+            "lesion_index": 2,
+            "fold": 2,
+            "image": "sub2131-20190117/2",
+            "label": "sub2131-20190117/2/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 34,
+            "fold": 3,
+            "image": "sub1080-20180416/34",
+            "label": "sub1080-20180416/34/lesion_"
+        },
+        {
+            "subid": 1078,
+            "lesion_index": 12,
+            "fold": 4,
+            "image": "sub1078-20180412/12",
+            "label": "sub1078-20180412/12/lesion_"
+        },
+        {
+            "subid": 1215,
+            "lesion_index": 21,
+            "fold": 0,
+            "image": "sub1215-20180429/21",
+            "label": "sub1215-20180429/21/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 22,
+            "fold": 1,
+            "image": "sub1293-20161129/22",
+            "label": "sub1293-20161129/22/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 49,
+            "fold": 2,
+            "image": "sub1125-20160919/49",
+            "label": "sub1125-20160919/49/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 3,
+            "fold": 3,
+            "image": "sub1293-20161129/3",
+            "label": "sub1293-20161129/3/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 82,
+            "fold": 4,
+            "image": "sub1050-20170624/82",
+            "label": "sub1050-20170624/82/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 19,
+            "fold": 0,
+            "image": "sub1050-20170624/19",
+            "label": "sub1050-20170624/19/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 73,
+            "fold": 1,
+            "image": "sub1125-20160919/73",
+            "label": "sub1125-20160919/73/lesion_"
+        },
+        {
+            "subid": 1298,
+            "lesion_index": 9,
+            "fold": 2,
+            "image": "sub1298-20190506/9",
+            "label": "sub1298-20190506/9/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 59,
+            "fold": 3,
+            "image": "sub1125-20160919/59",
+            "label": "sub1125-20160919/59/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 67,
+            "fold": 4,
+            "image": "sub1293-20161129/67",
+            "label": "sub1293-20161129/67/lesion_"
+        },
+        {
+            "subid": 1136,
+            "lesion_index": 6,
+            "fold": 0,
+            "image": "sub1136-20171109/6",
+            "label": "sub1136-20171109/6/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 56,
+            "fold": 1,
+            "image": "sub1044-20170317/56",
+            "label": "sub1044-20170317/56/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 58,
+            "fold": 2,
+            "image": "sub1044-20170317/58",
+            "label": "sub1044-20170317/58/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 75,
+            "fold": 3,
+            "image": "sub1125-20160919/75",
+            "label": "sub1125-20160919/75/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 96,
+            "fold": 4,
+            "image": "sub1125-20160919/96",
+            "label": "sub1125-20160919/96/lesion_"
+        },
+        {
+            "subid": 2026,
+            "lesion_index": 21,
+            "fold": 0,
+            "image": "sub2026-20160917/21",
+            "label": "sub2026-20160917/21/lesion_"
+        },
+        {
+            "subid": 1215,
+            "lesion_index": 19,
+            "fold": 1,
+            "image": "sub1215-20180429/19",
+            "label": "sub1215-20180429/19/lesion_"
+        },
+        {
+            "subid": 2026,
+            "lesion_index": 18,
+            "fold": 2,
+            "image": "sub2026-20160917/18",
+            "label": "sub2026-20160917/18/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 15,
+            "fold": 3,
+            "image": "sub1076-20170912/15",
+            "label": "sub1076-20170912/15/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 99,
+            "fold": 4,
+            "image": "sub1050-20170624/99",
+            "label": "sub1050-20170624/99/lesion_"
+        },
+        {
+            "subid": 2131,
+            "lesion_index": 6,
+            "fold": 0,
+            "image": "sub2131-20190117/6",
+            "label": "sub2131-20190117/6/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 31,
+            "fold": 1,
+            "image": "sub1038-20161031/31",
+            "label": "sub1038-20161031/31/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 4,
+            "fold": 2,
+            "image": "sub1038-20161031/4",
+            "label": "sub1038-20161031/4/lesion_"
+        }
+    ],
+    "testing": [
+        {
+            "subid": 1293,
+            "lesion_index": 1,
+            "image": "sub1293-20161129/1",
+            "label": "sub1293-20161129/1/prl_label_SRS_CH_"
+        },
+        {
+            "subid": 1074,
+            "lesion_index": 3,
+            "image": "sub1074-20190518/3",
+            "label": "sub1074-20190518/3/prl_label_CH_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 3,
+            "image": "sub1080-20180416/3",
+            "label": "sub1080-20180416/3/prl_label_SRS_"
+        },
+        {
+            "subid": 2131,
+            "lesion_index": 1,
+            "image": "sub2131-20190117/1",
+            "label": "sub2131-20190117/1/prl_label_LR_"
+        },
+        {
+            "subid": 1011,
+            "lesion_index": 7,
+            "image": "sub1011-20180911/7",
+            "label": "sub1011-20180911/7/prl_label_SRS_CH_"
+        },
+        {
+            "subid": 1529,
+            "lesion_index": 5,
+            "image": "sub1529-20170119/5",
+            "label": "sub1529-20170119/5/prl_label_LR_"
+        },
+        {
+            "subid": 2041,
+            "lesion_index": 1,
+            "image": "sub2041-20170515/1",
+            "label": "sub2041-20170515/1/prl_label_SRS_CH_"
+        },
+        {
+            "subid": 1348,
+            "lesion_index": 1,
+            "image": "sub1348-20181009/1",
+            "label": "sub1348-20181009/1/prl_label_SRS_"
+        },
+        {
+            "subid": 1529,
+            "lesion_index": 11,
+            "image": "sub1529-20170119/11",
+            "label": "sub1529-20170119/11/prl_label_LR_"
+        },
+        {
+            "subid": 1529,
+            "lesion_index": 20,
+            "image": "sub1529-20170119/20",
+            "label": "sub1529-20170119/20/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 35,
+            "image": "sub1293-20161129/35",
+            "label": "sub1293-20161129/35/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 95,
+            "image": "sub1050-20170624/95",
+            "label": "sub1050-20170624/95/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 38,
+            "image": "sub1125-20160919/38",
+            "label": "sub1125-20160919/38/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 2,
+            "image": "sub1038-20161031/2",
+            "label": "sub1038-20161031/2/lesion_"
+        },
+        {
+            "subid": 1215,
+            "lesion_index": 17,
+            "image": "sub1215-20180429/17",
+            "label": "sub1215-20180429/17/lesion_"
+        },
+        {
+            "subid": 1010,
+            "lesion_index": 24,
+            "image": "sub1010-20180208/24",
+            "label": "sub1010-20180208/24/lesion_"
+        },
+        {
+            "subid": 1348,
+            "lesion_index": 2,
+            "image": "sub1348-20181009/2",
+            "label": "sub1348-20181009/2/lesion_"
+        },
+        {
+            "subid": 2041,
+            "lesion_index": 40,
+            "image": "sub2041-20170515/40",
+            "label": "sub2041-20170515/40/lesion_"
+        },
+        {
+            "subid": 1011,
+            "lesion_index": 32,
+            "image": "sub1011-20180911/32",
+            "label": "sub1011-20180911/32/lesion_"
+        },
+        {
+            "subid": 1529,
+            "lesion_index": 38,
+            "image": "sub1529-20170119/38",
+            "label": "sub1529-20170119/38/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 14,
+            "image": "sub1293-20161129/14",
+            "label": "sub1293-20161129/14/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 53,
+            "image": "sub1125-20160919/53",
+            "label": "sub1125-20160919/53/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 80,
+            "image": "sub1038-20161031/80",
+            "label": "sub1038-20161031/80/lesion_"
+        },
+        {
+            "subid": 1348,
+            "lesion_index": 28,
+            "image": "sub1348-20181009/28",
+            "label": "sub1348-20181009/28/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 43,
+            "image": "sub1044-20170317/43",
+            "label": "sub1044-20170317/43/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 90,
+            "image": "sub1050-20170624/90",
+            "label": "sub1050-20170624/90/lesion_"
+        },
+        {
+            "subid": 1298,
+            "lesion_index": 8,
+            "image": "sub1298-20190506/8",
+            "label": "sub1298-20190506/8/lesion_"
+        },
+        {
+            "subid": 1011,
+            "lesion_index": 16,
+            "image": "sub1011-20180911/16",
+            "label": "sub1011-20180911/16/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 30,
+            "image": "sub1038-20161031/30",
+            "label": "sub1038-20161031/30/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 44,
+            "image": "sub1080-20180416/44",
+            "label": "sub1080-20180416/44/lesion_"
+        },
+        {
+            "subid": 1033,
+            "lesion_index": 14,
+            "image": "sub1033-20171117/14",
+            "label": "sub1033-20171117/14/lesion_"
+        },
+        {
+            "subid": 1529,
+            "lesion_index": 17,
+            "image": "sub1529-20170119/17",
+            "label": "sub1529-20170119/17/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 41,
+            "image": "sub1124-20160929/41",
+            "label": "sub1124-20160929/41/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 71,
+            "image": "sub1044-20170317/71",
+            "label": "sub1044-20170317/71/lesion_"
+        },
+        {
+            "subid": 1529,
+            "lesion_index": 18,
+            "image": "sub1529-20170119/18",
+            "label": "sub1529-20170119/18/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 66,
+            "image": "sub1125-20160919/66",
+            "label": "sub1125-20160919/66/lesion_"
+        },
+        {
+            "subid": 1010,
+            "lesion_index": 6,
+            "image": "sub1010-20180208/6",
+            "label": "sub1010-20180208/6/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 9,
+            "image": "sub1050-20170624/9",
+            "label": "sub1050-20170624/9/lesion_"
+        },
+        {
+            "subid": 1396,
+            "lesion_index": 13,
+            "image": "sub1396-20170126/13",
+            "label": "sub1396-20170126/13/lesion_"
+        },
+        {
+            "subid": 1010,
+            "lesion_index": 25,
+            "image": "sub1010-20180208/25",
+            "label": "sub1010-20180208/25/lesion_"
+        },
+        {
+            "subid": 1529,
+            "lesion_index": 9,
+            "image": "sub1529-20170119/9",
+            "label": "sub1529-20170119/9/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 18,
+            "image": "sub1044-20170317/18",
+            "label": "sub1044-20170317/18/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 44,
+            "image": "sub1124-20160929/44",
+            "label": "sub1124-20160929/44/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 102,
+            "image": "sub1125-20160919/102",
+            "label": "sub1125-20160919/102/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 21,
+            "image": "sub1076-20170912/21",
+            "label": "sub1076-20170912/21/lesion_"
+        },
+        {
+            "subid": 2131,
+            "lesion_index": 11,
+            "image": "sub2131-20190117/11",
+            "label": "sub2131-20190117/11/lesion_"
+        },
+        {
+            "subid": 1529,
+            "lesion_index": 14,
+            "image": "sub1529-20170119/14",
+            "label": "sub1529-20170119/14/lesion_"
+        },
+        {
+            "subid": 1348,
+            "lesion_index": 24,
+            "image": "sub1348-20181009/24",
+            "label": "sub1348-20181009/24/lesion_"
+        },
+        {
+            "subid": 2041,
+            "lesion_index": 22,
+            "image": "sub2041-20170515/22",
+            "label": "sub2041-20170515/22/lesion_"
+        },
+        {
+            "subid": 2041,
+            "lesion_index": 31,
+            "image": "sub2041-20170515/31",
+            "label": "sub2041-20170515/31/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 61,
+            "image": "sub1293-20161129/61",
+            "label": "sub1293-20161129/61/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 54,
+            "image": "sub1124-20160929/54",
+            "label": "sub1124-20160929/54/lesion_"
+        },
+        {
+            "subid": 2131,
+            "lesion_index": 26,
+            "image": "sub2131-20190117/26",
+            "label": "sub2131-20190117/26/lesion_"
+        },
+        {
+            "subid": 1010,
+            "lesion_index": 13,
+            "image": "sub1010-20180208/13",
+            "label": "sub1010-20180208/13/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 30,
+            "image": "sub1293-20161129/30",
+            "label": "sub1293-20161129/30/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 51,
+            "image": "sub1050-20170624/51",
+            "label": "sub1050-20170624/51/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 31,
+            "image": "sub1080-20180416/31",
+            "label": "sub1080-20180416/31/lesion_"
+        },
+        {
+            "subid": 1298,
+            "lesion_index": 11,
+            "image": "sub1298-20190506/11",
+            "label": "sub1298-20190506/11/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 74,
+            "image": "sub1038-20161031/74",
+            "label": "sub1038-20161031/74/lesion_"
+        },
+        {
+            "subid": 1298,
+            "lesion_index": 27,
+            "image": "sub1298-20190506/27",
+            "label": "sub1298-20190506/27/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 53,
+            "image": "sub1050-20170624/53",
+            "label": "sub1050-20170624/53/lesion_"
+        },
+        {
+            "subid": 1298,
+            "lesion_index": 5,
+            "image": "sub1298-20190506/5",
+            "label": "sub1298-20190506/5/lesion_"
+        },
+        {
+            "subid": 1529,
+            "lesion_index": 40,
+            "image": "sub1529-20170119/40",
+            "label": "sub1529-20170119/40/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 28,
+            "image": "sub1038-20161031/28",
+            "label": "sub1038-20161031/28/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 105,
+            "image": "sub1125-20160919/105",
+            "label": "sub1125-20160919/105/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 13,
+            "image": "sub1050-20170624/13",
+            "label": "sub1050-20170624/13/lesion_"
+        },
+        {
+            "subid": 1078,
+            "lesion_index": 10,
+            "image": "sub1078-20180412/10",
+            "label": "sub1078-20180412/10/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 11,
+            "image": "sub1076-20170912/11",
+            "label": "sub1076-20170912/11/lesion_"
+        },
+        {
+            "subid": 2041,
+            "lesion_index": 14,
+            "image": "sub2041-20170515/14",
+            "label": "sub2041-20170515/14/lesion_"
+        },
+        {
+            "subid": 1215,
+            "lesion_index": 26,
+            "image": "sub1215-20180429/26",
+            "label": "sub1215-20180429/26/lesion_"
+        },
+        {
+            "subid": 1298,
+            "lesion_index": 6,
+            "image": "sub1298-20190506/6",
+            "label": "sub1298-20190506/6/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 31,
+            "image": "sub1125-20160919/31",
+            "label": "sub1125-20160919/31/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 43,
+            "image": "sub1124-20160929/43",
+            "label": "sub1124-20160929/43/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 4,
+            "image": "sub1293-20161129/4",
+            "label": "sub1293-20161129/4/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 37,
+            "image": "sub1038-20161031/37",
+            "label": "sub1038-20161031/37/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 2,
+            "image": "sub1044-20170317/2",
+            "label": "sub1044-20170317/2/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 19,
+            "image": "sub1124-20160929/19",
+            "label": "sub1124-20160929/19/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 27,
+            "image": "sub1124-20160929/27",
+            "label": "sub1124-20160929/27/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 30,
+            "image": "sub1044-20170317/30",
+            "label": "sub1044-20170317/30/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 21,
+            "image": "sub1125-20160919/21",
+            "label": "sub1125-20160919/21/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 45,
+            "image": "sub1124-20160929/45",
+            "label": "sub1124-20160929/45/lesion_"
+        },
+        {
+            "subid": 1078,
+            "lesion_index": 1,
+            "image": "sub1078-20180412/1",
+            "label": "sub1078-20180412/1/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 44,
+            "image": "sub1038-20161031/44",
+            "label": "sub1038-20161031/44/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 60,
+            "image": "sub1125-20160919/60",
+            "label": "sub1125-20160919/60/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 40,
+            "image": "sub1293-20161129/40",
+            "label": "sub1293-20161129/40/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 13,
+            "image": "sub1038-20161031/13",
+            "label": "sub1038-20161031/13/lesion_"
+        },
+        {
+            "subid": 1529,
+            "lesion_index": 42,
+            "image": "sub1529-20170119/42",
+            "label": "sub1529-20170119/42/lesion_"
+        },
+        {
+            "subid": 1131,
+            "lesion_index": 7,
+            "image": "sub1131-20161209/7",
+            "label": "sub1131-20161209/7/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 69,
+            "image": "sub1293-20161129/69",
+            "label": "sub1293-20161129/69/lesion_"
+        },
+        {
+            "subid": 1298,
+            "lesion_index": 17,
+            "image": "sub1298-20190506/17",
+            "label": "sub1298-20190506/17/lesion_"
+        },
+        {
+            "subid": 1348,
+            "lesion_index": 25,
+            "image": "sub1348-20181009/25",
+            "label": "sub1348-20181009/25/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 47,
+            "image": "sub1080-20180416/47",
+            "label": "sub1080-20180416/47/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 7,
+            "image": "sub1038-20161031/7",
+            "label": "sub1038-20161031/7/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 54,
+            "image": "sub1125-20160919/54",
+            "label": "sub1125-20160919/54/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 2,
+            "image": "sub1076-20170912/2",
+            "label": "sub1076-20170912/2/lesion_"
+        },
+        {
+            "subid": 1131,
+            "lesion_index": 2,
+            "image": "sub1131-20161209/2",
+            "label": "sub1131-20161209/2/lesion_"
+        },
+        {
+            "subid": 1011,
+            "lesion_index": 8,
+            "image": "sub1011-20180911/8",
+            "label": "sub1011-20180911/8/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 16,
+            "image": "sub1124-20160929/16",
+            "label": "sub1124-20160929/16/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 53,
+            "image": "sub1293-20161129/53",
+            "label": "sub1293-20161129/53/lesion_"
+        },
+        {
+            "subid": 1010,
+            "lesion_index": 27,
+            "image": "sub1010-20180208/27",
+            "label": "sub1010-20180208/27/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 43,
+            "image": "sub1293-20161129/43",
+            "label": "sub1293-20161129/43/lesion_"
+        },
+        {
+            "subid": 1298,
+            "lesion_index": 18,
+            "image": "sub1298-20190506/18",
+            "label": "sub1298-20190506/18/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 53,
+            "image": "sub1038-20161031/53",
+            "label": "sub1038-20161031/53/lesion_"
+        },
+        {
+            "subid": 1010,
+            "lesion_index": 17,
+            "image": "sub1010-20180208/17",
+            "label": "sub1010-20180208/17/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 22,
+            "image": "sub1124-20160929/22",
+            "label": "sub1124-20160929/22/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 66,
+            "image": "sub1038-20161031/66",
+            "label": "sub1038-20161031/66/lesion_"
+        },
+        {
+            "subid": 2041,
+            "lesion_index": 34,
+            "image": "sub2041-20170515/34",
+            "label": "sub2041-20170515/34/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 45,
+            "image": "sub1125-20160919/45",
+            "label": "sub1125-20160919/45/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 16,
+            "image": "sub1044-20170317/16",
+            "label": "sub1044-20170317/16/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 53,
+            "image": "sub1044-20170317/53",
+            "label": "sub1044-20170317/53/lesion_"
+        },
+        {
+            "subid": 1298,
+            "lesion_index": 23,
+            "image": "sub1298-20190506/23",
+            "label": "sub1298-20190506/23/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 27,
+            "image": "sub1125-20160919/27",
+            "label": "sub1125-20160919/27/lesion_"
+        },
+        {
+            "subid": 2041,
+            "lesion_index": 16,
+            "image": "sub2041-20170515/16",
+            "label": "sub2041-20170515/16/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 51,
+            "image": "sub1038-20161031/51",
+            "label": "sub1038-20161031/51/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 63,
+            "image": "sub1125-20160919/63",
+            "label": "sub1125-20160919/63/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 20,
+            "image": "sub1050-20170624/20",
+            "label": "sub1050-20170624/20/lesion_"
+        },
+        {
+            "subid": 1396,
+            "lesion_index": 16,
+            "image": "sub1396-20170126/16",
+            "label": "sub1396-20170126/16/lesion_"
+        },
+        {
+            "subid": 1215,
+            "lesion_index": 4,
+            "image": "sub1215-20180429/4",
+            "label": "sub1215-20180429/4/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 83,
+            "image": "sub1050-20170624/83",
+            "label": "sub1050-20170624/83/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 52,
+            "image": "sub1038-20161031/52",
+            "label": "sub1038-20161031/52/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 90,
+            "image": "sub1125-20160919/90",
+            "label": "sub1125-20160919/90/lesion_"
+        },
+        {
+            "subid": 1078,
+            "lesion_index": 15,
+            "image": "sub1078-20180412/15",
+            "label": "sub1078-20180412/15/lesion_"
+        },
+        {
+            "subid": 1011,
+            "lesion_index": 23,
+            "image": "sub1011-20180911/23",
+            "label": "sub1011-20180911/23/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 33,
+            "image": "sub1050-20170624/33",
+            "label": "sub1050-20170624/33/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 72,
+            "image": "sub1044-20170317/72",
+            "label": "sub1044-20170317/72/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 102,
+            "image": "sub1050-20170624/102",
+            "label": "sub1050-20170624/102/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 61,
+            "image": "sub1050-20170624/61",
+            "label": "sub1050-20170624/61/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 71,
+            "image": "sub1293-20161129/71",
+            "label": "sub1293-20161129/71/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 85,
+            "image": "sub1050-20170624/85",
+            "label": "sub1050-20170624/85/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 25,
+            "image": "sub1293-20161129/25",
+            "label": "sub1293-20161129/25/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 47,
+            "image": "sub1293-20161129/47",
+            "label": "sub1293-20161129/47/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 38,
+            "image": "sub1124-20160929/38",
+            "label": "sub1124-20160929/38/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 24,
+            "image": "sub1038-20161031/24",
+            "label": "sub1038-20161031/24/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 10,
+            "image": "sub1125-20160919/10",
+            "label": "sub1125-20160919/10/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 37,
+            "image": "sub1080-20180416/37",
+            "label": "sub1080-20180416/37/lesion_"
+        },
+        {
+            "subid": 1396,
+            "lesion_index": 4,
+            "image": "sub1396-20170126/4",
+            "label": "sub1396-20170126/4/lesion_"
+        },
+        {
+            "subid": 1215,
+            "lesion_index": 9,
+            "image": "sub1215-20180429/9",
+            "label": "sub1215-20180429/9/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 21,
+            "image": "sub1038-20161031/21",
+            "label": "sub1038-20161031/21/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 76,
+            "image": "sub1125-20160919/76",
+            "label": "sub1125-20160919/76/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 61,
+            "image": "sub1038-20161031/61",
+            "label": "sub1038-20161031/61/lesion_"
+        },
+        {
+            "subid": 1078,
+            "lesion_index": 9,
+            "image": "sub1078-20180412/9",
+            "label": "sub1078-20180412/9/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 23,
+            "image": "sub1044-20170317/23",
+            "label": "sub1044-20170317/23/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 84,
+            "image": "sub1050-20170624/84",
+            "label": "sub1050-20170624/84/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 49,
+            "image": "sub1044-20170317/49",
+            "label": "sub1044-20170317/49/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 16,
+            "image": "sub1293-20161129/16",
+            "label": "sub1293-20161129/16/lesion_"
+        },
+        {
+            "subid": 1033,
+            "lesion_index": 5,
+            "image": "sub1033-20171117/5",
+            "label": "sub1033-20171117/5/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 30,
+            "image": "sub1125-20160919/30",
+            "label": "sub1125-20160919/30/lesion_"
+        },
+        {
+            "subid": 1529,
+            "lesion_index": 23,
+            "image": "sub1529-20170119/23",
+            "label": "sub1529-20170119/23/lesion_"
+        },
+        {
+            "subid": 1215,
+            "lesion_index": 11,
+            "image": "sub1215-20180429/11",
+            "label": "sub1215-20180429/11/lesion_"
+        },
+        {
+            "subid": 2026,
+            "lesion_index": 15,
+            "image": "sub2026-20160917/15",
+            "label": "sub2026-20160917/15/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 23,
+            "image": "sub1050-20170624/23",
+            "label": "sub1050-20170624/23/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 38,
+            "image": "sub1080-20180416/38",
+            "label": "sub1080-20180416/38/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 9,
+            "image": "sub1293-20161129/9",
+            "label": "sub1293-20161129/9/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 70,
+            "image": "sub1293-20161129/70",
+            "label": "sub1293-20161129/70/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 43,
+            "image": "sub1125-20160919/43",
+            "label": "sub1125-20160919/43/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 79,
+            "image": "sub1125-20160919/79",
+            "label": "sub1125-20160919/79/lesion_"
+        },
+        {
+            "subid": 2041,
+            "lesion_index": 23,
+            "image": "sub2041-20170515/23",
+            "label": "sub2041-20170515/23/lesion_"
+        },
+        {
+            "subid": 1033,
+            "lesion_index": 6,
+            "image": "sub1033-20171117/6",
+            "label": "sub1033-20171117/6/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 19,
+            "image": "sub1293-20161129/19",
+            "label": "sub1293-20161129/19/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 15,
+            "image": "sub1124-20160929/15",
+            "label": "sub1124-20160929/15/lesion_"
+        },
+        {
+            "subid": 1293,
+            "lesion_index": 76,
+            "image": "sub1293-20161129/76",
+            "label": "sub1293-20161129/76/lesion_"
+        },
+        {
+            "subid": 2041,
+            "lesion_index": 19,
+            "image": "sub2041-20170515/19",
+            "label": "sub2041-20170515/19/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 42,
+            "image": "sub1038-20161031/42",
+            "label": "sub1038-20161031/42/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 51,
+            "image": "sub1076-20170912/51",
+            "label": "sub1076-20170912/51/lesion_"
+        },
+        {
+            "subid": 1010,
+            "lesion_index": 22,
+            "image": "sub1010-20180208/22",
+            "label": "sub1010-20180208/22/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 64,
+            "image": "sub1044-20170317/64",
+            "label": "sub1044-20170317/64/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 28,
+            "image": "sub1080-20180416/28",
+            "label": "sub1080-20180416/28/lesion_"
+        },
+        {
+            "subid": 1044,
+            "lesion_index": 1,
+            "image": "sub1044-20170317/1",
+            "label": "sub1044-20170317/1/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 35,
+            "image": "sub1038-20161031/35",
+            "label": "sub1038-20161031/35/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 78,
+            "image": "sub1050-20170624/78",
+            "label": "sub1050-20170624/78/lesion_"
+        },
+        {
+            "subid": 1529,
+            "lesion_index": 15,
+            "image": "sub1529-20170119/15",
+            "label": "sub1529-20170119/15/lesion_"
+        },
+        {
+            "subid": 1011,
+            "lesion_index": 11,
+            "image": "sub1011-20180911/11",
+            "label": "sub1011-20180911/11/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 22,
+            "image": "sub1076-20170912/22",
+            "label": "sub1076-20170912/22/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 24,
+            "image": "sub1076-20170912/24",
+            "label": "sub1076-20170912/24/lesion_"
+        },
+        {
+            "subid": 2131,
+            "lesion_index": 21,
+            "image": "sub2131-20190117/21",
+            "label": "sub2131-20190117/21/lesion_"
+        },
+        {
+            "subid": 1076,
+            "lesion_index": 46,
+            "image": "sub1076-20170912/46",
+            "label": "sub1076-20170912/46/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 23,
+            "image": "sub1124-20160929/23",
+            "label": "sub1124-20160929/23/lesion_"
+        },
+        {
+            "subid": 1348,
+            "lesion_index": 17,
+            "image": "sub1348-20181009/17",
+            "label": "sub1348-20181009/17/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 36,
+            "image": "sub1125-20160919/36",
+            "label": "sub1125-20160919/36/lesion_"
+        },
+        {
+            "subid": 1080,
+            "lesion_index": 16,
+            "image": "sub1080-20180416/16",
+            "label": "sub1080-20180416/16/lesion_"
+        },
+        {
+            "subid": 2026,
+            "lesion_index": 23,
+            "image": "sub2026-20160917/23",
+            "label": "sub2026-20160917/23/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 104,
+            "image": "sub1125-20160919/104",
+            "label": "sub1125-20160919/104/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 42,
+            "image": "sub1050-20170624/42",
+            "label": "sub1050-20170624/42/lesion_"
+        },
+        {
+            "subid": 1078,
+            "lesion_index": 25,
+            "image": "sub1078-20180412/25",
+            "label": "sub1078-20180412/25/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 50,
+            "image": "sub1050-20170624/50",
+            "label": "sub1050-20170624/50/lesion_"
+        },
+        {
+            "subid": 1396,
+            "lesion_index": 8,
+            "image": "sub1396-20170126/8",
+            "label": "sub1396-20170126/8/lesion_"
+        },
+        {
+            "subid": 1348,
+            "lesion_index": 21,
+            "image": "sub1348-20181009/21",
+            "label": "sub1348-20181009/21/lesion_"
+        },
+        {
+            "subid": 1396,
+            "lesion_index": 11,
+            "image": "sub1396-20170126/11",
+            "label": "sub1396-20170126/11/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 100,
+            "image": "sub1125-20160919/100",
+            "label": "sub1125-20160919/100/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 22,
+            "image": "sub1038-20161031/22",
+            "label": "sub1038-20161031/22/lesion_"
+        },
+        {
+            "subid": 1529,
+            "lesion_index": 36,
+            "image": "sub1529-20170119/36",
+            "label": "sub1529-20170119/36/lesion_"
+        },
+        {
+            "subid": 2026,
+            "lesion_index": 10,
+            "image": "sub2026-20160917/10",
+            "label": "sub2026-20160917/10/lesion_"
+        },
+        {
+            "subid": 1038,
+            "lesion_index": 75,
+            "image": "sub1038-20161031/75",
+            "label": "sub1038-20161031/75/lesion_"
+        },
+        {
+            "subid": 1125,
+            "lesion_index": 80,
+            "image": "sub1125-20160919/80",
+            "label": "sub1125-20160919/80/lesion_"
+        },
+        {
+            "subid": 1298,
+            "lesion_index": 3,
+            "image": "sub1298-20190506/3",
+            "label": "sub1298-20190506/3/lesion_"
+        },
+        {
+            "subid": 1124,
+            "lesion_index": 1,
+            "image": "sub1124-20160929/1",
+            "label": "sub1124-20160929/1/lesion_"
+        },
+        {
+            "subid": 1050,
+            "lesion_index": 67,
+            "image": "sub1050-20170624/67",
+            "label": "sub1050-20170624/67/lesion_"
+        }
+    ]
+}
