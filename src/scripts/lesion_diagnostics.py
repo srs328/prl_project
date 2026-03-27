@@ -70,6 +70,45 @@ def _crop_from_volume(volume: np.ndarray, coords: list[int]) -> np.ndarray:
     crop[tuple(slices_crop)] = volume[tuple(slices_brain)]
     return crop
 
+def _get_center_lesion(
+        index_crop: np.ndarray, label_data: np.ndarray, lesion_id: int,
+) -> np.ndarray:
+    """Get an array where just the voxels of the center lesion are true
+
+    Args:
+        index_crop (np.ndarray): cropped roi containing
+        lesion_id (int): index of center lesion based on the lesion index map 
+
+    Returns:
+        np.ndarray: mask of center lesion (ndarray of true/false)
+    """
+    lesion_mask = label_data == 1
+    labeled, n_components = ndimage.label(lesion_mask)
+
+    index_mask = index_crop == lesion_id
+
+    # Keep only components that overlap with the indexed mask
+    result = np.zeros_like(lesion_mask)
+    for comp_id in range(1, n_components + 1):
+        comp_mask = labeled == comp_id
+        if np.any(comp_mask & index_mask):
+            result |= comp_mask
+
+    return result
+
+
+"""See if this would do the same
+    # 1. Find all labeled IDs that overlap with your index_mask
+# (We cast index_mask to bool to use it as a coordinate selector)
+overlapping_ids = np.unique(labeled[index_mask.astype(bool)])
+
+# 2. Remove 0 (the background label) if it exists in the set
+overlapping_ids = overlapping_ids[overlapping_ids != 0]
+
+# 3. Create the final mask by checking which pixels match these IDs
+result = np.isin(labeled, overlapping_ids)
+"""
+
 
 def _get_lesion_rim(
     index_crop: np.ndarray, label_data: np.ndarray, lesion_id: int,
@@ -93,8 +132,8 @@ def _get_lesion_rim(
     rim_mask = label_data == 2
     labeled, n_components = ndimage.label(rim_mask)
 
-    lesion_mask = index_crop == lesion_id
-    dilated = ndimage.binary_dilation(lesion_mask, iterations=n_dilate)
+    index_mask = index_crop == lesion_id
+    dilated = ndimage.binary_dilation(index_mask, iterations=n_dilate)
 
     # Keep only components that overlap with the dilated lesion mask
     result = np.zeros_like(rim_mask)
@@ -112,6 +151,26 @@ def _count_rim_for_lesion(
 ) -> int:
     """Count rim voxels belonging to a specific lesion."""
     return int(_get_lesion_rim(index_crop, label_data, lesion_id, n_dilate).sum())
+
+
+def get_convex_hull(mask: np.ndarray, voxel_sizes: tuple[float, ...] = None) -> np.ndarray:
+    """Convex hull of binary mask voxels in mm³.
+
+    Returns None if fewer than 4 non-coplanar rim voxels (ConvexHull needs this).
+    """
+    coords = np.argwhere(mask)  # (N, 3) in voxel indices
+    if len(coords) < 4:
+        return None
+    
+    if voxel_sizes is not None:
+        coords = coords * np.array(voxel_sizes)
+    try:
+        hull = ConvexHull(coords)
+    except Exception:
+        # Degenerate geometry (coplanar points, etc.)
+        return None
+    
+    return hull
 
 
 def rim_convex_hull_volume(rim_mask: np.ndarray, voxel_sizes: tuple[float, ...]) -> float | None:
@@ -132,6 +191,31 @@ def rim_convex_hull_volume(rim_mask: np.ndarray, voxel_sizes: tuple[float, ...])
 
 
 def rim_enclosing_sphere_radius(rim_mask: np.ndarray, voxel_sizes: tuple[float, ...]) -> float | None:
+    """Radius (mm) of the smallest sphere enclosing all rim voxels.
+
+    Uses convex hull vertices + centroid approach (guaranteed enclosing,
+    not mathematically minimal but close for typical rim shapes).
+    Returns None if no rim voxels.
+    """
+    coords = np.argwhere(rim_mask)
+    if len(coords) == 0:
+        return None
+    coords_mm = coords * np.array(voxel_sizes)
+    if len(coords) < 4:
+        # Too few points for ConvexHull — use all points directly
+        center = coords_mm.mean(axis=0)
+        return float(np.max(np.linalg.norm(coords_mm - center, axis=1)))
+    try:
+        hull = ConvexHull(coords_mm)
+        vertices = coords_mm[hull.vertices]
+    except Exception:
+        vertices = coords_mm
+    center = vertices.mean(axis=0)
+    return float(np.max(np.linalg.norm(vertices - center, axis=1)))
+
+
+
+def rim_enclosing_sphere_radius0(rim_mask: np.ndarray, voxel_sizes: tuple[float, ...]) -> float | None:
     """Radius (mm) of the smallest sphere enclosing all rim voxels.
 
     Uses convex hull vertices + centroid approach (guaranteed enclosing,

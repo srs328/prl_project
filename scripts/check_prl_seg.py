@@ -8,7 +8,7 @@ import pandas as pd
 sys.path.append("/home/srs-9/Projects/prl_project/helpers")
 from shell_interface import open_itksnap_workspace_cmd
 
-label_ref = pd.read_csv("/home/srs-9/Projects/prl_project/PRL_spreadsheet-lstai_update_label_reference.csv",
+label_ref = pd.read_csv("/home/srs-9/Projects/prl_project/src/resources/PRL_spreadsheet-lstai_update_label_reference.csv",
                         index_col="subid")
 
 dataroot = Path("/media/smbshare/srs-9/prl_project/data")
@@ -46,7 +46,8 @@ label_paths = [subject_root / lab for lab in prl_labels+["lstai_lesion_index.nii
 
 rename_root=("/media/smbshare", "Z:/")
 # rename_root = None
-cmd = open_itksnap_workspace_cmd(image_paths, labels=label_paths, rename_root=rename_root)
+# cmd = open_itksnap_workspace_cmd(image_paths, labels=label_paths, rename_root=rename_root)
+cmd = open_itksnap_workspace_cmd(image_paths, labels=label_paths)
 print(cmd)
 # pyperclip.copy(cmd)
-# subprocess.run(cmd, shell=True)
+subprocess.run(cmd, shell=True)

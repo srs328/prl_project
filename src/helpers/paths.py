@@ -26,6 +26,8 @@ TOKEN_MAP = {
     '${TRAIN_ROOT}': str(TRAIN_ROOT),
 }
 
+RESOURCES_DIR = PROJECT_ROOT / "src/resources"
+
 
 def expand_tokens(value):
     """Recursively expand ${VAR} tokens in strings, lists, and dicts."""

@@ -168,3 +168,13 @@ FN = np.sum((lab_data == 2) & (inf_data == 1))
 I just aggregated these over all the cases and computed values like sensitivity and precision from the cumulative counts. But the last several columns do show mean and std of metrics derived on a case by case basis.
 
 First look carefully at what parameters I varied since some important ones were only changed in one or two runs. Columns 0-9 are the parameters. The next few columns are statistics about the number of cases and voxels, and then metrics.
+
+
+
+I produced some data in lesion_diagnostics.ipynb. I saved some stats to:
+  /home/srs-9/Projects/prl_project/analysis/prl_image_stats-roi_train2_stage3_numcrops_bkd_constwt115_run2.csv
+
+I need to submit an abstract tomorrow for a conference, but I only need preliminary results for now. So can you help me create a quick classifier from this data? I dont want you to design it to be defensive and runnable from the cli; Im just looking for code snippets. So if it could just be something basic that can run from top to bottom, then I'd just port it into a jupyter notebook. Just make it a little extensible for extra parameters; I'll produce some quick radiomics soon to quantify sphericity and other shape features; but for now I just need a runnable skeleton for a classifier. Maybe a simple logistic regression? And can you use sklearn stuff for train and test splits?
+
+Write it into here:
+/home/srs-9/Projects/prl_project/notebooks/classifying_prl.py
