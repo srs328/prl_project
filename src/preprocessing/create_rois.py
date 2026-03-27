@@ -50,7 +50,7 @@ def prepare_prl(lesion_path, rim_path, output_path, dry_run=False, bypass=False,
             raise Exception
 
 
-def ensure_ring_seg(subject_root, suffix=None, dry_run=False):
+def ensure_ring_seg(subject_root, suffix=None, dry_run=False, output_dir=None):
     """Extract ring segmentation from full PRL probability mask."""
     full_seg_path = subject_root / f"prl_mask_def_prob_{suffix}.nii.gz"
     if suffix is None:
@@ -61,8 +61,12 @@ def ensure_ring_seg(subject_root, suffix=None, dry_run=False):
         else:
             raise FileNotFoundError(f"No segmentation in {subject_root}")
 
-    ring_seg_path = subject_root / f"prl_rim_def_prob_{suffix}.nii.gz"
+    if output_dir is None:
+        output_dir = subject_root
+    ring_seg_path = output_dir / f"prl_rim_def_prob_{suffix}.nii.gz"
+    print(ring_seg_path)
     if ring_seg_path.exists():
+        print("exists")
         return ring_seg_path
 
     command(f"fslmaths {full_seg_path} -thr 2 -uthr 2 {ring_seg_path}", dry_run=dry_run)
