@@ -40,7 +40,7 @@ class Dataset:
         self.dataset_home = config.get("dataset_home", 
                                        PROJECT_ROOT / "training" / name)
         self.work_home = config.get("work_home", TRAIN_ROOT / name)
-        self.data_root = config.get("data_root", DATA_ROOT)
+        self.data_root = Path(config.get("data_root", DATA_ROOT))
 
         self._config = config
 
@@ -63,6 +63,8 @@ class Dataset:
             expand_z=defaults.get("expand_z", 2),
         )
         training_defaults = defaults.get("training", {})
+        if training_defaults is None:
+            training_defaults = {}
         self.default_training = AlgoConfig.from_dict(training_defaults)
 
     @cached_property
@@ -77,6 +79,8 @@ class Dataset:
     @cached_property
     def suffix_to_use(self) -> dict[int, str]:
         result = {}
+        if self.suffix_to_use_path is None:
+            return result
         with open(self.suffix_to_use_path, "r") as f:
             lines = f.readlines()
             for line in lines[1:]:
@@ -88,7 +92,7 @@ class Dataset:
     def datalist_template_path(self) -> Path:
         return self.dataset_home / "datalist_template.json"
     
-    @property
+    @cached_property
     def datalist_template(self) -> dict:
         with open(self.datalist_template_path, 'r') as f:
             datalist_template = json.load(f)
@@ -99,7 +103,18 @@ class Dataset:
         
     def subject_dir(self, subid) -> Path:
         return self.data_root / self.subject_session(subid)
+    
+    def lesion_dir(self, datalist_case):
+        return self.subject_dir(datalist_case['subid']) / str(datalist_case['lesion_index'])
+    
+    def get_images(self, datalist_case, images, suffix="") -> list[str]:
+        im_names = [f"{im.removesuffix('.nii.gz')}{suffix}.nii.gz" for im in images]
+        return [self.lesion_dir(datalist_case) / im for im in im_names]
 
+
+    # I wonder if it makes sense for the main logic to be in another file and function.
+    # the only reason its like this now is that I wrote create_datalist_template before
+    # doing an OOP refactor
     def create_datalist(self, rebuild: bool = False) -> Path | None:
         """Create datalist_template.json with stratified fold assignments.
 
@@ -117,7 +132,7 @@ class Dataset:
             output_path=self.datalist_template_path,
             rebuild=rebuild,
         )
-
+    
     def __repr__(self) -> str:
         return f"Dataset('{self.name}')"
     
@@ -138,9 +153,29 @@ class Dataset:
 
         # Resolve relative paths against dataset_home
         for key in ("subjects", "suffix_to_use"):
-            if key in config and not Path(config[key]).is_absolute():
+            if key in config and config[key] is not None and not Path(config[key]).is_absolute():
                 config[key] = str(dataset_home / config[key])
             else:
                 config[key] = None
 
         return config
+
+    @staticmethod
+    def parse_stacked_image_name(image_name):
+        """Parse image stacks that are named like im1.im2.im2_<suffix>.nii.gz
+        Won't work if individual images have underscores
+        """
+        import re
+        pattern = re.compile(r"(([A-Za-z0-10]+\.?)+?)_(.+)\.nii\.gz")
+        matches = pattern.match(image_name)
+        images = matches[1].split(".")
+        suffix = matches[3]
+        return images, suffix
+        
+
+
+class Subject:
+    """Represents a subject and contains the various paths associated with them
+    
+    Should have functions to search the paths for patterns (e.g. to find an inference label)
+    """

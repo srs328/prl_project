@@ -22,14 +22,40 @@ from sklearn.pipeline import Pipeline
 # ---------------------------------------------------------------------------
 
 CSV = "/home/srs-9/Projects/prl_project/analysis/prl_image_stats-roi_train2_stage3_numcrops_bkd_constwt115_run2.csv"
+CSV_inf = "/home/srs-9/Projects/prl_project/analysis/prl_inference_defprobposs_image_stats-roi_train2_stage3_numcrops_bkd_constwt115_run2.csv"
+
 
 # Features to use — extend this list when radiomics arrive
+# FEATURES = [
+#     "rim_volume_infer",
+#     "rim_hull_volume_infer",
+#     "rim_sphere_radius_infer",
+#     "lesion_volume_infer",
+#     "lesion_hull_volume_infer",
+#     "pca_size",
+#     "pca_sphericity",
+#     "pca_planarity",
+#     "pca_linearity",
+#     "mean_radius",
+#     "std_radius",
+#     "min_radius",
+#     "max_radius",
+#     "radial_cv",
+# ]
+
 FEATURES = [
     "rim_volume_infer",
     "rim_hull_volume_infer",
     "rim_sphere_radius_infer",
-    "lesion_volume_infer",
-    "lesion_hull_volume_infer",
+    "pca_size",
+    "pca_sphericity",
+    "pca_planarity",
+    "pca_linearity",
+    "mean_radius",
+    "std_radius",
+    "min_radius",
+    "max_radius",
+    "radial_cv",
 ]
 
 TARGET = "case_type"        # "PRL" or "Lesion"
@@ -129,3 +155,41 @@ ax.set_xlabel("Coefficient (log-odds)")
 ax.set_title("Logistic regression coefficients")
 plt.tight_layout()
 plt.show()
+
+
+# %% 
+# ---------------------------------------------------------------------------
+# Test on fresh inference
+# ---------------------------------------------------------------------------
+
+CSV_inf = "/home/srs-9/Projects/prl_project/analysis/prl_inference_defprobposs_image_stats-roi_train2_stage3_numcrops_bkd_constwt115_run2.csv"
+
+df_inf = pd.read_csv(CSV_inf)
+df_inf = df_inf[df_inf['has_iron_infer']]
+print(f"Loaded {len(df_inf)} rows | {df_inf[TARGET].value_counts().to_dict()}")
+
+X_inf = df_inf[FEATURES].values
+y_inf = (df_inf[TARGET] == POS_LABEL).astype(int).values   # 1 = PRL, 0 = Lesion
+
+print(f"Test: {len(y_inf)} ({y_inf.sum()} PRL)")
+
+y_pred = model.predict(X_inf)
+y_prob = model.predict_proba(X_inf)[:, 1]
+
+print("\n--- Test set ---")
+print(classification_report(y_inf, y_pred, target_names=["Lesion", "PRL"]))
+print(f"ROC-AUC: {roc_auc_score(y_inf, y_prob):.3f}")
+
+fig, axes = plt.subplots(1, 2, figsize=(10, 4))
+ConfusionMatrixDisplay(confusion_matrix(y_inf, y_pred), display_labels=["Lesion", "PRL"]).plot(ax=axes[0])
+axes[0].set_title("Confusion matrix (test set)")
+RocCurveDisplay.from_predictions(y_inf, y_prob, pos_label=1, ax=axes[1])
+axes[1].set_title("ROC curve (test set)")
+plt.tight_layout()
+plt.show()
+
+# %% WHich did it get wrong
+import numpy as np
+false_negatives = (y_inf - y_pred) > 0
+false_negative_inds = np.where(false_negatives)
+df_fn = df_inf.iloc[false_negative_inds]

@@ -1,0 +1,16 @@
+name: inference_dataset
+data_root: /media/smbshare/srs-9/prl_project/inference_data
+# Data identity
+subjects: subjects.txt
+prl_df: ${PROJECT_ROOT}/src/resources/PRL_spreadsheet-lstai_update_label_reference.csv
+# Fold/split config (used once to create datalist_template.json)
+n_folds: 5
+test_split: 1
+
+# Preprocessing defaults (overridable by ExperimentGrid)
+defaults:
+  images: [flair, phase]
+  expand_xy: 20
+  expand_z: 2
+
+  training:

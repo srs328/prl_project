@@ -15,3 +15,17 @@ def dice_score(seg1: os.PathLike | np.ndarray, seg2: os.PathLike | np.ndarray,
         # return 1.0
         return None
     return 2.0 * intersection / volume_sum
+
+
+def get_prl_indices(prl_df, subid, possible=False):
+    confidence_labels = ["definite", "probable"]
+    if possible:
+        confidence_labels.append("possible")
+    prl_labels = set(
+        [
+            int(prl_df.loc[subid, f"PRL{i}_label"])
+            for i in range(1, 21)
+            if prl_df.loc[subid, f"confidence.{i-1}"] in confidence_labels
+        ]
+    )
+    return prl_labels

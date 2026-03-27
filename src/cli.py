@@ -371,6 +371,8 @@ def metrics(run_dir, test_only, output_csv, print_results, print_file, dataset_n
     help="Parallel processes for multi-subject inference (default: sequential)",
 )
 def infer(run_dir, subject, data_root, process_all, subjects_file, processes):
+    #TODO This could be made asier by utilizing Dataset with the dataset_name "inference_dataset"
+    #   which I defined with its own folder in training/
     """Run trained model on fresh subject(s).
 
     RUN_DIR is the trained model directory.

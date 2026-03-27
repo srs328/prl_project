@@ -48,7 +48,13 @@ def create_datalist_template(subjects, suffix_to_use, prl_df, data_root,
     if output_path.exists() and not rebuild:
         logger.info(f"{output_path} exists; use rebuild=True to replace it")
         return None
-
+    
+    if suffix_to_use is None:
+        suffix_to_use = {}
+    for k, suffix in suffix_to_use:
+        if len(suffix) > 1 and suffix[0] != "_":
+            suffix_to_use[k] = "_" + suffix
+    
     data_root = Path(data_root)
 
     prl_folders = []
@@ -76,10 +82,13 @@ def create_datalist_template(subjects, suffix_to_use, prl_df, data_root,
             else:
                 lesion_folders.append((folder, subid, index))
 
-    def _make_entry(folder, subid, index, case_type, suffix=None):
+    #FIXME can clean up by using rstrip("_") + "_"
+    def _make_entry(folder, subid, index, case_type, suffix=""):
+        if len(suffix) > 0 and suffix[0] != "_":
+            suffix = "_" + suffix
         rel = str(folder.relative_to(data_root))
         if case_type == "PRL":
-            label = f"{rel}/prl_label_{suffix}_"
+            label = f"{rel}/prl_label{suffix}_"
         else:
             label = f"{rel}/lesion_"
         return {
@@ -98,13 +107,13 @@ def create_datalist_template(subjects, suffix_to_use, prl_df, data_root,
     for i in range(test_end_ind):
         ind = inds[i]
         folder, subid, index = prl_folders[ind]
-        entry = _make_entry(folder, subid, index, "PRL", suffix_to_use[subid])
+        entry = _make_entry(folder, subid, index, "PRL", suffix_to_use.get(subid, ""))
         datalist["testing"].append(entry)
     for i in range(test_end_ind, len(inds)):
         fold = i % n_folds
         ind = inds[i]
         folder, subid, index = prl_folders[ind]
-        entry = _make_entry(folder, subid, index, "PRL", suffix_to_use[subid])
+        entry = _make_entry(folder, subid, index, "PRL", suffix_to_use.get(subid, ""))
         entry["fold"] = fold
         datalist["training"].append(entry)
 
@@ -130,7 +139,7 @@ def create_datalist_template(subjects, suffix_to_use, prl_df, data_root,
 
     label_types = {
         "prl_labels": [
-            str(item[0] / f"prl_label_{suffix_to_use[item[1]]}_")
+            str(item[0] / f"prl_label{suffix_to_use.get(item[1], '')}_")
             for item in prl_folders
         ],
         "lesion_labels": [str(item[0]) for item in lesion_folders],
@@ -194,5 +203,10 @@ def main(argv=None):
     )
 
 
+def main1():
+    from core.dataset import Dataset
+    inference_dataset = Dataset("inference_dataset")
+    inference_dataset.create_datalist()
+
 if __name__ == "__main__":
-    main()
+    main1()

@@ -16,6 +16,7 @@ import subprocess
 import tempfile
 from collections import defaultdict
 from pathlib import Path
+from functools import cached_property
 from typing import TYPE_CHECKING
 
 from loguru import logger
@@ -85,6 +86,16 @@ class Experiment:
     @property
     def id(self) -> str:
         return str(self.run_dir.relative_to(self.dataset.work_home.parent))
+    
+    @cached_property
+    def cases_df(self) -> pd.DataFrame:
+        import pandas as pd
+        return pd.DataFrame(self.cases).set_index(["subid", "lesion_index"])
+    
+    def get_case(self, subid, lesion_index) -> dict:
+        iloc = self.cases_df.index.get_loc((subid, lesion_index))
+        return self.cases_df.reset_index().iloc[iloc].to_dict()
+
 
     # --- Preprocessing (moved from Dataset) ---
 

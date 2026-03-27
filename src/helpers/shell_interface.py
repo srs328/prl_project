@@ -55,12 +55,21 @@ def open_itksnap_workspace_cmd(
         raise Exception("No images")
     if labels is None:
         labels = []
+    images_tmp = images.copy()
+    images = [Path(im) for im in images if im.exists()]
+    labels = [Path(lab) for lab in labels if lab.exists()]
+
+    if len(images) == 0:
+        print(f"Couldn't find {images_tmp}")
+        return
     if win:
         images = [convert_to_winroot(Path(p)) for p in images]
         labels = [convert_to_winroot(Path(p)) for p in labels]
     elif rename_root:
         images = [Path(rename_root[1]) / p.relative_to(rename_root[0]) for p in images]
         labels = [Path(rename_root[1]) / p.relative_to(rename_root[0]) for p in labels]
+    
+            
     images = [str(p) for p in images]
     labels = [str(p) for p in labels]
     command = ["itksnap"]
