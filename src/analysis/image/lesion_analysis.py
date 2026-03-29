@@ -1,0 +1,315 @@
+"""Lesion-level analysis: rim extraction, PRL counting, case analysis.
+
+Functions:
+    parse_bounding_boxes: Parse bbox file into (index, coords) pairs.
+    crop_from_volume: Extract a crop matching fslroi bounding box coords.
+    get_center_lesion: Boolean mask of the center lesion's body.
+    get_center_label: Boolean mask of a label class for a specific lesion.
+    get_lesion_rim: Boolean mask of rim voxels for a specific lesion.
+    count_rim_for_lesion: Count rim voxels for a specific lesion.
+    analyze_prl_case: Full analysis of a single PRL case.
+"""
+
+from __future__ import annotations
+
+import math
+import traceback
+from pathlib import Path
+
+import nibabel as nib
+import numpy as np
+from scipy import ndimage
+from loguru import logger
+
+from analysis.image.geometry import (
+    get_convex_hull,
+    rim_enclosing_sphere_radius,
+)
+
+
+def parse_bounding_boxes(bbox_file: Path) -> list[tuple[int, list[int]]]:
+    """Parse bounding box file into list of (index, [xmin, xsize, ymin, ysize, zmin, zsize])."""
+    bounding_boxes = []
+    with open(bbox_file) as f:
+        for line in f:
+            parts = line.split()
+            index = int(parts[0])
+            coords = list(map(int, parts[1:]))
+            bounding_boxes.append((index, coords))
+    return bounding_boxes
+
+
+def crop_from_volume(volume: np.ndarray, coords: list[int]) -> np.ndarray:
+    """Extract a crop from a full-brain volume using fslroi-style bounding box coords.
+
+    Handles negative start coords (from bbox expansion beyond brain boundary)
+    by zero-padding, matching fslroi's behavior.
+
+    Args:
+        volume: Full-brain 3D array.
+        coords: [xmin, xsize, ymin, ysize, zmin, zsize].
+
+    Returns:
+        Cropped array of shape (xsize, ysize, zsize).
+    """
+    xmin, xsize, ymin, ysize, zmin, zsize = coords
+    brain_shape = volume.shape[:3]
+
+    crop = np.zeros((xsize, ysize, zsize), dtype=volume.dtype)
+
+    slices_brain = []
+    slices_crop = []
+    for start, size, brain_dim in zip(
+        [xmin, ymin, zmin], [xsize, ysize, zsize], brain_shape
+    ):
+        b_start = max(0, start)
+        b_end = min(brain_dim, start + size)
+        c_start = max(0, -start)
+        c_end = c_start + (b_end - b_start)
+
+        if b_end <= b_start:
+            return crop
+
+        slices_brain.append(slice(b_start, b_end))
+        slices_crop.append(slice(c_start, c_end))
+
+    crop[tuple(slices_crop)] = volume[tuple(slices_brain)]
+    return crop
+
+
+def get_center_lesion(
+    index_crop: np.ndarray, label_data: np.ndarray, lesion_id: int
+) -> np.ndarray:
+    """Get boolean mask of the center lesion's body (label=1 voxels).
+
+    Uses connected components to find lesion regions that overlap with
+    the lesion index mask, excluding distant neighbor lesions.
+
+    Args:
+        index_crop: Cropped lstai_lesion_index (same shape as label_data).
+        label_data: Segmentation output (0=bg, 1=lesion, 2=rim).
+        lesion_id: The central lesion's integer ID.
+
+    Returns:
+        Boolean mask of the center lesion.
+    """
+    lesion_mask = label_data == 1
+    labeled, n_components = ndimage.label(lesion_mask)
+    index_mask = index_crop == lesion_id
+
+    result = np.zeros_like(lesion_mask)
+    for comp_id in range(1, n_components + 1):
+        comp_mask = labeled == comp_id
+        if np.any(comp_mask & index_mask):
+            result |= comp_mask
+
+    return result
+
+
+def get_center_label(
+    index_crop: np.ndarray,
+    label_data: np.ndarray,
+    lesion_id: int,
+    label_class: int,
+    n_dilate: int | None = None,
+) -> np.ndarray:
+    """Get boolean mask of a specific label class for a specific lesion.
+
+    Uses connected components to find label_class regions that overlap with the
+    central lesion's footprint (optionally dilated).
+
+    Args:
+        index_crop: Cropped lstai_lesion_index.
+        label_data: Segmentation output (0=bg, 1=lesion, 2=rim).
+        lesion_id: The central lesion's integer ID.
+        label_class: Label value to extract (1=lesion, 2=rim).
+        n_dilate: Voxels to dilate the lesion footprint by.
+
+    Returns:
+        Boolean mask of the requested label class for this lesion.
+    """
+    label_mask = label_data == label_class
+    labeled, n_components = ndimage.label(label_mask)
+
+    index_mask = index_crop == lesion_id
+    if n_dilate is not None:
+        index_mask = ndimage.binary_dilation(index_mask, iterations=n_dilate)
+
+    result = np.zeros_like(label_mask)
+    for comp_id in range(1, n_components + 1):
+        comp_mask = labeled == comp_id
+        if np.any(comp_mask & index_mask):
+            result |= comp_mask
+
+    return result
+
+
+def get_lesion_rim(
+    index_crop: np.ndarray,
+    label_data: np.ndarray,
+    lesion_id: int,
+    n_dilate: int = 1,
+) -> np.ndarray:
+    """Get boolean mask of rim voxels belonging to a specific lesion.
+
+    Uses connected components to find label=2 regions that overlap with the
+    central lesion's footprint (dilated to capture rim just outside boundary).
+
+    Args:
+        index_crop: Cropped lstai_lesion_index.
+        label_data: Segmentation output (0=bg, 1=lesion, 2=rim).
+        lesion_id: The central lesion's integer ID.
+        n_dilate: Voxels to dilate the lesion footprint by.
+
+    Returns:
+        Boolean mask of rim voxels for this lesion.
+    """
+    rim_mask = label_data == 2
+    labeled, n_components = ndimage.label(rim_mask)
+
+    index_mask = index_crop == lesion_id
+    dilated = ndimage.binary_dilation(index_mask, iterations=n_dilate)
+
+    result = np.zeros_like(rim_mask)
+    for comp_id in range(1, n_components + 1):
+        comp_mask = labeled == comp_id
+        if np.any(comp_mask & dilated):
+            result |= comp_mask
+
+    return result
+
+
+def count_rim_for_lesion(
+    index_crop: np.ndarray,
+    label_data: np.ndarray,
+    lesion_id: int,
+    n_dilate: int = 1,
+) -> int:
+    """Count rim voxels belonging to a specific lesion."""
+    return int(get_lesion_rim(index_crop, label_data, lesion_id, n_dilate).sum())
+
+
+def analyze_prl_case(case, dataset, include_data=True):
+    """Full analysis of a single PRL case.
+
+    Computes rim and lesion statistics for both ground truth and inference,
+    including voxel counts, volumes, convex hull volumes, and enclosing sphere radii.
+
+    Args:
+        case: pd.Series row from dataset.cases or experiment.cases.
+            Must have: image, plus index=(subid, lesion_index).
+            label and inference are both optional — at least one must exist on disk.
+        dataset: Dataset instance (provides data_root, preprocess config, subject lookup).
+        include_data: If True (default), return arrays (rim masks, hulls, etc.)
+            in lesion_data. If False, lesion_data contains only subid/lesion_index
+            — useful for batch runs to avoid holding large arrays in memory.
+
+    Returns:
+        (lesion_stats, lesion_data) tuple:
+            lesion_stats: Dict of scalar metrics for this case.
+            lesion_data: Dict of arrays (rim masks, hulls, etc.) for visualization,
+                or just identifiers if include_data=False.
+        Returns None if neither label nor inference exists on disk.
+    """
+    subid, lesion_index = case.name if hasattr(case, "name") else (case["subid"], case["lesion_index"])
+    subject = dataset.subject(subid)
+
+    lesion_index_path = subject.dir / "lstai_lesion_index.nii.gz"
+    lesion_index_vol = nib.load(str(lesion_index_path)).get_fdata().astype(np.int32)
+
+    # Parse bounding boxes
+    cfg = dataset.preprocess
+    bbox_suffix = f"xy{cfg.expand_xy}_z{cfg.expand_z}"
+    bbox_file = subject.dir / f"lstai_bounding_boxes_{bbox_suffix}.txt"
+    bounding_boxes = parse_bounding_boxes(bbox_file)
+
+    try:
+        assert bounding_boxes[lesion_index - 1][0] == lesion_index
+    except (AssertionError, IndexError):
+        logger.warning(f"Bounding box index mismatch for sub{subid} lesion {lesion_index}")
+    coords = bounding_boxes[lesion_index - 1][1]
+
+    groundtruth_path = case.get("label")
+    inference_path = case.get("inference")
+
+    label_paths = {}
+    if groundtruth_path is not None:
+        gt_path = Path(groundtruth_path)
+        if gt_path.exists():
+            label_paths["truth"] = gt_path
+        else:
+            logger.debug(f"Ground truth not found: {gt_path}")
+    if inference_path is not None:
+        inf_path = Path(inference_path)
+        if inf_path.exists():
+            label_paths["infer"] = inf_path
+        else:
+            logger.debug(f"Inference output not found: {inf_path}")
+
+    if not label_paths:
+        logger.warning(f"No label or inference found for sub{subid} lesion {lesion_index}")
+        return None
+
+    lesion_stats = {
+        "subid": subid,
+        "lesion_index": lesion_index,
+    }
+    lesion_data = {"subid": subid, "lesion_index": lesion_index}
+
+    for key, lab_path in label_paths.items():
+        lab_nifti = nib.load(str(lab_path))
+        lab_data = lab_nifti.get_fdata().astype(np.uint8)
+        voxel_size = lab_nifti.header.get_zooms()[:3]
+        voxel_volume = math.prod(voxel_size)
+
+        if include_data:
+            lesion_data[f"label_{key}"] = lab_data
+
+        index_crop = crop_from_volume(lesion_index_vol, coords)
+        if include_data:
+            lesion_data[f"index_crop_{key}"] = index_crop
+
+        try:
+            has_iron = np.any((index_crop == lesion_index) & (lab_data == 2))
+            if key == "infer":
+                lesion_stats["has_iron_infer"] = has_iron
+
+            rim = get_lesion_rim(index_crop, lab_data, lesion_index)
+            rim_count = int(rim.sum())
+            rim_sphere = rim_enclosing_sphere_radius(rim, voxel_size)
+            hull = get_convex_hull(rim, voxel_sizes=voxel_size)
+
+            if include_data:
+                lesion_data[f"rim_{key}"] = rim
+                lesion_data[f"rim_hull_{key}"] = hull
+
+            lesion_stats[f"rim_voxels_{key}"] = rim_count
+            lesion_stats[f"rim_volume_{key}"] = rim_count * voxel_volume
+            if hull is not None:
+                lesion_stats[f"rim_hull_volume_{key}"] = hull.volume
+            lesion_stats[f"rim_sphere_radius_{key}"] = rim_sphere
+        except Exception:
+            logger.warning(f"Rim analysis failed for sub{subid} lesion {lesion_index} ({key})")
+            logger.debug(traceback.format_exc())
+
+        try:
+            lesion = get_center_lesion(index_crop, lab_data, lesion_index)
+            lesion_count = int(lesion.sum())
+            hull = get_convex_hull(lesion, voxel_sizes=voxel_size)
+
+            if include_data:
+                lesion_data[f"lesion_{key}"] = lesion
+                lesion_data[f"lesion_hull_{key}"] = hull
+
+            lesion_stats[f"lesion_voxels_{key}"] = lesion_count
+            lesion_stats[f"lesion_volume_{key}"] = lesion_count * voxel_volume
+            if hull is not None:
+                lesion_stats[f"lesion_hull_volume_{key}"] = hull.volume
+        except Exception:
+            logger.warning(f"Lesion analysis failed for sub{subid} lesion {lesion_index} ({key})")
+            logger.debug(traceback.format_exc())
+
+        if include_data:
+            lesion_data[f"voxel_size_{key}"] = voxel_size
+
+    return lesion_stats, lesion_data

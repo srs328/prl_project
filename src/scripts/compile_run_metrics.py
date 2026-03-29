@@ -1,15 +1,27 @@
-"""Compile training metrics across grid search stages into unified DataFrames.
+"""DEPRECATED — use analysis.compile and analysis.metrics instead.
 
-Usage:
-    # As library
-    from scripts.compile_run_metrics import compile_all_metrics
-    df = compile_all_metrics("roi_train2", ["stage3_numcrops_bkd_constwt115"])
-
-    # Via CLI
-    prl compile roi_train2 --stage stage3_numcrops_bkd_constwt115
+Backward-compat re-exports so existing ``from scripts.compile_run_metrics import X``
+still works.
 """
 
 from __future__ import annotations
+
+# Backward-compat re-exports
+from analysis.compile import (  # noqa: F401
+    compile_all_metrics,
+    compile_experiment_metrics,
+    compile_grid_metrics,
+)
+from analysis.metrics.performance import performance_metrics  # noqa: F401
+from analysis.metrics.mlflow import mlflow_metrics  # noqa: F401
+from analysis.metrics.display import (  # noqa: F401
+    format_param_value,
+    extract_param,
+    rename_metric,
+    order_columns,
+)
+from analysis._cache import cached_load_run_data  # noqa: F401
+from analysis.loaders import load_run_data  # noqa: F401
 
 import pickle
 import re

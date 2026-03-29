@@ -69,10 +69,11 @@ _ALGO_REGISTRY: dict[str, type[AlgoConfig]] = {}
 
 @attrs.define()
 class AlgoConfig:
-    """Base training parameters shared across MONAI Auto3DSeg algorithms.
+    """Base training parameters for any MONAI Auto3DSeg algorithm.
 
-    Fields mirror the user-tunable entries in hyper_parameters.yaml.
-    Adding a field here automatically flows through to_input_dict() and
+    Fields mirror the full hyper_parameters.yaml. Defaults match the
+    user's SegResNet workflow (WYSIWYG, no auto-scaling). Adding a field
+    here automatically flows through to_input_dict() and
     to_monai_config_dict() — no manual enumeration needed.
 
     Fields set to None are omitted from the AutoRunner input dict, letting
@@ -80,6 +81,10 @@ class AlgoConfig:
     """
 
     algo: str = "segresnet"
+
+    # --- Data ---
+    modality: str = "mri"
+    cache_rate: float | None = None
 
     # --- Training schedule ---
     learning_rate: float = 0.0002
@@ -98,9 +103,14 @@ class AlgoConfig:
     crop_ratios: list[int] | None = None
     crop_mode: str = "ratio"
     crop_foreground: bool = True
+    resample: bool = False
+    resample_resolution: list[float] | None = None
+    normalize_mode: str = "meanstd"
+    intensity_bounds: list[float] | None = None
+    sigmoid: bool = False
+    orientation_ras: bool = True
 
-    # --- Auto-scaling ---
-    """Reversed the defaults for scale_allowed and scale_bath - now WYSIWYG"""
+    # --- Auto-scaling (WYSIWYG: all off by default) ---
     auto_scale_allowed: bool = False
     auto_scale_batch: bool = False
     auto_scale_roi: bool = False
@@ -111,17 +121,30 @@ class AlgoConfig:
     channels_last: bool = True
     determ: bool = False
     early_stopping_fraction: float = 0.001
+    debug: bool = False
+    ckpt_save: bool = True
+    validate_final_original_res: bool = True
+    calc_val_loss: bool = False
 
     # --- Loss / optimizer (nested dicts, None = template default) ---
     loss: dict | None = None
     optimizer: dict | None = None
 
+    # --- Network (nested dict, None = template default) ---
+    network: dict | None = None
+
+    # --- Optional phases (None = use template default) ---
+    finetune: dict | None = None
+    infer: dict | None = None
+
     # --- Pass-through for rare/future params ---
     extra: dict = attrs.Factory(dict)
     start_epoch: int = 0
 
-    # Fields excluded from MONAI input dict (metadata only)
-    _SKIP_IN_INPUT: ClassVar[frozenset] = frozenset({"algo", "extra", "start_epoch"})
+    # Fields excluded from MONAI input dict (metadata only or handled separately)
+    _SKIP_IN_INPUT: ClassVar[frozenset] = frozenset({
+        "algo", "extra", "start_epoch", "network", "finetune", "infer",
+    })
 
     def to_input_dict(self, datalist_path, dataroot) -> dict:
         """Build the AutoRunner input dict.
@@ -130,7 +153,6 @@ class AlgoConfig:
         fill_template_config() → hyper_parameters.yaml.
         """
         d = {
-            "modality": "MRI",
             "datalist": str(datalist_path),
             "dataroot": str(dataroot),
         }
@@ -201,11 +223,23 @@ class AlgoConfig:
         import yaml
         with open(yaml_path, 'r') as f:
             yaml_data = yaml.full_load(f)
-        
         return cls.from_dict(yaml_data)
 
-    
-        
+    @classmethod
+    def from_template(cls, algo: str = "segresnet") -> AlgoConfig:
+        """Create config with all defaults from the algorithm template.
+
+        Reads hyper_parameters.yaml from training/algorithm_templates/{algo}/configs/.
+        This gives you the "ground truth" defaults for an algorithm before
+        any dataset-level or experiment-level overrides.
+        """
+        from helpers.paths import PROJECT_ROOT
+        template_path = (
+            PROJECT_ROOT / "training" / "algorithm_templates"
+            / algo / "configs" / "hyper_parameters.yaml"
+        )
+        return cls.load_from_yaml(template_path)
+
     def __getitem__(self, key):
         obj = attrs.asdict(self)
         for k in key.split("#"):
@@ -256,11 +290,57 @@ class SegResNetConfig(AlgoConfig):
 
         with open(file, 'r') as f:
             yaml_data = yaml.full_load(f)
-        
+
         return cls.from_dict(yaml_data)
-        
+
+
+@attrs.define
+class SwinUNETRConfig(AlgoConfig):
+    """SwinUNETR-specific parameters (stub — fields only, no behavior changes).
+
+    Adds pretrained model support, adaptive validation, early stopping,
+    and LR scheduling fields that SwinUNETR's hyper_parameters.yaml uses.
+    """
+    algo: str = "swinunetr"
+
+    # Pretrained model
+    use_pretrain: bool = True
+    pretrained_path: str | None = None
+
+    # LR scheduler (nested dict, None = template default)
+    lr_scheduler: dict | None = None
+
+    # Adaptive validation
+    adapt_valid_mode: bool = True
+    adapt_valid_progress_percentages: list[int] = attrs.Factory(lambda: [10, 40, 70])
+    adapt_valid_num_epochs_per_validation: list[int] = attrs.Factory(lambda: [5, 5, 5])
+
+    # Early stopping (different mechanism from base early_stopping_fraction)
+    early_stop_mode: bool = True
+    early_stop_delta: float = 0
+    early_stop_patience: int = 5
+
+
+@attrs.define
+class DiNTSConfig(AlgoConfig):
+    """DiNTS-specific parameters (stub — fields only, no behavior changes).
+
+    DiNTS has a separate architecture search phase with its own config.
+    Training params are nested under a 'training:' key in the YAML.
+    """
+    algo: str = "dints"
+
+    # Architecture search config (the entire "searching:" block)
+    search_config: dict | None = None
+
+    # DiNTS-specific training
+    epoch_divided_factor: int = 36
+
+
 # Register subclasses
 _ALGO_REGISTRY["segresnet"] = SegResNetConfig
+_ALGO_REGISTRY["swinunetr"] = SwinUNETRConfig
+_ALGO_REGISTRY["dints"] = DiNTSConfig
 
 # Backward-compatible alias
 TrainingConfig = AlgoConfig

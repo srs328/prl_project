@@ -1,15 +1,20 @@
 #!/usr/bin/env python3
 """
-Compute comprehensive performance metrics (TP, FP, TN, FN, sensitivity, specificity, etc.)
-from inference results against ground truth labels.
+DEPRECATED — use analysis.metrics.performance instead.
 
-Treats label value 1 (lesion) as negative and label value 2 (rim) as positive.
-
-Usage:
-    python compute_performance_metrics.py /path/to/run2
-    python compute_performance_metrics.py /path/to/run2 --test-only --print-results
-    python compute_performance_metrics.py /path/to/run2 --output-csv performance_metrics.csv
+Backward-compat re-exports so existing ``from scripts.compute_performance_metrics import X``
+still works.
 """
+
+# Backward-compat re-exports
+from analysis.metrics.performance import (  # noqa: F401
+    get_confusion_matrix,
+    compute_derived_metrics,
+    compute_casewise_stats,
+    performance_metrics,
+)
+
+# --- Legacy code below (kept for CLI entry point only) ---
 
 import sys
 import argparse

@@ -49,6 +49,7 @@ FEATURES = [
     "rim_sphere_radius_infer",
     "pca_size",
     "pca_sphericity",
+
     "pca_planarity",
     "pca_linearity",
     "mean_radius",
@@ -66,10 +67,10 @@ RANDOM_STATE = 42
 CV_FOLDS = 5
 
 df = pd.read_csv(CSV)
-df = df[df['has_iron_infer']]
+# df = df[df['has_iron_infer']]
 
 df_inf = pd.read_csv(CSV_inf)
-df_inf = df_inf[df_inf['has_iron_infer']]
+# df_inf = df_inf[df_inf['has_iron_infer']]
 
 # %%
 # ---------------------------------------------------------------------------
@@ -162,7 +163,7 @@ plt.show()
 # Test on fresh inference
 # ---------------------------------------------------------------------------
 
-CSV_inf = "/home/srs-9/Projects/prl_project/analysis/prl_inference_defprobposs_image_stats-roi_train2_stage3_numcrops_bkd_constwt115_run2.csv"
+CSV_inf = "/home/srs-9/Projects/prl_project/analysis/prl_inference_image_stats-roi_train2_stage3_numcrops_bkd_constwt115_run2.csv"
 
 df_inf = pd.read_csv(CSV_inf)
 df_inf = df_inf[df_inf['has_iron_infer']]
@@ -187,6 +188,22 @@ RocCurveDisplay.from_predictions(y_inf, y_prob, pos_label=1, ax=axes[1])
 axes[1].set_title("ROC curve (test set)")
 plt.tight_layout()
 plt.show()
+
+# %%
+
+cv = StratifiedKFold(n_splits=CV_FOLDS, shuffle=True, random_state=RANDOM_STATE)
+cv_results = cross_validate(
+    model, X_inf, y_inf, cv=cv,
+    scoring=["roc_auc", "f1", "precision", "recall"],
+    return_train_score=False,
+)
+
+print(f"\n--- {CV_FOLDS}-fold stratified CV ---")
+for metric, vals in cv_results.items():
+    if metric.startswith("test_"):
+        name = metric.replace("test_", "")
+        print(f"  {name:12s}: {vals.mean():.3f} ± {vals.std():.3f}")
+
 
 # %% WHich did it get wrong
 import numpy as np

@@ -1,21 +1,21 @@
 #!/usr/bin/env python3
 """
-Analyze MLflow runs and aggregate metrics across folds.
+DEPRECATED — use analysis.metrics.mlflow instead.
 
-Supports both:
-- Distributed setup (each fold has its own mlruns directory)
-- Unified setup (all folds logged to shared mlruns directory)
-
-Usage:
-    # Distributed setup (run2)
-    python analyze_mlflow_runs.py /path/to/run2 --distributed
-
-    # Unified setup (future runs)
-    python analyze_mlflow_runs.py /path/to/run3
-
-    # Unified setup with plots
-    python analyze_mlflow_runs.py /path/to/run3 --plot
+Backward-compat re-exports so existing ``from scripts.analyze_mlflow_runs import X``
+still works. CLI entry point preserved below.
 """
+
+# Backward-compat re-exports
+from analysis.metrics.mlflow import (  # noqa: F401
+    load_metrics_from_file,
+    analyze_unified_mlruns,
+    analyze_distributed_mlruns,
+    aggregate_metrics,
+    mlflow_metrics,
+)
+
+# --- Legacy code below (kept for CLI entry point only) ---
 
 import json
 import os

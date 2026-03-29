@@ -316,8 +316,10 @@ def metrics(run_dir, test_only, output_csv, print_results, print_file, dataset_n
 
     RUN_DIR is the path to the training run directory.
     """
+    import pandas as pd
     from core.dataset import Dataset
     from core.experiment import Experiment
+    from analysis.metrics.performance import compute_casewise_stats
 
     if dataset_name is None:
         from helpers.paths import load_config
@@ -331,16 +333,28 @@ def metrics(run_dir, test_only, output_csv, print_results, print_file, dataset_n
     if output_csv is not None and not output_csv.is_absolute():
         output_csv = run_dir / output_csv
 
-    if print_file:
-        print_results = print_file
-    df = exp.evaluate(
-        test_only=test_only, output_csv=output_csv, print_results=print_results
-    )
+    # Filter cases by split
+    cases_df = exp.cases
+    if test_only:
+        cases_df = cases_df[cases_df["split"] == "testing"]
 
-    if df is not None:
+    # Only cases with inference results
+    cases_with_inf = cases_df[cases_df["inference"].notna()]
+    if cases_with_inf.empty:
+        click.echo("No cases with inference results found.")
+        return
+
+    results = compute_casewise_stats(cases_with_inf)
+    df = pd.DataFrame(results)
+
+    if output_csv:
+        output_csv.parent.mkdir(parents=True, exist_ok=True)
+        df.to_csv(output_csv, index=False)
         click.echo(f"Metrics computed for {len(df)} cases -> {output_csv}")
+    elif print_results or print_file:
+        click.echo(df.to_string())
     else:
-        click.echo("No results to report.")
+        click.echo(f"Metrics computed for {len(df)} cases.")
 
 
 @cli.command()
@@ -500,15 +514,25 @@ def compile_metrics(dataset_name, stages, output_csv, params, no_cache, print_ta
 
     DATASET_NAME is the dataset (e.g., 'roi_train2').
     """
-    from scripts.compile_run_metrics import compile_all_metrics
+    from analysis.compile import compile_all_metrics
+    from analysis.metrics.performance import performance_metrics
     from helpers.paths import PROJECT_ROOT
+    from core.grid import ExperimentGrid
+    from core.dataset import Dataset
 
-    stages_list = list(stages) if stages else None
     params_list = list(params) if params else None
 
+    grids = None
+    if stages:
+        ds = Dataset(dataset_name)
+        grids = [
+            ExperimentGrid.from_home_dir(ds.work_home / stage)
+            for stage in stages
+        ]
+
     df = compile_all_metrics(
-        dataset_name,
-        stages=stages_list,
+        func=performance_metrics,
+        grids=grids,
         params_to_gather=params_list,
         use_cache=not no_cache,
     )

@@ -1,32 +1,23 @@
 """Experiment class — a single training run.
 
 Encapsulates setup, training (via MONAI AutoRunner), prediction, and
-evaluation for a single set of hyperparameters. Also owns ROI creation
-and data preparation, since these depend on per-experiment parameters
-(expand_xy, expand_z, images).
+preprocessing for a single set of hyperparameters. Case path resolution
+is delegated to Dataset; Experiment adds inference output paths.
 """
 
 from __future__ import annotations
 
 import json
-import os
-import sys
-import contextlib
-import subprocess
-import tempfile
-from collections import defaultdict
 from pathlib import Path
 from functools import cached_property
-from typing import TYPE_CHECKING
 
+import pandas as pd
 from loguru import logger
 
 from core.configs import PreprocessingConfig, AlgoConfig
 from core.dataset import Dataset
 
-if TYPE_CHECKING:
-    import pandas as pd
-    
+
 class Experiment:
     """A single training run with fixed hyperparameters.
 
@@ -41,13 +32,23 @@ class Experiment:
         training_config: AlgoConfig,
         run_dir: Path,
     ):
-        self.dataset = dataset
         self.preprocess_config = preprocess_config
         self.training_config = training_config
         self.run_dir = Path(run_dir)
         if not self.run_dir.is_absolute():
             self.run_dir = dataset.work_home / self.run_dir
-        self._cases: list[dict] | None = None
+
+        # Ensure dataset uses this experiment's preprocessing config for
+        # path resolution. If the dataset already has the right config
+        # (or no override), set it; otherwise create a view with the
+        # correct config.
+        if dataset._preprocess is None or dataset._preprocess == preprocess_config:
+            dataset._preprocess = preprocess_config
+            self.dataset = dataset
+        else:
+            # Different preprocess config — create a new Dataset instance
+            # that shares the same identity but resolves paths differently
+            self.dataset = Dataset(dataset.name, preprocess=preprocess_config)
 
     @property
     def datalist_name(self) -> str:
@@ -65,39 +66,28 @@ class Experiment:
 
     @property
     def hyper_params(self) -> AlgoConfig:
-        """Returns the actual hyper_params used in training"""
+        """Returns the actual hyper_params used in training."""
         for fold_n in range(self.dataset.n_folds):
-            # TODO Make this a function if other algos name folds differently 
             fold_dir = self.run_dir / f"{self.training_config.algo}_{fold_n}"
             if self.has_trained(fold_dir):
                 hyper_params_file = fold_dir / "configs/hyper_parameters.yaml"
                 params = AlgoConfig.load_from_yaml(hyper_params_file)
                 return params
-    
+
     @property
     def work_home(self) -> Path:
-        """To be consistent with naming pattern used in Dataset and ExperimentGrid"""
+        """Alias for run_dir (consistent with Dataset/ExperimentGrid naming)."""
         return self.run_dir
-    
+
     @property
     def name(self) -> str:
         return str(self.run_dir.relative_to(self.dataset.work_home))
-    
+
     @property
     def id(self) -> str:
         return str(self.run_dir.relative_to(self.dataset.work_home.parent))
-    
-    @cached_property
-    def cases_df(self) -> pd.DataFrame:
-        import pandas as pd
-        return pd.DataFrame(self.cases).set_index(["subid", "lesion_index"])
-    
-    def get_case(self, subid, lesion_index) -> dict:
-        iloc = self.cases_df.index.get_loc((subid, lesion_index))
-        return self.cases_df.reset_index().iloc[iloc].to_dict()
 
-
-    # --- Preprocessing (moved from Dataset) ---
+    # --- Preprocessing ---
 
     def create_rois(self) -> None:
         """Crop ROIs for all subjects at this experiment's expand_xy/expand_z."""
@@ -138,94 +128,58 @@ class Experiment:
         with open(path) as f:
             return json.load(f)
 
-    @property
-    def cases(self) -> list[dict]:
-        """Flat list of all cases with split, case_type, and inference paths.
+    @cached_property
+    def cases(self) -> pd.DataFrame:
+        """Dataset cases augmented with inference paths for this run.
 
-        Cached after first access. Call refresh_cases() to re-scan disk
-        (e.g. after predict() generates new inference files).
+        Returns a DataFrame indexed by (subid, lesion_index) with columns:
+        split, case_type, image, label, subject_dir, inference.
+
+        The 'inference' column contains the path to the model's prediction
+        output if it exists on disk, or None otherwise.
+
+        Call refresh_cases() to re-scan disk after predict() generates
+        new inference files.
         """
-        if self._cases is None:
-            self._cases = self._build_cases()
-        return self._cases
-    
-    def subject_dir(self, subid):
-        return self.datalist
+        df = self.dataset.cases.copy()
+        df["inference"] = df.apply(self._find_inference_path, axis=1)
+        return df
 
     def refresh_cases(self) -> None:
         """Invalidate cached cases so the next access re-scans disk."""
-        self._cases = None
+        # Clear the cached_property
+        self.__dict__.pop("cases", None)
+        # Also clear dataset's cached cases so paths are re-resolved
+        self.dataset.__dict__.pop("cases", None)
 
-    def _build_cases(self) -> list[dict]:
-        datalist = self.datalist
-        cases = []
-
-        for item in datalist.get("testing", []):
-            item = dict(item)
-            item["split"] = "testing"
-            self._resolve_inference_path(item)
-            resolve_case_type(item)
-            cases.append(item)
-
-        for item in datalist.get("training", []):
-            item = dict(item)
-            item["split"] = f"fold{item.pop('fold')}"
-            self._resolve_inference_path(item)
-            resolve_case_type(item)
-            cases.append(item)
-
-        return cases
-
-    def _resolve_inference_path(self, case: dict) -> None:
-        """Add 'inference' key to a case dict if the predicted file exists.
-
-        Also converts image/label to absolute Paths.
-        """
+    def _find_inference_path(self, row: pd.Series) -> Path | None:
+        """Resolve inference output path for a single case row."""
         data_root = self.dataset.data_root
-        cfg = self.preprocess_config
+        image = row["image"]
+        label = row["label"]
+        split = row.name[0] if isinstance(row.name, tuple) else row["split"]
+        # row.name is the index tuple (subid, lesion_index), split is a column
+        split = row["split"]
 
-        # Make label absolute
-        label = Path(case["label"])
-        if not label.is_absolute():
-            label = data_root / label
-        case["label"] = label
-
-        # Make image absolute
-        image = Path(case["image"])
-        if not image.is_absolute():
-            image = data_root / image
-        case["image"] = image
-
-        # Resolve inference output path
         label_relative = label.relative_to(data_root)
-        if case["split"] == "testing":
-            # inf_path = (
-            #     self.run_dir
-            #     / "ensemble_output"
-            #     / label_relative.with_name(f"{cfg.datalist_suffix}_ensemble.nii.gz")
-            # )
+
+        if split == "testing":
             inf_path = (
                 self.run_dir
                 / "ensemble_output"
-                / label_relative.with_name(f"{image.name.removesuffix('.nii.gz')}_ensemble.nii.gz")
+                / label_relative.with_name(
+                    f"{image.name.removesuffix('.nii.gz')}_ensemble.nii.gz"
+                )
             )
         else:
-            # Validation: fold_predictions/fold0/...
-            # inf_path = (
-            #     self.run_dir
-            #     / "fold_predictions"
-            #     / case["split"]
-            #     / label_relative.with_name(f"{cfg.datalist_suffix}.nii.gz")
-            # )
             inf_path = (
                 self.run_dir
                 / "fold_predictions"
-                / case["split"]
-                / label_relative.with_name(f"{image.name}")
+                / split
+                / label_relative.with_name(image.name)
             )
 
-        if inf_path.exists():
-            case["inference"] = inf_path
+        return inf_path if inf_path.exists() else None
 
     # --- Setup ---
 
@@ -451,79 +405,6 @@ class Experiment:
         self.refresh_cases()
         return results
 
-    # --- Evaluation ---
-    # TODO Consider removing from inside class
-    def evaluate(
-        self,
-        test_only: bool = False,
-        output_csv: Path | None = None,
-        print_results: bool | str = False,
-    ) -> pd.DataFrame | None:
-        """Compute performance metrics using self.cases.
-
-        Groups cases by split and runs analyze_dataset() on each group.
-        Returns a DataFrame of per-case metrics.
-        """
-        from scripts.compute_performance_metrics import (
-            analyze_dataset,
-            print_results as _print_results,
-        )
-        import pandas as _pd
-
-        cases = self.cases
-
-        # Group by split
-        by_split: dict[str, list[dict]] = defaultdict(list)
-        for case in cases:
-            if "inference" not in case:
-                continue
-            by_split[case["split"]].append(case)
-
-        all_results = {}
-
-        # Process testing first
-        if "testing" in by_split:
-            results = analyze_dataset(by_split["testing"])
-            if results.get("aggregated"):
-                all_results["testing"] = results
-                if print_results:
-                    if type(print_results) is str:
-                        with open(print_results, "a") as f:
-                            with contextlib.redirect_stdout(f):
-                                _print_results(results)
-                    else:
-                        _print_results(results)
-
-        # Process validation folds
-        if not test_only:
-            for split_name in sorted(by_split):
-                if split_name == "testing":
-                    continue
-                results = analyze_dataset(
-                    by_split[split_name]
-                )
-                if results.get("aggregated"):
-                    all_results[f"validation {split_name}"] = results
-                    if print_results:
-                        _print_results(results)
-
-        # Build DataFrame
-        all_cases = []
-        for split, results in all_results.items():
-            for case in results["cases"]:
-                case["split"] = split
-                all_cases.append(case)
-
-        if not all_cases:
-            return None
-
-        df = _pd.DataFrame(all_cases)
-        if output_csv:
-            df.to_csv(output_csv, index=False)
-            logger.info(f"Results saved to: {output_csv}")
-
-        return df
-
     # --- Class methods ---
 
     @classmethod
@@ -575,10 +456,3 @@ class Experiment:
 
     def __repr__(self) -> str:
         return f"Experiment(id={self.id}, run_dir={self.run_dir}, dataset={self.dataset.name})"
-
-
-def resolve_case_type(t_case):
-    if "prl" in Path(t_case["label"]).name:
-        t_case["case_type"] = "PRL"
-    else:
-        t_case["case_type"] = "Lesion"

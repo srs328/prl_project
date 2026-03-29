@@ -27,7 +27,6 @@ MODULE_LEVELS: dict[str, str] = {
     "core.grid":                           "INFO",
     # preprocessing
     "preprocessing.create_rois":           "INFO",
-    "preprocessing.create_datalist":       "INFO",
     "preprocessing.prepare_training_data": "INFO",
     # scripts
     "scripts.generate_fold_predictions":   "INFO",

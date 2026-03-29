@@ -22,5 +22,5 @@ dependencies = [
 prl = "cli:cli"
 
 [tool.setuptools]
-packages = ["core", "helpers", "preprocessing", "scripts"]
+packages = ["core", "helpers", "preprocessing", "scripts", "analysis", "analysis.metrics", "analysis.image"]
 package-dir = {"" = "src"}
