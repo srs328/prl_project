@@ -1,0 +1,8 @@
+algos: ["swinunetr"]
+modality: mri
+class_names: ["lesion", "rim"]
+work_dir: /media/smbshare/srs-9/prl_project/training/full_brain/swinunetr_test1
+datalist: /media/smbshare/srs-9/prl_project/training/full_brain/swinunetr_test1/datalist.json
+dataroot: /media/smbshare/srs-9/prl_project/data
+# NOTE: SwinUNETR's fill_template_config() ignores hyper_parameters/transforms_train
+# sections (unlike SegResNet). Use patch_swinunetr_configs() in the notebook instead.

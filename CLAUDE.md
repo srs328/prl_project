@@ -17,7 +17,37 @@ Python environment: `~/.virtualenvs/monai/bin/python`
 
 Key dependencies: MONAI (Auto3DSeg), nibabel, pandas, MLflow, numpy, PyYAML, attrs, click, loguru. External tools: FSL (fslroi, fslmaths, fslstats), C3D.
 
-## Architecture
+## Architecture of bundles/prlsegresnet
+
+Standalone MONAI bundle wrapping the segresnet Auto3DSeg template with custom preprocessing (fan-out) and postprocessing (fan-in) for per-lesion ROI extraction. Lives at `training/bundles/prlsegresnet/`. Does not import from `src/`.
+
+### How it works
+
+The existing segresnet template trains on pre-cropped per-lesion NIfTI ROIs. This bundle replaces the FSL-based offline preprocessing (fslstats, fslroi, fslmerge) with pure Python using MONAI's `generate_spatial_bounding_box()` for bbox computation and numpy-based cropping with zero-padding. The segresnet training/inference scripts are copied verbatim and run unchanged — they see the same per-ROI datalist they always have.
+
+**Pipeline flow**: `preprocess_subjects()` → segresnet `train.py` / `infer.py` → `uncrop_predictions()`
+
+### Key files
+
+- **`scripts/preprocess.py`** — Fan-out: full-brain images → per-lesion ROI crops.
+  - `compute_lesion_bboxes(lesion_index, expand_xy, expand_z)` — MONAI-based bbox computation, exact match with FSL's fslstats output.
+  - `crop_volume(volume, bbox)` — Deterministic crop with zero-padding for out-of-bounds (matches fslroi behavior).
+  - `crop_lesion_rois(subject_data, bboxes, image_keys)` — Batch crop all channels + labels per lesion.
+  - `preprocess_subject()` / `preprocess_subjects()` — Orchestrators. The batch version writes per-ROI NIfTIs and generates a segresnet-compatible datalist JSON.
+  - `save_bboxes()` / `load_bboxes()` — Read/write the existing `lstai_bounding_boxes_xy{X}_z{Z}.txt` format for backward compat.
+- **`scripts/postprocess.py`** — Fan-in: per-ROI predictions → full-brain volume. Ported from `src/scripts/inference.py::uncrop_predictions()`. Uses `np.maximum` for overlapping ROIs. Has both file-based (`uncrop_predictions()`) and in-memory (`uncrop_from_arrays()`) versions.
+- **`scripts/{segmenter,train,infer,algo,utils,validate}.py`** — Copied verbatim from `training/algorithm_templates/segresnet/scripts/`.
+- **`configs/preprocessing.yaml`** — ROI extraction params (expand_xy, expand_z, images, etc.).
+- **`configs/hyper_parameters.yaml`** — Copied from segresnet template.
+- **`experiments/stratified_folds.py`** — Standalone fold assignment experiment (separate from bundle pipeline). Per-subject stratification with PRL balancing. Includes `make_dummy_subjects()` for testing with realistic distributions.
+
+### What's deferred
+
+In-pipeline label construction (currently offline with c3d), PersistentDataset caching, MonaiLabel metadata, integration with `src/core/` Experiment/Dataset classes.
+
+## Architecture of src/
+
+Inside src/ is my pipeline code with my custom "core" library which prepares data for Auto3dSeg's auto_runner, handles parameter configs for auto_runner, and then my custom postprocessing.
 
 ### Core Classes (`src/core/`)
 

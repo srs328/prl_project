@@ -1,6 +1,6 @@
 #!/bin/bash
 
-root="/mnt/h" # edit this to be your smbshare root (whatever the parent of 3Tpioneer_bids is)
+root="/media/smbshare" # edit this to be your smbshare root (whatever the parent of 3Tpioneer_bids is)
 # root="/mnt/h"
 
 # -------------------------------------

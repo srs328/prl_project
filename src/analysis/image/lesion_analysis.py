@@ -165,6 +165,7 @@ def get_lesion_rim(
         Boolean mask of rim voxels for this lesion.
     """
     rim_mask = label_data == 2
+
     labeled, n_components = ndimage.label(rim_mask)
 
     index_mask = index_crop == lesion_id
@@ -177,6 +178,27 @@ def get_lesion_rim(
             result |= comp_mask
 
     return result
+
+def get_rim_units(rim):
+    concomp_s = ndimage.generate_binary_structure(3,3)
+    rim_close1 = ndimage.binary_closing(rim, iterations=2, structure=concomp_s)
+    labeled, n_components = ndimage.label(rim_close1, structure=concomp_s)
+    sorted_comps = sorted(range(1, n_components+1), key=lambda comp_id: np.sum(labeled==comp_id), reverse=True)
+
+    # just do simple thresholding for now
+    components = [comp_i for comp_i in sorted_comps if np.sum(labeled==comp_i) > 10]
+    for comp_i in components:
+        print(f"Component {comp_i} size: ", np.sum(labeled==comp_i), " voxels")
+    labeled[~np.isin(labeled, components)] = 0
+        
+    # Now do a more careful closure
+    #? What would using generate_binary_structure(3,1) change practically? Is there an 
+    #?   obviously better choice if I want a 3D shell-like shape?
+    concomp_s = ndimage.generate_binary_structure(3,1)
+    rim_close2 = ndimage.binary_closing(rim, iterations=2, structure=concomp_s)
+
+    return rim_close2*labeled, components
+
 
 
 def count_rim_for_lesion(

@@ -32,6 +32,8 @@ IMAGES = [
     "t1.nii.gz",
 ]
 LESION_MASK = "space-flair_seg-lst.nii.gz"
+LESION_PMAP = "lst-ai/lesion_pmap.nii.gz"
+PRL_FULL_PREFIX = "prl_seg_def_prob_"
 
 
 def prepare_prl(lesion_path, rim_path, output_path, dry_run=False, bypass=False, exception_ok=True):
@@ -73,6 +75,44 @@ def ensure_ring_seg(subject_root, suffix=None, dry_run=False, output_dir=None):
     return ring_seg_path
 
 
+def ensure_pmap(subject_root, dry_run=False):
+    LST_SH = "/home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh"
+    pmap_path = subject_root / "lst-ai/lesion_pmap.nii.gz"
+    run_if_missing(
+        pmap_path,
+        f"bash {LST_SH} {str(subject_root)}",
+        dry_run=dry_run
+    )
+    return pmap_path
+
+def prepare_full_prl(subid, suffix, prl_df, data_root, dry_run=False):
+    sesid = prl_df.loc[subid, "date_mri"]
+    subject_root = data_root / f"sub{subid}-{sesid}"
+    ring_in = ensure_ring_seg(subject_root, suffix=suffix, dry_run=dry_run)
+    lesion_in = subject_root / LESION_MASK
+    # output_path = subject_root / f"{PRL_FULL_PREFIX.strip('_')}_{suffix}.nii.gz"  
+    #! too hard to keep track of subjects; doesn't matter too much right now, but consider keeping track later  
+    output_path = subject_root / f"{PRL_FULL_PREFIX.strip('_')}.nii.gz"    
+    prepare_prl(lesion_in, ring_in, output_path, dry_run=dry_run)
+
+
+CONCAT_SH = str(Path(__file__).parent.parent.parent / "preprocessing" / "concatImages.sh")
+def stack_images(subid, images, prl_df, data_root, dry_run=False):
+    sesid = prl_df.loc[subid, "date_mri"]
+    subject_root = data_root / f"sub{subid}-{sesid}"
+    images.sort()
+    image_paths = [subject_root / f"{im.removesuffix('.nii.gz')}.nii.gz" for im in images]
+    for path in image_paths:
+        if not path.exists():
+            raise
+    image_stack_name = ".".join([im.name.removesuffix(".nii.gz") for im in image_paths]) + ".nii.gz"
+    image_stack = subject_root / image_stack_name
+    run_if_missing(
+        Path(image_stack),
+        f"bash {CONCAT_SH} {image_stack} {' '.join([str(p) for p in image_paths])}",
+    )
+
+    
 def prepare_rois(subid, suffix, prl_df, expand_xy, expand_z, data_root, dry_run=False):
     """Crop ROIs for a single subject.
 
@@ -122,6 +162,10 @@ def prepare_rois(subid, suffix, prl_df, expand_xy, expand_z, data_root, dry_run=
         lesion_in = subject_root / LESION_MASK
         lesion_out = output_path / f"lesion_xy{expand_xy}_z{expand_z}.nii.gz"
         run_if_missing(lesion_out, f"fslroi {lesion_in} {lesion_out} {box}", dry_run=dry_run)
+        
+        lesion_pmap_in = ensure_pmap(subject_root, dry_run=dry_run)
+        lesion_pmap_out = output_path / f"lesion_pmap_xy{expand_xy}_z{expand_z}.nii.gz"
+        run_if_missing(lesion_pmap_out, f"fslroi {lesion_pmap_in} {lesion_pmap_out} {box}", dry_run=dry_run)
 
         ring_in = ensure_ring_seg(subject_root, suffix=suffix, dry_run=dry_run)
         ring_basename = ring_in.name.removesuffix(".nii.gz")
@@ -155,6 +199,26 @@ def _prepare_roi_wrapper(args):
         data_root=args["data_root"],
         dry_run=args["dry_run"],
     )
+    
+def _prepare_full_prl_wrapper(args):
+    """Wrapper for multiprocessing — unpacks dict args."""
+    return prepare_full_prl(
+        subid=args["subid"],
+        suffix=args["suffix"],
+        prl_df=args["prl_df"],
+        data_root=args["data_root"],
+        dry_run=args["dry_run"],
+    )
+    
+def _stack_images_wrapper(args):
+    """Wrapper for multiprocessing — unpacks dict args."""
+    return stack_images(
+        subid=args["subid"],
+        images=args["images"],
+        prl_df=args["prl_df"],
+        data_root=args["data_root"],
+        dry_run=args["dry_run"],
+    )
 
 
 def create_rois_for_subjects(subjects, suffix_to_use, prl_df, data_root,
@@ -181,6 +245,48 @@ def create_rois_for_subjects(subjects, suffix_to_use, prl_df, data_root,
         ]
         with BetterPool(processes) as pool:
             results_iterator = pool.imap_unordered(_prepare_roi_wrapper, tasks)
+            for _ in tqdm(results_iterator, total=len(subjects)):
+                pass
+            
+def create_full_prls_for_subjects(subjects, suffix_to_use, prl_df, data_root, dry_run=False, processes=None):
+    const_args = dict(
+        prl_df=prl_df,
+        data_root=data_root, dry_run=dry_run,
+    )
+    if processes is None:
+        for subid in tqdm(subjects):
+            task = {"subid": subid, "suffix": suffix_to_use[subid], **const_args}
+            print(task)
+            _prepare_full_prl_wrapper(task)
+    else:
+        logger.info(f"Starting {len(subjects)} tasks with {processes} processes")
+        tasks = [
+            {"subid": subid, "suffix": suffix_to_use[subid], **const_args}
+            for subid in subjects
+        ]
+        with BetterPool(processes) as pool:
+            results_iterator = pool.imap_unordered(_prepare_full_prl_wrapper, tasks)
+            for _ in tqdm(results_iterator, total=len(subjects)):
+                pass
+            
+def stack_images_for_subjects(subjects, images, prl_df, data_root, dry_run=False, processes=None):
+    const_args = dict(
+        prl_df=prl_df, images=images,
+        data_root=data_root, dry_run=dry_run,
+    )
+    if processes is None:
+        for subid in tqdm(subjects):
+            task = {"subid": subid, **const_args}
+            print(task)
+            _stack_images_wrapper(task)
+    else:
+        logger.info(f"Starting {len(subjects)} tasks with {processes} processes")
+        tasks = [
+            {"subid": subid, **const_args}
+            for subid in subjects
+        ]
+        with BetterPool(processes) as pool:
+            results_iterator = pool.imap_unordered(_stack_images_wrapper, tasks)
             for _ in tqdm(results_iterator, total=len(subjects)):
                 pass
 
@@ -224,6 +330,7 @@ def main(argv=None):
             subid, suffix = line.strip().split(",")
             suffix_to_use[int(subid)] = suffix
 
+    #! this is what normally runs for the main pipeline
     create_rois_for_subjects(
         subjects=subjects,
         suffix_to_use=suffix_to_use,
@@ -234,7 +341,24 @@ def main(argv=None):
         processes=args.processes,
         dry_run=args.dry_run,
     )
-
+    #! just quickly wanted to produce full PRL segmentations
+    # create_full_prls_for_subjects(
+    #     subjects=subjects,
+    #     suffix_to_use=suffix_to_use,
+    #     prl_df=prl_df,
+    #     data_root=Path(label_config["dataroot"]),
+    #     processes=args.processes,
+    #     dry_run=args.dry_run,
+    # )
+    #! just trying to do this quick and dirty, clean up later
+    # stack_images_for_subjects(
+    #     subjects=subjects,
+    #     images=["flair", "phase"],
+    #     prl_df=prl_df,
+    #     data_root=Path(label_config["dataroot"]),
+    #     processes=args.processes,
+    #     dry_run=args.dry_run,
+    # )
 
 if __name__ == "__main__":
     main()

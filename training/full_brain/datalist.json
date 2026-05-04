@@ -1,0 +1,171 @@
+{
+    "dataroot": "/media/smbshare/srs-9/prl_project/data",
+    "training": [
+        {
+            "subid": 1011,
+            "nPRL": 6,
+            "image": "sub1011-20180911/flair.phase.nii.gz",
+            "label": "sub1011-20180911/prl_seg_def_prob.nii.gz",
+            "fold": 0
+        },
+        {
+            "subid": 1215,
+            "nPRL": 2,
+            "image": "sub1215-20180429/flair.phase.nii.gz",
+            "label": "sub1215-20180429/prl_seg_def_prob.nii.gz",
+            "fold": 0
+        },
+        {
+            "subid": 1124,
+            "nPRL": 1,
+            "image": "sub1124-20160929/flair.phase.nii.gz",
+            "label": "sub1124-20160929/prl_seg_def_prob.nii.gz",
+            "fold": 0
+        },
+        {
+            "subid": 1298,
+            "nPRL": 1,
+            "image": "sub1298-20190506/flair.phase.nii.gz",
+            "label": "sub1298-20190506/prl_seg_def_prob.nii.gz",
+            "fold": 0
+        },
+        {
+            "subid": 1125,
+            "nPRL": 6,
+            "image": "sub1125-20160919/flair.phase.nii.gz",
+            "label": "sub1125-20160919/prl_seg_def_prob.nii.gz",
+            "fold": 1
+        },
+        {
+            "subid": 1348,
+            "nPRL": 2,
+            "image": "sub1348-20181009/flair.phase.nii.gz",
+            "label": "sub1348-20181009/prl_seg_def_prob.nii.gz",
+            "fold": 1
+        },
+        {
+            "subid": 1131,
+            "nPRL": 1,
+            "image": "sub1131-20161209/flair.phase.nii.gz",
+            "label": "sub1131-20161209/prl_seg_def_prob.nii.gz",
+            "fold": 1
+        },
+        {
+            "subid": 1396,
+            "nPRL": 1,
+            "image": "sub1396-20170126/flair.phase.nii.gz",
+            "label": "sub1396-20170126/prl_seg_def_prob.nii.gz",
+            "fold": 1
+        },
+        {
+            "subid": 2041,
+            "nPRL": 5,
+            "image": "sub2041-20170515/flair.phase.nii.gz",
+            "label": "sub2041-20170515/prl_seg_def_prob.nii.gz",
+            "fold": 2
+        },
+        {
+            "subid": 1050,
+            "nPRL": 2,
+            "image": "sub1050-20170624/flair.phase.nii.gz",
+            "label": "sub1050-20170624/prl_seg_def_prob.nii.gz",
+            "fold": 2
+        },
+        {
+            "subid": 1358,
+            "nPRL": 2,
+            "image": "sub1358-20170311/flair.phase.nii.gz",
+            "label": "sub1358-20170311/prl_seg_def_prob.nii.gz",
+            "fold": 2
+        },
+        {
+            "subid": 2131,
+            "nPRL": 1,
+            "image": "sub2131-20190117/flair.phase.nii.gz",
+            "label": "sub2131-20190117/prl_seg_def_prob.nii.gz",
+            "fold": 2
+        },
+        {
+            "subid": 1529,
+            "nPRL": 4,
+            "image": "sub1529-20170119/flair.phase.nii.gz",
+            "label": "sub1529-20170119/prl_seg_def_prob.nii.gz",
+            "fold": 3
+        },
+        {
+            "subid": 2026,
+            "nPRL": 2,
+            "image": "sub2026-20160917/flair.phase.nii.gz",
+            "label": "sub2026-20160917/prl_seg_def_prob.nii.gz",
+            "fold": 3
+        },
+        {
+            "subid": 1080,
+            "nPRL": 2,
+            "image": "sub1080-20180416/flair.phase.nii.gz",
+            "label": "sub1080-20180416/prl_seg_def_prob.nii.gz",
+            "fold": 3
+        },
+        {
+            "subid": 1293,
+            "nPRL": 1,
+            "image": "sub1293-20161129/flair.phase.nii.gz",
+            "label": "sub1293-20161129/prl_seg_def_prob.nii.gz",
+            "fold": 3
+        },
+        {
+            "subid": 1010,
+            "nPRL": 3,
+            "image": "sub1010-20180208/flair.phase.nii.gz",
+            "label": "sub1010-20180208/prl_seg_def_prob.nii.gz",
+            "fold": 4
+        },
+        {
+            "subid": 1044,
+            "nPRL": 2,
+            "image": "sub1044-20170317/flair.phase.nii.gz",
+            "label": "sub1044-20170317/prl_seg_def_prob.nii.gz",
+            "fold": 4
+        },
+        {
+            "subid": 1078,
+            "nPRL": 2,
+            "image": "sub1078-20180412/flair.phase.nii.gz",
+            "label": "sub1078-20180412/prl_seg_def_prob.nii.gz",
+            "fold": 4
+        },
+        {
+            "subid": 1033,
+            "nPRL": 1,
+            "image": "sub1033-20171117/flair.phase.nii.gz",
+            "label": "sub1033-20171117/prl_seg_def_prob.nii.gz",
+            "fold": 4
+        }
+    ],
+    "testing": [
+        {
+            "subid": 1074,
+            "nPRL": 2,
+            "image": "sub1074-20190518/flair.phase.nii.gz",
+            "label": "sub1074-20190518/prl_seg_def_prob.nii.gz"
+        },
+        {
+            "subid": 1038,
+            "nPRL": 2,
+            "image": "sub1038-20161031/flair.phase.nii.gz",
+            "label": "sub1038-20161031/prl_seg_def_prob.nii.gz"
+        },
+        {
+            "subid": 1076,
+            "nPRL": 2,
+            "image": "sub1076-20170912/flair.phase.nii.gz",
+            "label": "sub1076-20170912/prl_seg_def_prob.nii.gz"
+        },
+        {
+            "subid": 1136,
+            "nPRL": 2,
+            "image": "sub1136-20171109/flair.phase.nii.gz",
+            "label": "sub1136-20171109/prl_seg_def_prob.nii.gz"
+        }
+    ]
+}

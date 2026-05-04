@@ -6,12 +6,17 @@ Functions:
     rim_enclosing_sphere_radius: Radius of smallest enclosing sphere in mm.
     compute_pca_features: PCA-based shape descriptors (sphericity, planarity, linearity).
     compute_radial_metrics: Radial distance statistics from mask centroid.
+    
+Some considerations:
+- How expensive is the computation of convex hull? Should I be careful about only computing it once and making
+    sure that it is simply passed to other functions?
 """
 
 from __future__ import annotations
 
 import numpy as np
 from scipy.spatial import ConvexHull
+from scipy import ndimage
 
 
 def get_convex_hull(
@@ -129,7 +134,6 @@ def compute_radial_metrics(rim_mask: np.ndarray) -> dict[str, float]:
 
     Distances are in voxel units. Returns NaN values if no rim voxels.
     """
-    from scipy import ndimage
 
     coords = np.argwhere(rim_mask > 0)
 
@@ -154,4 +158,17 @@ def compute_radial_metrics(rim_mask: np.ndarray) -> dict[str, float]:
         features["std_radius"] / features["mean_radius"]
         if features["mean_radius"] > 0 else np.nan
     )
+    return features
+
+
+def lesion_pmap_features(rim_mask: np.ndarray, lesion_pmap: np.ndarray) -> dict:
+    """Extract features based on the lesion probability map for classification
+    This is a function I could add more features to as I think of them. First thoughts:
+    - Some cumulative measure of probability within the iron rim (e.g. within the convex hull)
+    - Probability at the centroid of the rim_mask
+    """
+    centroid = ndimage.center_of_mass(rim_mask)
+    
+    hull = get_convex_hull(rim_mask)
+    features = {}
     return features

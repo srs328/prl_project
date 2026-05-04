@@ -52,7 +52,8 @@ EXPERIMENT_KEYS = {
     "stage3": "stage3_numcrops_bkd_constwt115",
     "stage4": "stage4_sweep_dicece_wts",
     "stage5": "stage5_sweep_dicecewt_nbatch",
-    "lambda_test": "test_dicece_lambda",
+    "stage6": "stage6_sweep_dicece_wts",
+    "lambda_test": "test_dicece_lambda"
 }
 
 ANALYSIS_DIR = PROJECT_ROOT / "analysis"

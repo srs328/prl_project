@@ -51,6 +51,43 @@ The bundle should receive paths to full size images and labels (so one per subje
 - Look into all those questions
 - Double check the monai.transforms.Crop and monai.transforms.SpatialCrop: if it turns out these are deterministic like I thought, it means you missed it, in which case lets move forward in steps just like we did now where you compile a list of questions and concerns, then I look into each and answer. And try to present your questions and concerns in batches like you just did as much as possible instead of pausing thinking to prompt me
 
+### Planning next step
+
+#### Data Handling
+
+The steps above have been completed according to the plan at `/home/srs-9/.claude/plans/lovely-dreaming-valley.md`. Now I want to take careful steps towards making the prlsegresnet bundle runnable end to end (e.g. with AutoRunner).
+
+Accomplishing this will probably require modification to the original segresnet scripts, but I want to make these modifications as minimal as necessary for this to work. So lets go step by step and see how to do this.
+
+One issue is data loading. If I want to feed full subject images and segmentations, we'll need to write custom handling to produce ROI's within existing infrastructure. `preprocessing.py` has some building blocks for this, but we need to put them together.
+
+Lets say we have a datalist with {"testing": [...], "training": [...]} with paths to the full sized images and labels and no fold assignments. We could load the data similarly to what I tried here:
+
+```python
+from core.dataset import Dataset as MyDataset
+from monai.data import DatasetFunc, ImageDataset
+
+my_dataset = MyDataset("roi_train2")
+
+img_list = []
+seg_list = []
+for subid in my_dataset.subjects:
+    subject = my_dataset.subject(subid)
+    img_path = subject.dir / "flair.phase.nii.gz"
+    seg_path = subject.dir / "prl_seg_def_prob.nii.gz"
+    if img_path.exists():
+        img_list.append(img_path)
+        seg_list.append(seg_path)
+
+img_dataset = ImageDataset(
+    image_files=img_list,
+    seg_files=seg_list,
+    image_only=False
+)
+```
+
+
+
 ---
 
 ## Refactoring analysis code in src/scripts and 

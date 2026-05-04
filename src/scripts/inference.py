@@ -30,6 +30,17 @@ CONCAT_SH = str(_PREPROCESSING_DIR / "concatImages.sh")
 LESION_MASK = "space-flair_seg-lst.nii.gz"
 
 
+def ensure_pmap(subject_root, dry_run=False):
+    LST_SH = "/home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh"
+    pmap_path = subject_root / "lst-ai/lesion_pmap.nii.gz"
+    run_if_missing(
+        pmap_path,
+        f"bash {LST_SH} {str(subject_root)}",
+        dry_run=dry_run
+    )
+    return pmap_path
+
+
 def create_rois_for_inference(
     subject_dir: Path,
     images: tuple[str, ...],
@@ -50,11 +61,11 @@ def create_rois_for_inference(
     bbox_file = subject_dir / f"lstai_bounding_boxes_{bbox_suffix}.txt"
 
     # Generate bounding boxes if needed
-    if not bbox_file.exists():
-        command(
-            f"bash {DEFINE_BOXES_SH} --expand-xy {expand_xy} --expand-z {expand_z} {subject_dir}",
-            verbose=True
-        )
+    # if not bbox_file.exists():
+    command(
+        f"bash {DEFINE_BOXES_SH} --expand-xy {expand_xy} --expand-z {expand_z} {subject_dir}",
+        verbose=True
+    )
 
     # Parse bounding boxes
     bounding_boxes = []
@@ -89,6 +100,10 @@ def create_rois_for_inference(
             f"fslroi {lesion_in} {lesion_out} {box}",
             dry_run=dry_run,
         )
+        
+        # lesion_pmap_in = ensure_pmap(subject_dir, dry_run=dry_run)
+        # lesion_pmap_out = output_path / f"lesion_pmap_xy{expand_xy}_z{expand_z}.nii.gz"
+        # run_if_missing(lesion_pmap_out, f"fslroi {lesion_pmap_in} {lesion_pmap_out} {box}", dry_run=dry_run)
 
     logger.info(f"Created {len(bounding_boxes)} ROIs for {subject_dir.name}")
     return bounding_boxes
@@ -419,10 +434,13 @@ def infer_subject(
 
     # 1. Create ROIs
     print(subject_dir)
-    create_rois_for_inference(
-        subject_dir, images, expand_xy, expand_z,
-    )
-
+    try:
+        create_rois_for_inference(
+            subject_dir, images, expand_xy, expand_z,
+        )
+    except FileNotFoundError:
+        logger.error(f"Problem with generating valid bounding box file in {subject_dir.name}")
+        return "FAILED"
     # 2. Stack image channels
     prepare_inference_data(
         subject_dir, images, expand_xy, expand_z,
@@ -449,3 +467,5 @@ def infer_subject(
     )
 
     return output_path
+
+

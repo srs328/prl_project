@@ -1,0 +1,10 @@
+{
+    "dataroot": "${DATA_ROOT}",
+    "train_home": "${PROJECT_ROOT}/training",
+    "dataset_name": "inference_dataset",
+    "prl_df": "${PROJECT_ROOT}/src/resources/PRL_spreadsheet-lstai_update_label_reference.csv",
+    "subjects": "${PROJECT_ROOT}/training/inference_dataset/subjects.txt",
+    "expand_xy": 20,
+    "expand_z": 2,
+    "images": ["flair", "phase"]
+}

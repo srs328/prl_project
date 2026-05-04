@@ -77,7 +77,7 @@ df_inf = pd.read_csv(CSV_inf)
 # Load & prepare
 # ---------------------------------------------------------------------------
 
-model_df = df_inf.copy()
+model_df = df.copy()
 print(f"Loaded {len(model_df)} rows | {model_df[TARGET].value_counts().to_dict()}")
 
 X = model_df[FEATURES].values
@@ -191,6 +191,11 @@ plt.show()
 
 # %%
 
+fp = (y_pred & ~y_inf).astype(bool)
+fn = (~y_pred & y_inf).astype(bool)
+
+# %%
+
 cv = StratifiedKFold(n_splits=CV_FOLDS, shuffle=True, random_state=RANDOM_STATE)
 cv_results = cross_validate(
     model, X_inf, y_inf, cv=cv,
@@ -209,4 +214,26 @@ for metric, vals in cv_results.items():
 import numpy as np
 false_negatives = (y_inf - y_pred) > 0
 false_negative_inds = np.where(false_negatives)
+false_positives = (y_inf - y_pred) < 0
+true_positives = (y_inf + y_pred) == 2
+false_negative_inds = np.where(false_negatives)
 df_fn = df_inf.iloc[false_negative_inds]
+df_fp = df_inf.iloc[false_positives]
+df_tp =  df_inf.iloc[true_positives]
+
+df_res = df_inf.copy()
+df_res['prob'] = y_prob
+df_p = df_res[(false_positives | true_positives)]
+
+df_prl_pos_all = pd.concat([df_p, df[df['case_type']=="PRL"]], ignore_index=True)
+df_prl_tp = pd.concat([df_tp, df[df['case_type']=="PRL"]], ignore_index=True)
+#%%
+# rim_volumes = 
+rim_vol_p = df_prl_pos_all.groupby("subid")['rim_volume_infer'].sum()
+rim_vol_tp = df_prl_tp.groupby("subid")['rim_volume_infer'].sum().rename("rim_volume_tp")
+rim_vol = pd.concat([rim_vol_p, rim_vol_tp], axis=1)
+rim_vol_truth = df.groupby("subid")['rim_volume_truth'].sum()
+rim_vol['rim_volume_truth'] = rim_vol_truth
+rim_vol = rim_vol.fillna(0)
+rim_vol.to_csv("rim_volumes.csv")
+# rim_vol.
