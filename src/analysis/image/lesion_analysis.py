@@ -211,7 +211,11 @@ def count_rim_for_lesion(
     return int(get_lesion_rim(index_crop, label_data, lesion_id, n_dilate).sum())
 
 
-def analyze_prl_case(case, dataset, include_data=True):
+def analyze_prl_case(case, dataset, 
+                     include_data=True,
+                     screen_iron=False,
+                     count_rim=False,
+                     ):
     """Full analysis of a single PRL case.
 
     Computes rim and lesion statistics for both ground truth and inference,
@@ -293,6 +297,8 @@ def analyze_prl_case(case, dataset, include_data=True):
 
         try:
             has_iron = np.any((index_crop == lesion_index) & (lab_data == 2))
+            if screen_iron:
+                return has_iron
             if key == "infer":
                 lesion_stats["has_iron_infer"] = has_iron
 

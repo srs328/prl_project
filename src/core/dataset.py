@@ -54,7 +54,7 @@ class Dataset:
 
         self.n_folds = config["n_folds"]
         self.test_split = config["test_split"]
-        self.prl_df_path = Path(config["prl_df"])
+        self.prl_df_path = Path(config.get("prl_df", None))
         self.subjects_path = Path(config["subjects"])
 
         if config["suffix_to_use"] is not None:
@@ -86,8 +86,12 @@ class Dataset:
     # --- Lazy-loaded data ---
 
     @cached_property
-    def prl_df(self) -> pd.DataFrame:
-        return pd.read_csv(self.prl_df_path, index_col="subid")
+    def prl_df(self) -> pd.DataFrame | None:
+        if self.prl_df_path is None:
+            return None
+        prl_df = pd.read_csv(self.prl_df_path, index_col="subid")
+        prl_df['date_mri'] = prl_df['date_mri'].astype("Int64")
+        return prl_df
 
     @cached_property
     def subjects(self) -> list[int]:
