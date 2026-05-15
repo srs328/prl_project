@@ -1,0 +1,56 @@
+{
+  "train_home": "${PROJECT_ROOT}/training",
+  "dataset_name": "roi_train2",
+  "experiment_name": "stage2_numcrops_dicece",
+  "base_label_config": "label_config.jsonc",
+  "base_monai_config": "monai_config.jsonc",
+  "param_grid": {
+    "monai": {
+      "train_param.num_images_per_batch": [1, 2, 4],
+      "train_param.loss": [
+        {
+          "_target_": "DiceCELoss",
+          "include_background": true,
+          "squared_pred": true,
+          "smooth_nr": 0,
+          "smooth_dr": 1.0e-05,
+          "softmax": "$not @sigmoid",
+          "sigmoid": "$@sigmoid",
+          "to_onehot_y": "$not @sigmoid"
+        },
+        {
+          "_target_": "DiceCELoss",
+          "include_background": false,
+          "squared_pred": true,
+          "smooth_nr": 0,
+          "smooth_dr": 1.0e-05,
+          "softmax": "$not @sigmoid",
+          "sigmoid": "$@sigmoid",
+          "to_onehot_y": "$not @sigmoid"
+        },
+        {
+          "_target_": "DiceCELoss",
+          "include_background": true,
+          "weight": [1.0, 1.0, 5.0],
+          "squared_pred": true,
+          "smooth_nr": 0,
+          "smooth_dr": 1.0e-05,
+          "softmax": "$not @sigmoid",
+          "sigmoid": "$@sigmoid",
+          "to_onehot_y": "$not @sigmoid"
+        },
+        {
+          "_target_": "DiceCELoss",
+          "include_background": false,
+          "weight": [1.0, 1.0, 5.0],
+          "squared_pred": true,
+          "smooth_nr": 0,
+          "smooth_dr": 1.0e-05,
+          "softmax": "$not @sigmoid",
+          "sigmoid": "$@sigmoid",
+          "to_onehot_y": "$not @sigmoid"
+        }
+      ]
+    }
+  }
+}

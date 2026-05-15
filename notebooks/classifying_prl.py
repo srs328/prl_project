@@ -21,9 +21,12 @@ from sklearn.pipeline import Pipeline
 # Config
 # ---------------------------------------------------------------------------
 
+CSV = "/home/srs-9/Projects/prl_project/analysis/prl_image_stats-roi_train2_stage6_sweep_dicece_wts_run1.csv"
+CSV_inf = "/home/srs-9/Projects/prl_project/analysis/prl_inference_image_stats-roi_train2_stage6_sweep_dicece_wts_run1.csv"
 CSV = "/home/srs-9/Projects/prl_project/analysis/prl_image_stats-roi_train2_stage3_numcrops_bkd_constwt115_run2.csv"
 CSV_inf = "/home/srs-9/Projects/prl_project/analysis/prl_inference_image_stats-roi_train2_stage3_numcrops_bkd_constwt115_run2.csv"
 
+CSV_fullinf = "/home/srs-9/Projects/prl_project/analysis/prl_fullinference_image_stats-roi_train2_stage6_sweep_dicece_wts_run1.csv"
 
 # Features to use — extend this list when radiomics arrive
 # FEATURES = [
@@ -67,15 +70,19 @@ RANDOM_STATE = 42
 CV_FOLDS = 5
 
 df = pd.read_csv(CSV)
-# df = df[df['has_iron_infer']]
+df = df[df['has_iron_infer']]
 
 df_inf = pd.read_csv(CSV_inf)
-# df_inf = df_inf[df_inf['has_iron_infer']]
+df_inf = df_inf[df_inf['has_iron_infer']]
+df_full_inf = pd.read_csv(CSV_fullinf)
+
+
 
 # %%
 # ---------------------------------------------------------------------------
 # Load & prepare
 # ---------------------------------------------------------------------------
+TEST_SIZE = 0.1            # fraction held out
 
 model_df = df.copy()
 print(f"Loaded {len(model_df)} rows | {model_df[TARGET].value_counts().to_dict()}")
@@ -237,3 +244,62 @@ rim_vol['rim_volume_truth'] = rim_vol_truth
 rim_vol = rim_vol.fillna(0)
 rim_vol.to_csv("rim_volumes.csv")
 # rim_vol.
+
+
+
+# %% Train on all cases that have PRL's identified to lesion indices
+
+df_train = pd.concat([df, df_inf], axis=0, ignore_index=True)
+TEST_SIZE = 0.1            # fraction held out
+
+model_df = df_train.copy()
+print(f"Loaded {len(model_df)} rows | {model_df[TARGET].value_counts().to_dict()}")
+
+X = model_df[FEATURES].values
+y = (model_df[TARGET] == POS_LABEL).astype(int).values   # 1 = PRL, 0 = Lesion
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=TEST_SIZE, stratify=y, random_state=RANDOM_STATE
+)
+print(f"Train: {len(y_train)} ({y_train.sum()} PRL) | Test: {len(y_test)} ({y_test.sum()} PRL)")
+
+
+model2 = Pipeline([
+    ("imputer", SimpleImputer(strategy="constant", fill_value=0)),   # hull/sphere NaN when <4 rim voxels
+    ("scaler", StandardScaler()),
+    ("clf", LogisticRegression(
+        class_weight="balanced",    # important: 48 PRL vs ~117 Lesion
+        max_iter=1000,
+        random_state=RANDOM_STATE,
+    )),
+])
+
+model2.fit(X_train, y_train)
+
+y_pred = model2.predict(X_test)
+y_prob = model2.predict_proba(X_test)[:, 1]
+
+print("\n--- Test set ---")
+print(classification_report(y_test, y_pred, target_names=["Lesion", "PRL"]))
+print(f"ROC-AUC: {roc_auc_score(y_test, y_prob):.3f}")
+
+fig, axes = plt.subplots(1, 2, figsize=(10, 4))
+ConfusionMatrixDisplay(confusion_matrix(y_test, y_pred), display_labels=["Lesion", "PRL"]).plot(ax=axes[0])
+axes[0].set_title("Confusion matrix (test set)")
+RocCurveDisplay.from_predictions(y_test, y_prob, pos_label=1, ax=axes[1])
+axes[1].set_title("ROC curve (test set)")
+plt.tight_layout()
+plt.show()
+
+
+# %% Predict on cases that have no ground truth, only number of PRL
+
+CSV_fullinf = "/home/srs-9/Projects/prl_project/analysis/prl_fullinference_image_stats-roi_train2_stage6_sweep_dicece_wts_run1.csv"
+df_fullinf = pd.read_csv(CSV_fullinf)
+df_fullinf = df_fullinf[df_fullinf['has_iron_infer']]
+# print(f"Loaded {len(df_fullinf)} rows | {df_fullinf[TARGET].value_counts().to_dict()}")
+
+X_fullinf = df_fullinf[FEATURES].values
+
+y_pred = model.predict(X_fullinf)
+df_fullinf["isPRL_infer"] = y_pred

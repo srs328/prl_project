@@ -286,7 +286,9 @@ def uncrop_predictions(
     data_root: Path,
     images: tuple[str, ...],
     run_id: str,
-    infer_filepaths: dict = None
+    suffix: str = None,
+    infer_filepaths: dict = None,
+    valid_indices: list|None = None
 ) -> Path:
     """Combine inferred ROI labels back onto full brain volume.
 
@@ -299,7 +301,7 @@ def uncrop_predictions(
     """
     subject_dir = Path(subject_dir)
     data_root = Path(data_root)
-    output_name = f"prl_inference_{run_id}.nii.gz"
+    output_name = f"prl_inference_{run_id}{suffix}.nii.gz"
 
     # Reference image for shape and affine
     ref_img = nib.load(str(subject_dir / "flair.nii.gz"))
@@ -324,6 +326,9 @@ def uncrop_predictions(
     subject_rel = subject_dir.relative_to(data_root)
 
     for index, coords in bounding_boxes:
+        if valid_indices is not None and index not in valid_indices:
+            continue
+        
         xmin, xsize, ymin, ysize, zmin, zsize = coords
 
         # Find the inference output
@@ -331,7 +336,9 @@ def uncrop_predictions(
             infer_filename = f"{image_prefix}{bbox_suffix}_infer_{run_id}.nii.gz"
             infer_path = data_root / subject_rel / str(index) / infer_filename
         else:
-            infer_path = infer_filepaths[int(index)]
+            # infer_path = infer_filepaths[int(index)]
+            #! havent actually tested this to see if above is wrong, but it seems like it probably is
+            infer_path = infer_filepaths[int(index)-1]
 
         if not infer_path.exists():
             logger.warning(f"Inference output not found: {infer_path}")

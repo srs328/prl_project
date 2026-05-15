@@ -1,0 +1,48 @@
+{
+  "train_home": "${PROJECT_ROOT}/training",
+  "dataset_name": "roi_train2",
+  "experiment_name": "sweep_dicecewt_ncrop4",
+  "base_label_config": "label_config.jsonc",
+  "base_monai_config": "monai_config.jsonc",
+  "param_grid": {
+    "training": {
+      "auto_scale_batch": [false],
+      "batch_size": [4],
+      "loss": [
+        {
+          "_target_": "DiceCELoss",
+          "include_background": true,
+          "weight": "$torch.tensor([1.0, 3.0, 5.0]).cuda()",
+          "squared_pred": true,
+          "smooth_nr": 0,
+          "smooth_dr": 1.0e-05,
+          "softmax": "$not @sigmoid",
+          "sigmoid": "$@sigmoid",
+          "to_onehot_y": "$not @sigmoid"
+        },
+        {
+          "_target_": "DiceCELoss",
+          "include_background": true,
+          "weight": "$torch.tensor([1.0, 2.0, 5.0]).cuda()",
+          "squared_pred": true,
+          "smooth_nr": 0,
+          "smooth_dr": 1.0e-05,
+          "softmax": "$not @sigmoid",
+          "sigmoid": "$@sigmoid",
+          "to_onehot_y": "$not @sigmoid"
+        },
+        {
+          "_target_": "DiceCELoss",
+          "include_background": true,
+          "weight": "$torch.tensor([1.0, 5.0, 5.0]).cuda()",
+          "squared_pred": true,
+          "smooth_nr": 0,
+          "smooth_dr": 1.0e-05,
+          "softmax": "$not @sigmoid",
+          "sigmoid": "$@sigmoid",
+          "to_onehot_y": "$not @sigmoid"
+        }
+      ]
+    }
+  }
+}

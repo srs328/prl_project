@@ -11,8 +11,10 @@ Functions:
 """
 
 from __future__ import annotations
-
+import os
+from collections.abc import Iterable
 import math
+import pandas as pd
 import traceback
 from pathlib import Path
 
@@ -24,6 +26,8 @@ from loguru import logger
 from analysis.image.geometry import (
     get_convex_hull,
     rim_enclosing_sphere_radius,
+    compute_radial_metrics,
+    compute_pca_features
 )
 
 
@@ -211,6 +215,227 @@ def count_rim_for_lesion(
     return int(get_lesion_rim(index_crop, label_data, lesion_id, n_dilate).sum())
 
 
+def screen_for_iron(dataset, subid, label_key):
+    subject = dataset.subject(subid)
+    lesion_index_path = subject.dir / "lstai_lesion_index.nii.gz"
+    lesion_index_vol = nib.load(str(lesion_index_path)).get_fdata().astype(np.int32)
+    # Parse bounding boxes
+    cfg = dataset.preprocess
+    bbox_suffix = f"xy{cfg.expand_xy}_z{cfg.expand_z}"
+    bbox_file = subject.dir / f"lstai_bounding_boxes_{bbox_suffix}.txt"
+    bounding_boxes = parse_bounding_boxes(bbox_file)
+
+    has_iron = {}
+    for lesion_index, case in dataset.cases.loc[subid, :].iterrows():
+        lab_path = case.get(label_key)
+        if lab_path is None:
+            has_iron[lesion_index] = "Missing"
+            continue
+        coords = bounding_boxes[lesion_index - 1][1]
+        lab_nifti = nib.load(str(lab_path))
+        lab_data = np.asanyarray(lab_nifti.dataobj).astype(np.uint8)
+        if not np.any(lab_data == 2):
+            has_iron[lesion_index] = False
+            continue
+
+        # Only then do the more complex intersection check
+        index_crop = crop_from_volume(lesion_index_vol, coords)
+        has_iron[lesion_index] = np.any((index_crop == lesion_index) & (lab_data == 2))
+    return has_iron
+
+
+def analyze_subject_prl0(dataset, subid, label_keys, include_data=True, cases: pd.DataFrame | None = None):
+    if not isinstance(label_keys, Iterable):
+        label_keys = [label_keys]
+    
+    if cases is None:
+        cases = dataset.cases
+    elif not isinstance(cases, pd.DataFrame):
+        print("cases argument must be None or pd.DataFrame, but defaulting to dataset.cases")
+        cases = dataset.cases
+    subject = dataset.subject(subid)
+    lesion_index_path = subject.dir / "lstai_lesion_index.nii.gz"
+    lesion_index_vol = nib.load(str(lesion_index_path)).get_fdata().astype(np.int32)
+    # Parse bounding boxes
+    cfg = dataset.preprocess
+    bbox_suffix = f"xy{cfg.expand_xy}_z{cfg.expand_z}"
+    bbox_file = subject.dir / f"lstai_bounding_boxes_{bbox_suffix}.txt"
+    bounding_boxes = parse_bounding_boxes(bbox_file)
+
+    subject_lesion_data = []
+    subject_lesion_stats = []
+    for lesion_index, lesion_case in cases.loc[subid, :].iterrows():
+        lesion_data = {"subid": subid, "lesion_index": lesion_index} 
+        lesion_stats = {"subid": subid, "lesion_index": lesion_index} 
+        coords = bounding_boxes[lesion_index - 1][1]       
+        index_crop = crop_from_volume(lesion_index_vol, coords)
+        for key in label_keys:
+            lab_path = lesion_case.get(key)
+            if lab_path is None or not os.path.exists(lab_path):
+                logger.warning(f"{lab_path} does not exist")
+                continue
+            lab_nifti = nib.load(str(lab_path))
+            lab_data = np.asanyarray(lab_nifti.dataobj)
+            voxel_size = lab_nifti.header.get_zooms()[:3]
+            voxel_volume = math.prod(voxel_size)
+
+            if include_data:
+                lesion_data[f"index_crop_{key}"] = index_crop
+            try:
+                has_iron = np.any((index_crop == lesion_index) & (lab_data == 2))
+                lesion_stats[f"has_iron_{key}"] = has_iron
+
+                rim = get_lesion_rim(index_crop, lab_data, lesion_index)
+                rim_count = int(rim.sum())
+                rim_sphere = rim_enclosing_sphere_radius(rim, voxel_size)
+                hull = get_convex_hull(rim, voxel_sizes=voxel_size)
+
+                if include_data:
+                    lesion_data[f"rim_{key}"] = rim
+                    lesion_data[f"rim_hull_{key}"] = hull
+
+                lesion_stats[f"rim_voxels_{key}"] = rim_count
+                lesion_stats[f"rim_volume_{key}"] = rim_count * voxel_volume
+                if hull is not None:
+                    lesion_stats[f"rim_hull_volume_{key}"] = hull.volume
+                lesion_stats[f"rim_sphere_radius_{key}"] = rim_sphere
+            except Exception:
+                logger.warning(f"Rim analysis failed for sub{subid} lesion {lesion_index} ({key})")
+                logger.debug(traceback.format_exc())
+
+            try:
+                lesion = get_center_lesion(index_crop, lab_data, lesion_index)
+                lesion_count = int(lesion.sum())
+                hull = get_convex_hull(lesion, voxel_sizes=voxel_size)
+
+                if include_data:
+                    lesion_data[f"lesion_{key}"] = lesion
+                    lesion_data[f"lesion_hull_{key}"] = hull
+
+                lesion_stats[f"lesion_voxels_{key}"] = lesion_count
+                lesion_stats[f"lesion_volume_{key}"] = lesion_count * voxel_volume
+                if hull is not None:
+                    lesion_stats[f"lesion_hull_volume_{key}"] = hull.volume
+            except Exception:
+                logger.warning(f"Lesion analysis failed for sub{subid} lesion {lesion_index} ({key})")
+                logger.debug(traceback.format_exc())
+
+            if include_data:
+                lesion_data[f"voxel_size_{key}"] = voxel_size
+
+        subject_lesion_data.append(lesion_data)
+        subject_lesion_stats.append(lesion_stats)
+    return subject_lesion_stats, subject_lesion_data
+
+
+
+def analyze_label(index_crop, lab_nifti: nib.Nifti1Image, lesion_index, include_data=True, key="infer"):
+    key = "_" + key.removeprefix("_")
+    lesion_stats = {}
+    lesion_data = {}
+    lab_data = np.asanyarray(lab_nifti.dataobj)
+    voxel_size = lab_nifti.header.get_zooms()[:3]
+    voxel_volume = math.prod(voxel_size)
+
+    if include_data:
+        lesion_data[f"index_crop{key}"] = index_crop
+    has_iron = np.any((index_crop == lesion_index) & (lab_data == 2))
+    lesion_stats[f"has_iron{key}"] = has_iron
+
+    rim = get_lesion_rim(index_crop, lab_data, lesion_index)
+    rim_count = int(rim.sum())
+    rim_sphere = rim_enclosing_sphere_radius(rim, voxel_size)
+    hull = get_convex_hull(rim, voxel_sizes=voxel_size)
+
+    if include_data:
+        lesion_data[f"rim{key}"] = rim
+        lesion_data[f"rim_hull{key}"] = hull
+
+    lesion_stats[f"rim_voxels{key}"] = rim_count
+    lesion_stats[f"rim_volume{key}"] = rim_count * voxel_volume
+    if hull is not None:
+        lesion_stats[f"rim_hull_volume{key}"] = hull.volume
+    lesion_stats[f"rim_sphere_radius{key}"] = rim_sphere
+
+    lesion = get_center_lesion(index_crop, lab_data, lesion_index)
+    lesion_count = int(lesion.sum())
+    hull = get_convex_hull(lesion, voxel_sizes=voxel_size)
+
+    if include_data:
+        lesion_data[f"lesion{key}"] = lesion
+        lesion_data[f"lesion_hull{key}"] = hull
+
+    lesion_stats[f"lesion_voxels{key}"] = lesion_count
+    lesion_stats[f"lesion_volume{key}"] = lesion_count * voxel_volume
+    if hull is not None:
+        lesion_stats[f"lesion_hull_volume{key}"] = hull.volume
+
+    if include_data:
+        lesion_data[f"voxel_size{key}"] = voxel_size
+        
+    if key == "_infer":
+        features = {
+            **compute_pca_features(lesion_data[f"rim{key}"]),
+            **compute_radial_metrics(lesion_data[f"rim{key}"]),
+        }
+        lesion_stats.update(features)
+    
+    return lesion_stats, lesion_data
+
+
+
+def analyze_subject_prl(subid, dataset, label_keys, lesion_indices=None, include_data=True, cases: pd.DataFrame | None = None):
+    if isinstance(label_keys, str):
+        label_keys = [label_keys]
+    
+    if cases is None:
+        cases = dataset.cases
+    elif not isinstance(cases, pd.DataFrame):
+        print("cases argument must be None or pd.DataFrame, but defaulting to dataset.cases")
+        cases = dataset.cases
+    if lesion_indices is None:
+        lesion_indices = cases.loc[subid, :].index
+    subject = dataset.subject(subid)
+    lesion_index_path = subject.dir / "lstai_lesion_index.nii.gz"
+    lesion_index_vol = np.asanyarray(nib.load(str(lesion_index_path)).dataobj).astype(np.int32)
+    # Parse bounding boxes
+    cfg = dataset.preprocess
+    bbox_suffix = f"xy{cfg.expand_xy}_z{cfg.expand_z}"
+    bbox_file = subject.dir / f"lstai_bounding_boxes_{bbox_suffix}.txt"
+    bounding_boxes = parse_bounding_boxes(bbox_file)
+
+    subject_lesion_data = []
+    subject_lesion_stats = []
+    for lesion_index in lesion_indices:
+        lesion_case = cases.loc[(subid, lesion_index), :]
+        lesion_data = {"subid": subid, "lesion_index": lesion_index, "case_type": lesion_case.get('case_type')} 
+        lesion_stats = {"subid": subid, "lesion_index": lesion_index, "case_type": lesion_case.get('case_type')} 
+        coords = bounding_boxes[lesion_index - 1][1]       
+        index_crop = crop_from_volume(lesion_index_vol, coords)
+        for key in label_keys:
+            lab_path = lesion_case.get(key)
+            if lab_path is None or not os.path.exists(lab_path):
+                logger.warning(f"{lab_path} does not exist")
+                raise
+            lab_nifti = nib.load(str(lab_path))
+            try:
+                lesion_s, lesion_d = analyze_label(index_crop, lab_nifti, lesion_index)
+            except Exception:
+                logger.warning(f"Rim analysis failed for sub{subid} lesion {lesion_index} ({key})")
+                logger.debug(traceback.format_exc())
+                lesion_s = lesion_d = None
+            lesion_stats.update(lesion_s)
+            lesion_data.update(lesion_d)
+
+        subject_lesion_data.append(lesion_data)
+        subject_lesion_stats.append(lesion_stats)
+    return subject_lesion_stats, subject_lesion_data
+
+
+
+
+# refactor so this can take a subid instead of a case so that lstai_lesion_index doesn't have to 
+#   be loaded like a 100 different times
 def analyze_prl_case(case, dataset, 
                      include_data=True,
                      screen_iron=False,

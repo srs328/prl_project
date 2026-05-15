@@ -75,6 +75,10 @@ def ensure_ring_seg(subject_root, suffix=None, dry_run=False, output_dir=None):
     return ring_seg_path
 
 
+def ensure_ring_label():
+    pass
+
+
 def ensure_pmap(subject_root, dry_run=False):
     LST_SH = "/home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh"
     pmap_path = subject_root / "lst-ai/lesion_pmap.nii.gz"
