@@ -242,7 +242,7 @@ rim_vol = pd.concat([rim_vol_p, rim_vol_tp], axis=1)
 rim_vol_truth = df.groupby("subid")['rim_volume_truth'].sum()
 rim_vol['rim_volume_truth'] = rim_vol_truth
 rim_vol = rim_vol.fillna(0)
-rim_vol.to_csv("rim_volumes.csv")
+# rim_vol.to_csv("rim_volumes.csv")
 # rim_vol.
 
 
@@ -250,7 +250,7 @@ rim_vol.to_csv("rim_volumes.csv")
 # %% Train on all cases that have PRL's identified to lesion indices
 
 df_train = pd.concat([df, df_inf], axis=0, ignore_index=True)
-TEST_SIZE = 0.1            # fraction held out
+TEST_SIZE = 0.25            # fraction held out
 
 model_df = df_train.copy()
 print(f"Loaded {len(model_df)} rows | {model_df[TARGET].value_counts().to_dict()}")

@@ -56,8 +56,13 @@ work_home.mkdir(exist_ok=True)
 expand_xy, expand_z = 20, 2
 expand_suffix = f"xy{expand_xy}_z{expand_z}"
 
-subid = 2026
-prl_initials = ["CH", "SRS"]
+
+labels_to_check = {
+    2026: ["SRS", "CH"]
+}
+
+subid = 1396
+prl_initials = ["CH", "SRS", "LR"]
 ses = str(subject_sessions.loc[subid, 'ses'])
 subject_root = DATA_ROOT / f"sub{subid}-{ses}"
 work_folder = work_home / subject_root.name

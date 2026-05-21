@@ -325,10 +325,7 @@ def uncrop_predictions(
     image_prefix = ".".join(image_basenames) + "_"
     subject_rel = subject_dir.relative_to(data_root)
 
-    for index, coords in bounding_boxes:
-        if valid_indices is not None and index not in valid_indices:
-            continue
-        
+    for index, coords in bounding_boxes:        
         xmin, xsize, ymin, ysize, zmin, zsize = coords
 
         # Find the inference output
@@ -345,6 +342,8 @@ def uncrop_predictions(
             continue
 
         crop_data = nib.load(str(infer_path)).get_fdata().astype(np.uint8)
+        if valid_indices is not None and index not in valid_indices:
+            crop_data = np.zeros_like(crop_data)
 
         # Handle clipping for negative start coords and brain boundary overflow.
         # fslroi zero-pads when bbox extends outside the volume.
@@ -474,5 +473,6 @@ def infer_subject(
     )
 
     return output_path
+
 
 

@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LogisticRegression
@@ -41,11 +42,20 @@ def prepare_data(df, **kwargs):
     cv_folds = kwargs.get("cv_folds", CV_FOLDS)
     features = kwargs.get("features", FEATURES)
     X = df[features].values
-    y = (df[TARGET] == POS_LABEL).astype(int).values   # 1 = PRL, 0 = Lesion
+    try:
+        y = (df[TARGET] == POS_LABEL).astype(int).values   # 1 = PRL, 0 = Lesion
+    except KeyError:
+        y = np.full((X.shape[0],), np.nan)
+    
+    if test_size == 1:
+        return None, X, None, y
+    elif test_size == 0:
+        return X, None, y, None
 
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=test_size, stratify=y, random_state=RANDOM_STATE
     )
+    
     return X_train, X_test, y_train, y_test
 
 
@@ -63,7 +73,7 @@ def train_model(X_train, y_train):
     return model
 
 
-def evaluate_model(model, X_test, y_test, display=False, to_print=False):
+def evaluate_model(model, X_test, y_test, display=False, to_print=False, return_fig=False):
     y_pred = model.predict(X_test)
     y_prob = model.predict_proba(X_test)[:, 1]
 
@@ -78,10 +88,13 @@ def evaluate_model(model, X_test, y_test, display=False, to_print=False):
         axes[0].set_title("Confusion matrix (test set)")
         RocCurveDisplay.from_predictions(y_test, y_prob, pos_label=1, ax=axes[1])
         axes[1].set_title("ROC curve (test set)")
+        if return_fig:
+            return fig, axes
         plt.tight_layout()
         plt.show()
 
-
+    return y_pred, y_prob 
+    
 def cross_validation():
     pass
 
