@@ -142,6 +142,191 @@ def compute_casewise_stats(cases) -> list[dict]:
     return results
 
 
+def compute_metrics(lab_path, inf_path):
+    lab = nib.load(lab_path)
+    inf = nib.load(inf_path)
+    prl_dice = dice_score(lab.get_fdata(), inf.get_fdata(), seg1_val=2, seg2_val=2)
+    lesion_dice = dice_score(lab.get_fdata(), inf.get_fdata(), seg1_val=1, seg2_val=1)
+    tp, fp, tn, fn = get_confusion_matrix(lab, inf)
+
+    metrics = {
+        "lesion_dice": lesion_dice,
+        "prl_dice": prl_dice,
+        "tp": tp,
+        "fp": fp,
+        "tn": tn,
+        "fn": fn,
+    }
+    metrics.update(compute_derived_metrics(tp, fp, tn, fn))
+
+    if (tp + fp + tn + fn) == 0:
+        metrics["Notes"] = "Something's wrong"
+    else:
+        metrics["Notes"] = None
+    return metrics
+
+
+import numpy as np
+from scipy import ndimage
+
+
+def _surface_distances(mask_a, mask_b, voxel_spacing=None):
+    """
+    Compute distances from the surface of mask_a to the surface of mask_b.
+
+    Returns an array of distances. If either mask is empty, returns None.
+    """
+    mask_a = np.asarray(mask_a).astype(bool)
+    mask_b = np.asarray(mask_b).astype(bool)
+
+    if not mask_a.any() or not mask_b.any():
+        return None
+
+    if voxel_spacing is None:
+        voxel_spacing = np.ones(mask_a.ndim)
+
+    # Define surfaces as mask voxels minus interior voxels
+    structure = ndimage.generate_binary_structure(mask_a.ndim, 1)
+
+    surface_a = mask_a ^ ndimage.binary_erosion(mask_a, structure=structure, border_value=0)
+    surface_b = mask_b ^ ndimage.binary_erosion(mask_b, structure=structure, border_value=0)
+
+    # Distance transform gives distance to nearest surface_b voxel
+    dt_b = ndimage.distance_transform_edt(~surface_b, sampling=voxel_spacing)
+
+    return dt_b[surface_a]
+
+
+def _hausdorff_metrics(mask_a, mask_b, voxel_spacing=None, percentile=95, zero_division=np.nan):
+    """
+    Symmetric Hausdorff and percentile Hausdorff distance between two binary masks.
+
+    Returns:
+        hausdorff: maximum symmetric surface distance
+        hausdorff95: percentile symmetric surface distance
+    """
+    mask_a = np.asarray(mask_a).astype(bool)
+    mask_b = np.asarray(mask_b).astype(bool)
+
+    if not mask_a.any() and not mask_b.any():
+        return zero_division, zero_division
+
+    if not mask_a.any() or not mask_b.any():
+        return np.inf, np.inf
+
+    dists_a_to_b = _surface_distances(mask_a, mask_b, voxel_spacing)
+    dists_b_to_a = _surface_distances(mask_b, mask_a, voxel_spacing)
+
+    if dists_a_to_b is None or dists_b_to_a is None:
+        return np.inf, np.inf
+
+    all_dists = np.concatenate([dists_a_to_b, dists_b_to_a])
+
+    hausdorff = np.max(all_dists)
+    hausdorff95 = np.percentile(all_dists, percentile)
+
+    return hausdorff, hausdorff95
+
+
+def binary_segmentation_metrics(
+    lab_data,
+    inf_data,
+    positive_label=2,
+    roi_mask=None,
+    voxel_spacing=None,
+    zero_division=np.nan,
+):
+    """
+    Compute binary segmentation metrics for a target label.
+
+    By default, evaluates positive_label vs all other voxels.
+    If roi_mask is supplied, metrics are computed only within that mask.
+
+    Parameters
+    ----------
+    lab_data : array-like
+        Ground truth label image.
+
+    inf_data : array-like
+        Inferred/predicted label image.
+
+    positive_label : int
+        Label treated as the positive class.
+
+    roi_mask : array-like or None
+        Optional mask restricting evaluation to a region of interest.
+
+    voxel_spacing : tuple/list/array or None
+        Physical voxel spacing, e.g. (1.0, 1.0, 1.5). If None, Hausdorff
+        distances are reported in voxel units.
+
+    zero_division : float
+        Value returned when a metric denominator is zero.
+
+    Returns
+    -------
+    dict
+        Dice/F1, confusion counts, precision, recall, specificity, NPV,
+        accuracy, Hausdorff distance, and 95th percentile Hausdorff distance.
+    """
+
+    lab_data = np.asarray(lab_data)
+    inf_data = np.asarray(inf_data)
+
+    if roi_mask is None:
+        roi_mask = np.ones(lab_data.shape, dtype=bool)
+    else:
+        roi_mask = np.asarray(roi_mask).astype(bool)
+
+    manual_pos = (lab_data == positive_label) & roi_mask
+    pred_pos = (inf_data == positive_label) & roi_mask
+
+    manual_neg = (~manual_pos) & roi_mask
+    pred_neg = (~pred_pos) & roi_mask
+
+    TP = np.sum(manual_pos & pred_pos)
+    FP = np.sum(manual_neg & pred_pos)
+    TN = np.sum(manual_neg & pred_neg)
+    FN = np.sum(manual_pos & pred_neg)
+
+    def safe_div(num, den):
+        return num / den if den != 0 else zero_division
+
+    dice = safe_div(2 * TP, 2 * TP + FP + FN)
+    precision = safe_div(TP, TP + FP)
+    sensitivity = safe_div(TP, TP + FN)
+    recall = sensitivity
+    specificity = safe_div(TN, TN + FP)
+    npv = safe_div(TN, TN + FN)
+    accuracy = safe_div(TP + TN, TP + FP + TN + FN)
+    f1 = safe_div(2 * precision * recall, precision + recall)
+
+    hausdorff, hausdorff95 = _hausdorff_metrics(
+        manual_pos,
+        pred_pos,
+        voxel_spacing=voxel_spacing,
+        percentile=95,
+        zero_division=zero_division,
+    )
+
+    return {
+        "dice": dice,
+        "f1": f1,
+        "tp": int(TP),
+        "fp": int(FP),
+        "tn": int(TN),
+        "fn": int(FN),
+        "precision": precision,
+        "sensitivity": sensitivity,
+        "recall": recall,
+        "specificity": specificity,
+        "npv": npv,
+        "accuracy": accuracy,
+        "hausdorff": hausdorff,
+        "hausdorff95": hausdorff95,
+    }
+    
+
 def performance_metrics(
     experiment_data: dict,
     splits: list[str] | None = None,
