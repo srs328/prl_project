@@ -8,6 +8,8 @@ tutorials/
 figures/
 screenshots/
 *.nii*
+*.pkl
+*.png 
 
 *.code-workspace
 training_work_dirs/

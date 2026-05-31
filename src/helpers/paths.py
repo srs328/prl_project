@@ -11,6 +11,7 @@ import os
 import json
 import re
 from pathlib import Path
+from loguru import logger
 
 import yaml
 
@@ -89,3 +90,18 @@ def load_config(config_path):
         config = json.loads(text)
 
     return expand_tokens(config)
+
+
+def get_infer_path(dataset, test_case, experiment_name) -> Path:
+    case_dir = dataset.lesion_dir(test_case)
+    matches = list(case_dir.glob(f"*{experiment_name.replace('/','_')}.nii.gz"))
+    if len(matches) > 1:
+        logger.warning(f"Found more than 1 case: {','.join(matches)}, returning the first")
+    return matches[0]
+    
+def find_inference(search_path, experiment_name) -> Path:
+    matches = list(search_path.glob(f"*{experiment_name.replace('/','_')}.nii.gz"))
+    if len(matches) > 1:
+        logger.warning(f"Found more than 1 case: {','.join(matches)}, returning the first")
+    return matches[0]
+

@@ -27,7 +27,7 @@ from analysis.image.geometry import (
     get_convex_hull,
     rim_enclosing_sphere_radius,
     compute_radial_metrics,
-    compute_pca_features
+    compute_pca_features,
 )
 
 
@@ -183,26 +183,30 @@ def get_lesion_rim(
 
     return result
 
+
 def get_rim_units(rim):
-    concomp_s = ndimage.generate_binary_structure(3,3)
+    concomp_s = ndimage.generate_binary_structure(3, 3)
     rim_close1 = ndimage.binary_closing(rim, iterations=2, structure=concomp_s)
     labeled, n_components = ndimage.label(rim_close1, structure=concomp_s)
-    sorted_comps = sorted(range(1, n_components+1), key=lambda comp_id: np.sum(labeled==comp_id), reverse=True)
+    sorted_comps = sorted(
+        range(1, n_components + 1),
+        key=lambda comp_id: np.sum(labeled == comp_id),
+        reverse=True,
+    )
 
     # just do simple thresholding for now
-    components = [comp_i for comp_i in sorted_comps if np.sum(labeled==comp_i) > 10]
+    components = [comp_i for comp_i in sorted_comps if np.sum(labeled == comp_i) > 10]
     for comp_i in components:
-        print(f"Component {comp_i} size: ", np.sum(labeled==comp_i), " voxels")
+        print(f"Component {comp_i} size: ", np.sum(labeled == comp_i), " voxels")
     labeled[~np.isin(labeled, components)] = 0
-        
+
     # Now do a more careful closure
-    #? What would using generate_binary_structure(3,1) change practically? Is there an 
-    #?   obviously better choice if I want a 3D shell-like shape?
-    concomp_s = ndimage.generate_binary_structure(3,1)
+    # ? What would using generate_binary_structure(3,1) change practically? Is there an
+    # ?   obviously better choice if I want a 3D shell-like shape?
+    concomp_s = ndimage.generate_binary_structure(3, 1)
     rim_close2 = ndimage.binary_closing(rim, iterations=2, structure=concomp_s)
 
-    return rim_close2*labeled, components
-
+    return rim_close2 * labeled, components
 
 
 def count_rim_for_lesion(
@@ -244,14 +248,18 @@ def screen_for_iron(dataset, subid, label_key):
     return has_iron
 
 
-def analyze_subject_prl0(dataset, subid, label_keys, include_data=True, cases: pd.DataFrame | None = None):
+def analyze_subject_prl0(
+    dataset, subid, label_keys, include_data=True, cases: pd.DataFrame | None = None
+):
     if not isinstance(label_keys, Iterable):
         label_keys = [label_keys]
-    
+
     if cases is None:
         cases = dataset.cases
     elif not isinstance(cases, pd.DataFrame):
-        print("cases argument must be None or pd.DataFrame, but defaulting to dataset.cases")
+        print(
+            "cases argument must be None or pd.DataFrame, but defaulting to dataset.cases"
+        )
         cases = dataset.cases
     subject = dataset.subject(subid)
     lesion_index_path = subject.dir / "lstai_lesion_index.nii.gz"
@@ -265,9 +273,9 @@ def analyze_subject_prl0(dataset, subid, label_keys, include_data=True, cases: p
     subject_lesion_data = []
     subject_lesion_stats = []
     for lesion_index, lesion_case in cases.loc[subid, :].iterrows():
-        lesion_data = {"subid": subid, "lesion_index": lesion_index} 
-        lesion_stats = {"subid": subid, "lesion_index": lesion_index} 
-        coords = bounding_boxes[lesion_index - 1][1]       
+        lesion_data = {"subid": subid, "lesion_index": lesion_index}
+        lesion_stats = {"subid": subid, "lesion_index": lesion_index}
+        coords = bounding_boxes[lesion_index - 1][1]
         index_crop = crop_from_volume(lesion_index_vol, coords)
         for key in label_keys:
             lab_path = lesion_case.get(key)
@@ -300,7 +308,9 @@ def analyze_subject_prl0(dataset, subid, label_keys, include_data=True, cases: p
                     lesion_stats[f"rim_hull_volume_{key}"] = hull.volume
                 lesion_stats[f"rim_sphere_radius_{key}"] = rim_sphere
             except Exception:
-                logger.warning(f"Rim analysis failed for sub{subid} lesion {lesion_index} ({key})")
+                logger.warning(
+                    f"Rim analysis failed for sub{subid} lesion {lesion_index} ({key})"
+                )
                 logger.debug(traceback.format_exc())
 
             try:
@@ -317,7 +327,9 @@ def analyze_subject_prl0(dataset, subid, label_keys, include_data=True, cases: p
                 if hull is not None:
                     lesion_stats[f"lesion_hull_volume_{key}"] = hull.volume
             except Exception:
-                logger.warning(f"Lesion analysis failed for sub{subid} lesion {lesion_index} ({key})")
+                logger.warning(
+                    f"Lesion analysis failed for sub{subid} lesion {lesion_index} ({key})"
+                )
                 logger.debug(traceback.format_exc())
 
             if include_data:
@@ -328,8 +340,9 @@ def analyze_subject_prl0(dataset, subid, label_keys, include_data=True, cases: p
     return subject_lesion_stats, subject_lesion_data
 
 
-
-def analyze_label(index_crop, lab_nifti: nib.Nifti1Image, lesion_index, include_data=True, key="infer"):
+def analyze_label(
+    index_crop, lab_nifti: nib.Nifti1Image, lesion_index, include_data=True, key="infer"
+):
     key = "_" + key.removeprefix("_")
     lesion_stats = {}
     lesion_data = {}
@@ -372,32 +385,42 @@ def analyze_label(index_crop, lab_nifti: nib.Nifti1Image, lesion_index, include_
 
     if include_data:
         lesion_data[f"voxel_size{key}"] = voxel_size
-        
+
     if key == "_infer":
         features = {
             **compute_pca_features(lesion_data[f"rim{key}"]),
             **compute_radial_metrics(lesion_data[f"rim{key}"]),
         }
         lesion_stats.update(features)
-    
+
     return lesion_stats, lesion_data
 
 
-
-def analyze_subject_prl(subid, dataset, label_keys, lesion_indices=None, include_data=True, cases: pd.DataFrame | None = None):
+def analyze_subject_prl(
+    subid,
+    dataset,
+    label_keys,
+    lesion_indices=None,
+    include_data=True,
+    cases: pd.DataFrame | None = None,
+) -> tuple[list[dict], list[dict]]:
     if isinstance(label_keys, str):
         label_keys = [label_keys]
-    
+
     if cases is None:
         cases = dataset.cases
     elif not isinstance(cases, pd.DataFrame):
-        print("cases argument must be None or pd.DataFrame, but defaulting to dataset.cases")
+        print(
+            "cases argument must be None or pd.DataFrame, but defaulting to dataset.cases"
+        )
         cases = dataset.cases
     if lesion_indices is None:
         lesion_indices = cases.loc[subid, :].index
     subject = dataset.subject(subid)
     lesion_index_path = subject.dir / "lstai_lesion_index.nii.gz"
-    lesion_index_vol = np.asanyarray(nib.load(str(lesion_index_path)).dataobj).astype(np.int32)
+    lesion_index_vol = np.asanyarray(nib.load(str(lesion_index_path)).dataobj).astype(
+        np.int32
+    )
     # Parse bounding boxes
     cfg = dataset.preprocess
     bbox_suffix = f"xy{cfg.expand_xy}_z{cfg.expand_z}"
@@ -408,9 +431,17 @@ def analyze_subject_prl(subid, dataset, label_keys, lesion_indices=None, include
     subject_lesion_stats = []
     for lesion_index in lesion_indices:
         lesion_case = cases.loc[(subid, lesion_index), :]
-        lesion_data = {"subid": subid, "lesion_index": lesion_index, "case_type": lesion_case.get('case_type')} 
-        lesion_stats = {"subid": subid, "lesion_index": lesion_index, "case_type": lesion_case.get('case_type')} 
-        coords = bounding_boxes[lesion_index - 1][1]       
+        lesion_data = {
+            "subid": subid,
+            "lesion_index": lesion_index,
+            "case_type": lesion_case.get("case_type"),
+        }
+        lesion_stats = {
+            "subid": subid,
+            "lesion_index": lesion_index,
+            "case_type": lesion_case.get("case_type"),
+        }
+        coords = bounding_boxes[lesion_index - 1][1]
         index_crop = crop_from_volume(lesion_index_vol, coords)
         for key in label_keys:
             lab_path = lesion_case.get(key)
@@ -421,7 +452,9 @@ def analyze_subject_prl(subid, dataset, label_keys, lesion_indices=None, include
             try:
                 lesion_s, lesion_d = analyze_label(index_crop, lab_nifti, lesion_index)
             except Exception:
-                logger.warning(f"Rim analysis failed for sub{subid} lesion {lesion_index} ({key})")
+                logger.warning(
+                    f"Rim analysis failed for sub{subid} lesion {lesion_index} ({key})"
+                )
                 logger.debug(traceback.format_exc())
                 lesion_s = lesion_d = None
             lesion_stats.update(lesion_s)
@@ -432,15 +465,15 @@ def analyze_subject_prl(subid, dataset, label_keys, lesion_indices=None, include
     return subject_lesion_stats, subject_lesion_data
 
 
-
-
-# refactor so this can take a subid instead of a case so that lstai_lesion_index doesn't have to 
+# refactor so this can take a subid instead of a case so that lstai_lesion_index doesn't have to
 #   be loaded like a 100 different times
-def analyze_prl_case(case, dataset, 
-                     include_data=True,
-                     screen_iron=False,
-                     count_rim=False,
-                     ):
+def analyze_prl_case(
+    case,
+    dataset,
+    include_data=True,
+    screen_iron=False,
+    count_rim=False,
+):
     """Full analysis of a single PRL case.
 
     Computes rim and lesion statistics for both ground truth and inference,
@@ -462,7 +495,9 @@ def analyze_prl_case(case, dataset,
                 or just identifiers if include_data=False.
         Returns None if neither label nor inference exists on disk.
     """
-    subid, lesion_index = case.name if hasattr(case, "name") else (case["subid"], case["lesion_index"])
+    subid, lesion_index = (
+        case.name if hasattr(case, "name") else (case["subid"], case["lesion_index"])
+    )
     subject = dataset.subject(subid)
 
     lesion_index_path = subject.dir / "lstai_lesion_index.nii.gz"
@@ -477,7 +512,9 @@ def analyze_prl_case(case, dataset,
     try:
         assert bounding_boxes[lesion_index - 1][0] == lesion_index
     except (AssertionError, IndexError):
-        logger.warning(f"Bounding box index mismatch for sub{subid} lesion {lesion_index}")
+        logger.warning(
+            f"Bounding box index mismatch for sub{subid} lesion {lesion_index}"
+        )
     coords = bounding_boxes[lesion_index - 1][1]
 
     groundtruth_path = case.get("label")
@@ -498,7 +535,9 @@ def analyze_prl_case(case, dataset,
             logger.debug(f"Inference output not found: {inf_path}")
 
     if not label_paths:
-        logger.warning(f"No label or inference found for sub{subid} lesion {lesion_index}")
+        logger.warning(
+            f"No label or inference found for sub{subid} lesion {lesion_index}"
+        )
         return None
 
     lesion_stats = {
@@ -542,7 +581,9 @@ def analyze_prl_case(case, dataset,
                 lesion_stats[f"rim_hull_volume_{key}"] = hull.volume
             lesion_stats[f"rim_sphere_radius_{key}"] = rim_sphere
         except Exception:
-            logger.warning(f"Rim analysis failed for sub{subid} lesion {lesion_index} ({key})")
+            logger.warning(
+                f"Rim analysis failed for sub{subid} lesion {lesion_index} ({key})"
+            )
             logger.debug(traceback.format_exc())
 
         try:
@@ -559,7 +600,9 @@ def analyze_prl_case(case, dataset,
             if hull is not None:
                 lesion_stats[f"lesion_hull_volume_{key}"] = hull.volume
         except Exception:
-            logger.warning(f"Lesion analysis failed for sub{subid} lesion {lesion_index} ({key})")
+            logger.warning(
+                f"Lesion analysis failed for sub{subid} lesion {lesion_index} ({key})"
+            )
             logger.debug(traceback.format_exc())
 
         if include_data:

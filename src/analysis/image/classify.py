@@ -1,7 +1,9 @@
+import scipy.stats as stats
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
 from sklearn.model_selection import train_test_split, StratifiedKFold, cross_validate
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import (
@@ -41,6 +43,9 @@ def prepare_data(df, **kwargs):
     test_size = kwargs.get("test_size", TEST_SIZE)
     cv_folds = kwargs.get("cv_folds", CV_FOLDS)
     features = kwargs.get("features", FEATURES)
+    if features is None:
+        features = df.columns.drop(["subid", "lesion_index"])
+    df[features] = stats.zscore(df[features], nan_policy="omit")
     X = df[features].values
     try:
         y = (df[TARGET] == POS_LABEL).astype(int).values   # 1 = PRL, 0 = Lesion
@@ -69,6 +74,15 @@ def train_model(X_train, y_train):
             random_state=RANDOM_STATE,
         )),
     ])
+#     model = Pipeline([
+#     ("imputer", SimpleImputer(strategy="constant", fill_value=0)),   
+#     ("scaler", StandardScaler()),
+#     ("clf", SVC(
+#         class_weight="balanced",     # Handles your 48 PRL vs ~117 Lesion imbalance
+#         random_state=RANDOM_STATE,
+#         probability=True             # Optional: Add this if you need predict_proba()
+#     )),
+# ])
     model.fit(X_train, y_train)
     return model
 

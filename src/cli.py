@@ -12,6 +12,7 @@ Usage:
 
 import click
 from pathlib import Path
+import pickle as pkl
 
 
 @click.group()
@@ -256,42 +257,8 @@ def grid(
             dry_run=dry_run,
             run_key=run_key,
         )
-
-
-@cli.command()
-@click.argument("run_dir", type=click.Path(exists=True, path_type=Path))
-@click.option("--fold", type=int, default=None, help="Specific fold (default: all)")
-@click.option(
-    "--dataset",
-    "dataset_name",
-    type=str,
-    default=None,
-    help="Dataset name (auto-detected from run_dir configs if omitted)",
-)
-def predict(run_dir, fold, dataset_name):
-    """Generate fold validation predictions for a training run.
-
-    RUN_DIR is the path to the training run directory.
-    """
-    from core.dataset import Dataset
-    from core.experiment import Experiment
-
-    if dataset_name is None:
-        from helpers.paths import load_config
-
-        label_config = load_config(run_dir / "label_config.json")
-        dataset_name = label_config["dataset_name"]
-
-    ds = Dataset(dataset_name)
-    exp = Experiment.from_run_dir(run_dir, ds)
-
-    results = exp.predict(fold=fold)
-
-    for fold_num, result in sorted(results.items()):
-        status = "ok" if result == "success" else "FAILED"
-        click.echo(f"  Fold {fold_num}: {status}")
-
-
+        
+        
 @cli.command()
 @click.argument("run_dir", type=click.Path(exists=True, path_type=Path))
 @click.option("--test-only", is_flag=True, help="Only analyze test set")
@@ -355,6 +322,105 @@ def metrics(run_dir, test_only, output_csv, print_results, print_file, dataset_n
         click.echo(df.to_string())
     else:
         click.echo(f"Metrics computed for {len(df)} cases.")
+
+@cli.command(name="compile")
+@click.argument("dataset_name")
+@click.option(
+    "--stage",
+    "stages",
+    multiple=True,
+    help="Stage name(s) to compile. Omit for all discovered stages.",
+)
+@click.option(
+    "--output-csv",
+    type=click.Path(path_type=Path),
+    default=None,
+    help="Output CSV path (default: analysis/{dataset}_compiled_metrics.csv)",
+)
+@click.option(
+    "--params",
+    multiple=True,
+    help="Param keys to extract as columns (e.g., learning_rate, loss#weight)",
+)
+@click.option("--no-cache", is_flag=True, help="Ignore cached data, recompute from scratch")
+@click.option("--print", "print_table", is_flag=True, help="Print table to stdout")
+def compile_metrics(dataset_name, stages, output_csv, params, no_cache, print_table):
+    """Compile training metrics across grid search stages.
+
+    DATASET_NAME is the dataset (e.g., 'roi_train2').
+    """
+    from analysis.compile import compile_all_metrics
+    from analysis.metrics.performance import performance_metrics
+    from helpers.paths import PROJECT_ROOT
+    from core.grid import ExperimentGrid
+    from core.dataset import Dataset
+
+    params_list = list(params) if params else None
+
+    grids = None
+    if stages:
+        ds = Dataset(dataset_name)
+        grids = [
+            ExperimentGrid.from_home_dir(ds.work_home / stage)
+            for stage in stages
+        ]
+
+    df = compile_all_metrics(
+        func=performance_metrics,
+        grids=grids,
+        params_to_gather=params_list,
+        use_cache=not no_cache,
+    )
+
+    if df.empty:
+        click.echo("No data to compile.")
+        return
+
+    if output_csv is None:
+        output_csv = PROJECT_ROOT / "analysis" / f"{dataset_name}_compiled_metrics.csv"
+    output_csv.parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(output_csv, index=False)
+    click.echo(f"Compiled {len(df)} runs -> {output_csv}")
+
+    if print_table:
+        click.echo(df.to_string())
+
+
+
+@cli.command()
+@click.argument("run_dir", type=click.Path(exists=True, path_type=Path))
+@click.option("--fold", type=int, default=None, help="Specific fold (default: all)")
+@click.option(
+    "--dataset",
+    "dataset_name",
+    type=str,
+    default=None,
+    help="Dataset name (auto-detected from run_dir configs if omitted)",
+)
+def predict(run_dir, fold, dataset_name):
+    """Generate fold validation predictions for a training run.
+
+    RUN_DIR is the path to the training run directory.
+    """
+    from core.dataset import Dataset
+    from core.experiment import Experiment
+
+    if dataset_name is None:
+        from helpers.paths import load_config
+
+        label_config = load_config(run_dir / "label_config.json")
+        dataset_name = label_config["dataset_name"]
+
+    ds = Dataset(dataset_name)
+    exp = Experiment.from_run_dir(run_dir, ds)
+
+    results = exp.predict(fold=fold)
+
+    for fold_num, result in sorted(results.items()):
+        status = "ok" if result == "success" else "FAILED"
+        click.echo(f"  Fold {fold_num}: {status}")
+
+
 
 
 @cli.command()
@@ -486,72 +552,101 @@ def _infer_wrapper(kwargs):
     name = kwargs["subject_dir"].name
     result = infer_subject(**kwargs)
     return name, result
+        
 
+def analyze_wrapper(args):
+    from analysis.image import lesion_analysis as lesion_dx
+    subid, lesion_indices, dataset = args
+    return lesion_dx.analyze_subject_prl(subid, dataset, "inference", lesion_indices=lesion_indices)
 
-@cli.command(name="compile")
-@click.argument("dataset_name")
+@cli.command()
+@click.argument("run_dir", type=click.Path(exists=True, path_type=Path))    
 @click.option(
-    "--stage",
-    "stages",
-    multiple=True,
-    help="Stage name(s) to compile. Omit for all discovered stages.",
-)
-@click.option(
-    "--output-csv",
-    type=click.Path(path_type=Path),
+    "--dataset",
+    "dataset_name",
+    type=str,
     default=None,
-    help="Output CSV path (default: analysis/{dataset}_compiled_metrics.csv)",
+    help="Dataset name (auto-detected if omitted)",
 )
 @click.option(
-    "--params",
-    multiple=True,
-    help="Param keys to extract as columns (e.g., learning_rate, loss#weight)",
+    "--work-dir",
+    type=str,
+    default=None
 )
-@click.option("--no-cache", is_flag=True, help="Ignore cached data, recompute from scratch")
-@click.option("--print", "print_table", is_flag=True, help="Print table to stdout")
-def compile_metrics(dataset_name, stages, output_csv, params, no_cache, print_table):
-    """Compile training metrics across grid search stages.
-
-    DATASET_NAME is the dataset (e.g., 'roi_train2').
-    """
-    from analysis.compile import compile_all_metrics
-    from analysis.metrics.performance import performance_metrics
-    from helpers.paths import PROJECT_ROOT
-    from core.grid import ExperimentGrid
+@click.option(
+    "--train-dataset",
+    type=str,
+    default="roi_train2"
+)
+def classify(run_dir, dataset_name, work_dir, train_dataset):
+    import pandas as pd
     from core.dataset import Dataset
+    from core.experiment import Experiment
+    from tqdm import tqdm
+    from helpers.paths import find_inference, PROJECT_ROOT
+    from analysis.image import lesion_analysis as lesion_dx
+    from helpers.parallel import BetterPool
+    from collections import defaultdict
 
-    params_list = list(params) if params else None
+    if work_dir is None:
+        work_dir = PROJECT_ROOT / "analysis"
+        
+    if dataset_name is None:
+        from helpers.paths import load_config
 
-    grids = None
-    if stages:
-        ds = Dataset(dataset_name)
-        grids = [
-            ExperimentGrid.from_home_dir(ds.work_home / stage)
-            for stage in stages
-        ]
+        label_config = load_config(run_dir / "label_config.json")
+        dataset_name = label_config["dataset_name"]
 
-    df = compile_all_metrics(
-        func=performance_metrics,
-        grids=grids,
-        params_to_gather=params_list,
-        use_cache=not no_cache,
-    )
+    dataset = Dataset(dataset_name)
+    train_dataset = Dataset(train_dataset)
+    experiment = Experiment.from_run_dir(run_dir, train_dataset)
 
-    if df.empty:
-        click.echo("No data to compile.")
-        return
+    # Map the dictionary to the index to create the column all at once
+    cases_file = work_dir / f"{experiment.id.replace('/', '_')}-{dataset_name}-cases_has_iron.csv"
+    if not cases_file.exists():
+        dataset.cases['inference'] = None
+        for i, case_i in tqdm(dataset.cases.iterrows()):
+            dataset.cases.loc[i, "inference"] = find_inference(Path(case_i.subject_dir)/str(case_i.name[1]), experiment.name)
+            
+        all_results = {}
+        for subid in tqdm(dataset.cases.index.get_level_values("subid").unique()):
+            # Dict of {lesion_index: bool}
+            res = lesion_dx.screen_for_iron(dataset, subid, "inference")
+            # Store with the full (subid, lesion_index) tuple key
+            for l_idx, val in res.items():
+                all_results[(subid, l_idx)] = val
+        dataset.cases['has_iron'] = dataset.cases.index.map(all_results).fillna(False)
+        dataset.cases.to_csv(cases_file)
+    else:
+        cases = pd.read_csv(cases_file, index_col=["subid", "lesion_index"])
+        dataset.cases = cases
+        
+    screened_cases = dataset.cases[dataset.cases['has_iron']]
+    
+    image_stats_file = work_dir / f"prl_image_stats-{experiment.id.replace('/', '_')}-{dataset_name}.csv"
+    image_data_file = work_dir / f"prl_image_data-{experiment.id.replace('/', '_')}-{dataset_name}.pkl"
+    if not image_stats_file.exists():
+        full_data = defaultdict(list)
+        tasks = []
+        for subid, g in screened_cases.reset_index().groupby("subid"):
+            tasks.append((subid, g['lesion_index'].to_list(), dataset))
+        with BetterPool(8) as pool: #TODO make parallel execution dependent on cli option
+            results_iterator = pool.imap_unordered(analyze_wrapper, tasks)
+            for result in tqdm(results_iterator, total=len(tasks)):
+                full_data['prl_stats'].extend(result[0])
+                full_data['prl_data'].extend(result[1])
 
-    if output_csv is None:
-        output_csv = PROJECT_ROOT / "analysis" / f"{dataset_name}_compiled_metrics.csv"
-    output_csv.parent.mkdir(parents=True, exist_ok=True)
-    df.to_csv(output_csv, index=False)
-    click.echo(f"Compiled {len(df)} runs -> {output_csv}")
-
-    if print_table:
-        click.echo(df.to_string())
-
-
+        pd.DataFrame(full_data['prl_stats']).to_csv(
+            image_stats_file,
+            index=False
+        )
+        
+        with open(image_data_file, 'wb') as f:
+            pkl.dump(full_data, f)
+    
 if __name__ == "__main__":
     cli()
 
 # prl infer --data-root $inf_dataroot --subjects-file $subjects_list  $run_dir
+
+# classify --dataset inference_dataset /media/smbshare/srs-9/prl_project/training/roi_train2/test_dicece_lambda/run1
