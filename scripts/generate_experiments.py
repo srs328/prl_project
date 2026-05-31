@@ -7,6 +7,8 @@ and generates individual run directories with customized label_config.json and m
 Also pre-generates stacked images for each configuration.
 """
 
+#! OBSOLETE I THINK, DOUBLE CHECK THEN DELETE IF TRUE
+
 import sys
 import os
 import json
