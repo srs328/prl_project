@@ -149,6 +149,7 @@ src/
 │       └── plotting.py       # 3D visualization (plot_lesion_rim_3d)
 ├── helpers/                  # paths.py, shell_interface.py, parallel.py, utils.py
 ├── preprocessing/            # create_rois.py, create_datalist.py, prepare_training_data.py
+├── resources/
 └── scripts/                  # Legacy shims (re-export from analysis.*), inference, fold predictions
 
 training/roi_train2/

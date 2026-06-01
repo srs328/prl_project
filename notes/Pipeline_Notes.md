@@ -4,17 +4,30 @@
 
 Add running list of goals here:
 
+### 03/2026
+
 My goal is to refactor or restructure my training pipeline so that it's easier to run, more extensible to hyperparameter optimization and grid searching, and portable. Right now I run it locally but I want to port it to the HPC after it's ready for hyperparameter optimization.  
 
-- [ ] Some way of centrally defining the project root and dataroot prefixes (maybe as environment variables or in a python file like an `__init__.py` or something else) so they can be loaded into every script instead of needing to be hardcoded into the config .json files
+- [x] Some way of centrally defining the project root and dataroot prefixes (maybe as environment variables or in a python file like an `__init__.py` or something else) so they can be loaded into every script instead of needing to be hardcoded into the config .json files
 - [ ] Everything described in [[Training Pipeline#Hyperparameter optimization]]
-- [ ] Figure out a method for job submission when this is ported to the HPC (using the IBM LSF platform e.g. bsub and job arrays)
+- [x] Figure out a method for job submission when this is ported to the HPC (using the IBM LSF platform e.g. bsub and job arrays)
+
+### 06/2026
+
+EDIT: I have been running grid searches on the HPC for awhile now and it does seem to work pretty smoothly. But I'm coming back to this after a break, and it has felt a bit tedious to reorient myself to how everything works, so I want to do a detailed audit to determine whether any small or thorough refactoring would be beneficial before diving back into the work
+
+MOST CURRENT GOALS:
+Right now I want to do a proper audit and am open to a deep refactor if warranted. I wonder if my code is spread out over too many modules in certain circumstances. 
+
+- [ ] Be more convenient to compare metrics between experimwents, after radiomic classification, and play around in notebooks
 
 ## Project Structure
 
+I have three sets of subjects. 24 who have segmented PRL rims (call it the training set); 52 who have PRLs identified to lesions by an index (call it the inference set); a few hundred who just have known PRL counts but no reliable index to label lesions as PRL or not (call it the full inference set) (note that while I could have better, more descriptive names for these three data partitions, those three names are sort of baked into the code already, so I'll avoid changing them until later when I feel like refactoring).
+
 ### Segmentations and original data organization
 
-The `dataroot` is `/media/smbshare/srs-9/prl_project/data`. It contains all the subjects' folders. The names are in the format `sub<subid>-<sesid>`, and right now there is only one session per subject, so every subid appears once. I call each of these `subject_root` in most code
+The training data `dataroot` is `/media/smbshare/srs-9/prl_project/data`. It contains the 24 segmented subjects' folders. The names are in the format `sub<subid>-<sesid>`, and right now there is only one session per subject, so every subid appears once. I call each of these `subject_root` in most code
 
 ```
 sub1010-20180208
@@ -37,9 +50,9 @@ sub1011-20180911
 
 - `space-flair_seg-lst.nii.gz` is the binary lesion mask produced by LST-AI
 - `lstai_lesion_index.nii.gz` is the indexed lesion mask produced by `c3d space-flair_seg-lst.nii.gz -comp -o lstai_lesion_index.nii.gz`
-- `prl_mask_def_prob_<initials>.nii.gz` contains the rim segmentation. The initials refer to the rater (CH, SRS, LR; SRS_CH means that CH made fixes to SRS). CH is the most senior rater, then SRS, then LR. "def_prob" means that it only includes PRL's that were identified with a confidence of "definite" or "probable" (see [Project Structure](Training%20Pipeline#Project%20Structure) for more information)
-    - Rims are labeled 2, lesion is labeled 1. In some cases, there are additional labels (3=central vein, 4=extraneous iron content; 5=extralesional hyperintensity). All but rim (label 2) are ignored. In preprocessing, the rims are extracted from this image and overlayed onto `space-flair_seg-lst.nii.gz`. Eventually, we may add the central vein sign if rim segmentation is successful
-- There are three imaging modalities. This will be a hyperparameter. For now, just flair and phase are being used; eventually T1 will be added to the stack
+- `prl_mask_def_prob_<initials>.nii.gz` contains the rim segmentation. The initials refer to the rater (CH, SRS, LR; SRS_CH means that CH made fixes to SRS). CH is the most senior rater, then SRS, then LR. "def_prob" means that it only includes PRL's that were identified with a confidence of "definite" or "probable" (~~see [Project Structure](Training%20Pipeline#Project%20Structure) for more information~~ lost this link)
+    - Rims are labeled 2, lesion is labeled 1. In some cases, there are additional labels (3=central vein, 4=extraneous iron content; 5=extralesional hyperintensity). All but rim (label 2) are ignored. In preprocessing, the rims are extracted from this image and saved into  "prl_rim_def_prob_\<rater\>.nii.gz" and overlayed onto `space-flair_seg-lst.nii.gz` to get the actual training segmentations. Eventually, we may add the central vein sign if rim segmentation is successful.
+- There are three imaging modalities. This will be a hyperparameter. For now, just flair and phase are being used; I have done training tests with T1 added to the stack as well
 
 ### Code Workspace
 
@@ -48,6 +61,10 @@ This is subject to change because I want it to be more organized. In my projects
 ```
 put directory structure here when ready
 ```
+
+The main pipeline code lives under `src`. However there was a time when I had the code at the top level, and so some resource files live in the top level `resources` folder and I haven't migrated all those references to `src/resources`, nor have I copied all the files from the former to the latter.
+
+#### Some notes about legacy top level folders
 
 - `resources`
 	- `labels_to_use.csv` contains the suffix (initials of the rater) of the PRL label file that is to be used for training
@@ -61,10 +78,12 @@ put directory structure here when ready
 	- `subject-sessions.csv` is a master list of all subjects and their baseline MRI session (which corresponds to "date_mri" in the PRL label references)
 	- `subjects.txt` is a running list of all subjects who have at least one manual label (i.e. `prl_mask_def_prob_<initials>.nii.gz`
 
-- `helpers`: ADD INFO ABOUT THE HELPER MODULES
+- `preprocessing`: right now this contains code that used to process the raw `subject_root` folders to create the cropped images and labels for training and to copy subject data from my original data location to my prl working directories. I don't think anything within this top level preprocessing folder is called from within the pipeline, but I still might depend on some of these scripts if I needed to run a particular copying task on entirely new data (but I haven't run into that situation in awhile so I don't know which of these files I may need to keep for the future, so I will just keep all of them for now) 
+- `training`: This folder is still very important. It contains training runs and experiment specific folders with the customized configs and code for running that particular session. ~~I'm trying to think of a way to more seamlessly integrate preprocessing with the stuff here~~ EDIT 06/2026: I think I did improve integration of preprocessing with stuff here a lot. The basic conceit is: a folder like roi_train2 contains a datalist_template for a particular set of subjects (e.g. the 24 training subjects) with already defined train/test split. These assignmentsm are in datalist_template.json. For particular training parameters like crop padding, datalists are created from the template. These derived datalists will have full paths to images and labels while the template will have prefixes. `dataset.yaml` contains defaults for that training paradigm which can be overriden for specific HPO experiments. `roi_train2_t1` is a copy of `roi_train1` for the three image stack (flair, phase, t1). At the time that I made it, it seemed easier to just create a new paradigm folder instead of trying to integrate the 3 image stack via overrides. `inference_dataset` and `full_inference_dataset` were for the other two sets of subjects. These don't have ground truth. I added these in after writing all the core code, and so I ended up needing to go back and modifying the core code to be compatible with datasets missing ground truth, and it possibly got a bit hacky here and there. 
 
-- `preprocessing`: right now this contains code that processes the raw `subject_root` folders to create the cropped images and labels for training
-- `training`: contains training runs and experiment specific folders with the customized configs and code for running that particular session. I'm trying to think of a way to more seamlessly integrate preprocessing with the stuff here (see [[Training Pipeline#Pipeline|Pipeline]] for detailed information on how I'm running this right now)
+#### Production code in src
+
+`src/cli.py` is the entry point for anything production level. `src/analysis` contains modules for various post deep learning steps like gathering performance metrics or doing radiomic classification. `src/helpers` has many important helper modules. `src/resources` has a few things that aren't referenced much in code but which I still need sometimes. `src/hpc` has scripts needed for running training on the HPC. `src/preprocessing` is for preprocessing labels and images before deep learning. This includes creating image stacks and cropping segmentations
 
 ### Training work directories
 
@@ -103,7 +122,11 @@ After moving on from `roi_train1_segresnet` to `roi_train2`, I renamed the the f
 
 ### Configs
 
-`label_config.json` contains parameters necessary to prepare all the segmentations and MRI images before MONAI sees them.
+#### LEGACY DOCUMENTATION
+
+A lot of the description below may no longer be relevant since I updated config handling. I haven't properly documented the new approach yet
+
+`label_config.json` contains parameters necessary to prepare all the segmentations and MRI images before MONAI sees them
 
 - `images`: which images to stack. Eventually I will try adding T1 to the stack
 - `subjects`: I manually created the folder `training/roi_train2` and copied `subjects.txt` into it so that I'd preserve the subjects list for this in case the original running list is updated
@@ -144,7 +167,7 @@ After moving on from `roi_train1_segresnet` to `roi_train2`, I renamed the the f
     }
 }
 ```
-
+~~
 - `training_work_home`: the top level folder that contains a set of experiments. For now I will classify a "set" of experiements as those which contain the same training subjects and labels
 - `TEST_SPLIT` is the percent to hold from training so I can do inference and compute Dice
 - `train_param` is the dict I pass to `Autorunner.set_training_params`. I want to create the ability to set these in such a way that I could potentially do a gridsearch
@@ -152,13 +175,19 @@ After moving on from `roi_train1_segresnet` to `roi_train2`, I renamed the the f
 
 It would be nice to find a way that I could use relative paths in these configs and set an environment variable or some `__init__.py` approach to setting the project and dataroots so I could port this all over to the HPC more easily.
 
+===END LEGACY CONFIG DOCUMENTATION===
+
 #### Hyperparameter optimization
 
-I need to think of a good interface for me to use to vary the parameters in `label_config.json` and `monai_config.json`. At some point maybe I'd need code to automatically generate these two configs and save them into appropriate locations (like subfolders under `training_work_home`). And maybe a master controller config file where I set the paramter space to vary and pass to a script that generates downstream scripts to run everything. At somepoint I'll read [tutorials/auto3dseg/docs/hpo.md at main · Project-MONAI/tutorials](https://github.com/Project-MONAI/tutorials/blob/main/auto3dseg/docs/hpo.md) to see if it can handle the `monai_config.json` part of it and then get some ideas for how I can handle the `label_config.json` side of it.
+EDIT (06/2026): I think I accomplished the goals listed below already
 
-### Pipeline
+I need to think of a good interface for me to use to vary the parameters in `label_config.json` and `monai_config.json`. At some point maybe I'd need code to automatically generate these two configs and save them into appropriate locations (like subfolders under `training_work_home`). And maybe a master controller config file where I set the paramter space to vary and pass to a script that generates downstream scripts to run everything. ~~At somepoint I'll read [tutorials/auto3dseg/docs/hpo.md at main · Project-MONAI/tutorials](https://github.com/Project-MONAI/tutorials/blob/main/auto3dseg/docs/hpo.md) to see if it can handle the `monai_config.json` part of it and then get some ideas for how I can handle the `label_config.json` side of it.~~ (determined that the auto3dseg hpo would be more effort than it's worth, possibly overkill)
 
-Below I'll describe how I run everything under the current paradigm. Any part of this pipeline is subject to change if there is room for improvement based on what I have in [[Training Pipeline#Goals]]
+### Pipeline (ALSO MOSTLY LEGACY but helpful info still)
+
+~~Below I'll describe how I run everything under the current paradigm. Any part of this pipeline is subject to change if there is room for improvement based on what I have in [[Training Pipeline#Goals]]~~
+
+The description below is out of date in terms of how I actually initiate the steps, but it still accurately describes the key concepts. My current approach all starts in `src/cli.py` and is mostly implemented there and in `src/core` modules.
 
 #### Step 0: 
 
@@ -223,7 +252,9 @@ python training/roi_train2/train.py
 ```
 
 
+### Notebooks
 
+At the top level in `notebooks` there are many jupyter notebooks. Ignore all except for `notebooks/evaluate_inference2.py`. This is the only one I have been working with recently and it essentially describes how I've been interacting with my project recently and probably contains insights into how things can improve, what types of hacks I'm using due to inelegencies, etc. 
 
 ## Scratch 
 

@@ -8,11 +8,12 @@ prl_df: ${PROJECT_ROOT}/src/resources/PRL_spreadsheet-lstai_update_label_referen
 n_folds: 5
 test_split: 0.2
 
-# Preprocessing defaults (overridable by ExperimentGrid)
 defaults:
-  images: [flair, phase, t1]
-  expand_xy: 20
-  expand_z: 2
+  # Preprocessing defaults (overridable by ExperimentGrid)
+  preprocessing:
+    images: [flair, phase, t1]
+    expand_xy: 20
+    expand_z: 2
 
   # Training defaults (overridable per-experiment)
   training:

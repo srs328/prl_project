@@ -27,6 +27,10 @@ from helpers.paths import (
 from core.configs import PreprocessingConfig, AlgoConfig
 
 
+DEFAULT_EXPAND_XY = 20
+DEFAULT_EXPAND_Z = 2
+DEFAULT_IMAGES = ["flair", "phase"]
+
 class Dataset:
     """Represents a named dataset with fixed subjects and fold assignments.
 
@@ -64,10 +68,11 @@ class Dataset:
 
         # Parse defaults
         defaults = config.get("defaults", {})
+        preprocess_defaults = defaults.get("preprocessing", {})
         self.default_preprocess = PreprocessingConfig(
-            images=defaults.get("images", ["flair", "phase"]),
-            expand_xy=defaults.get("expand_xy", 20),
-            expand_z=defaults.get("expand_z", 2),
+            images=preprocess_defaults.get("images", DEFAULT_IMAGES),
+            expand_xy=preprocess_defaults.get("expand_xy", DEFAULT_EXPAND_XY),
+            expand_z=preprocess_defaults.get("expand_z", DEFAULT_EXPAND_Z),
         )
         training_defaults = defaults.get("training", {})
         if training_defaults is None:
@@ -308,9 +313,14 @@ class Dataset:
             raise FileNotFoundError(
                 f"Dataset '{name}' not found: {config_path} does not exist"
             )
-        config = load_config(config_path)
+        config = load_config(config_path, pwd=config_path.parent)
 
         # Resolve relative paths against dataset_home
+        # TODO added this block before I added the ${PWD} token expansion to paths.py
+        #   consider maybe just keeping this little block here for backwards compatibility but 
+        #   making sure to always use ${PWD} to be explicit. OR I could update this block to 
+        #   go through every key looking for values that look like they are relative path parts
+        #   (e.g. anything with a file extension or anything with slashes), and resolving those
         for key in ("subjects", "suffix_to_use"):
             if key in config and config[key] is not None and not Path(config[key]).is_absolute():
                 config[key] = str(dataset_home / config[key])
