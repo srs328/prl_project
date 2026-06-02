@@ -20,6 +20,8 @@ MOST CURRENT GOALS:
 Right now I want to do a proper audit and am open to a deep refactor if warranted. I wonder if my code is spread out over too many modules in certain circumstances. 
 
 - [ ] Be more convenient to compare metrics between experimwents, after radiomic classification, and play around in notebooks
+- [ ] Port code from `notebooks/save_final_prl_seg.ipynb` for saving final segmentations for visual inspection, but only after I've done any important refactoring that will make my life easier down the line
+- [ ] Conceptually, I want to understand why classification based on deep learning segmentation from roi_train2_t1 (ie roi_train2_t1/run1) is performing much worse compared to roi_train2/stage6_sweep_dicece_wts/run1
 
 ## Project Structure
 
@@ -254,7 +256,13 @@ python training/roi_train2/train.py
 
 ### Notebooks
 
-At the top level in `notebooks` there are many jupyter notebooks. Ignore all except for `notebooks/evaluate_inference2.py`. This is the only one I have been working with recently and it essentially describes how I've been interacting with my project recently and probably contains insights into how things can improve, what types of hacks I'm using due to inelegencies, etc. 
+At the top level in `notebooks` there are many jupyter notebooks. Ignore all except for `notebooks/evaluate_inference2.ipynb` and `notebooks/save_final_prl_seg.ipynb`. These are the only one I have been working with recently and it essentially describes how I've been interacting with my project recently and probably contains insights into how things can improve, what types of hacks I'm using due to inelegencies, etc. The most recent code I added to src is classification code which I prototyped in evaluate_inference2. save_final_prl_seg contains some cells for saving radiomic filtered segmentations which I have yet to port into module level code that can be run from the cli.
+
+## Training Run Examples
+
+in `/media/smbshare/srs-9/prl_project/training/roi_train2`, any subfolder from stage3 till stage8 is probably a good example. Stage6 maybe best since it is stage6/run1 which I am currently using as my best run for subsequent radiomic classification
+
+ALso in `/media/smbshare/srs-9/prl_project` are the folders `full_inference_data` and `inference_data` which contains inference results for the other two subject sets. 
 
 ## Scratch 
 
