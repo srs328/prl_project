@@ -160,7 +160,7 @@ def get_lesion_rim(
     central lesion's footprint (dilated to capture rim just outside boundary).
 
     Args:
-        index_crop: Cropped lstai_lesion_index.
+        index_crop: Cropped region from lstai_lesion_index.nii.gz.
         label_data: Segmentation output (0=bg, 1=lesion, 2=rim).
         lesion_id: The central lesion's integer ID.
         n_dilate: Voxels to dilate the lesion footprint by.
@@ -169,7 +169,6 @@ def get_lesion_rim(
         Boolean mask of rim voxels for this lesion.
     """
     rim_mask = label_data == 2
-
     labeled, n_components = ndimage.label(rim_mask)
 
     index_mask = index_crop == lesion_id

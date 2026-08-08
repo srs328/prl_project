@@ -13,12 +13,20 @@ import attrs
 from pathlib import Path
 
 
+# def get_value(obj, key_path):
+#     keys = key_path.split("#")
+#     if len(keys) == 1:
+#         return obj[keys[0]]
+#     else:
+#         return AlgoConfig.get_value(obj[keys[0]], "#".join(keys[1:]))
+
+
 def get_value(obj, key_path):
     keys = key_path.split("#")
     if len(keys) == 1:
         return obj[keys[0]]
     else:
-        return AlgoConfig.get_value(obj[keys[0]], "#".join(keys[1:]))
+        return get_value(obj[keys[0]], "#".join(keys[1:]))
 
 
 
