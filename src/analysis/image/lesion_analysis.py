@@ -218,7 +218,7 @@ def count_rim_for_lesion(
     return int(get_lesion_rim(index_crop, label_data, lesion_id, n_dilate).sum())
 
 
-def screen_for_iron(dataset, subid, label_key):
+def screen_for_iron(dataset, subid, label_key) -> dict[int, bool]:
     subject = dataset.subject(subid)
     lesion_index_path = subject.dir / "lstai_lesion_index.nii.gz"
     lesion_index_vol = nib.load(str(lesion_index_path)).get_fdata().astype(np.int32)
@@ -340,7 +340,8 @@ def analyze_subject_prl0(
 
 
 def analyze_label(
-    index_crop, lab_nifti: nib.Nifti1Image, lesion_index, include_data=True, key="infer"
+    index_crop, lab_nifti: nib.Nifti1Image, lesion_index, include_data=True, key="infer",
+    screen_iron: bool = True
 ):
     key = "_" + key.removeprefix("_")
     lesion_stats = {}
@@ -353,6 +354,8 @@ def analyze_label(
         lesion_data[f"index_crop{key}"] = index_crop
     has_iron = np.any((index_crop == lesion_index) & (lab_data == 2))
     lesion_stats[f"has_iron{key}"] = has_iron
+    if not has_iron:
+        return lesion_stats, lesion_data
 
     rim = get_lesion_rim(index_crop, lab_data, lesion_index)
     rim_count = int(rim.sum())
