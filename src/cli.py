@@ -559,7 +559,7 @@ def _infer_wrapper(kwargs):
         
 
 def analyze_wrapper(args):
-    from analysis.image import lesion_analysis as lesion_dx
+    from classification import lesion_analysis as lesion_dx
     subid, lesion_indices, dataset = args
     return lesion_dx.analyze_subject_prl(subid, dataset, "inference", lesion_indices=lesion_indices)
 
@@ -574,7 +574,7 @@ def analyze_wrapper(args):
 )
 @click.option(
     "--work-dir",
-    type=str,
+    type=click.Path(file_okay=False, path_type=Path),
     default=None
 )
 @click.option(
@@ -588,7 +588,7 @@ def classify(run_dir, dataset_name, work_dir, train_dataset):
     from core.experiment import Experiment
     from tqdm import tqdm
     from helpers.paths import find_inference, PROJECT_ROOT
-    from analysis.image import lesion_analysis as lesion_dx
+    from classification import lesion_analysis as lesion_dx
     from helpers.parallel import BetterPool
     from collections import defaultdict
 
@@ -610,7 +610,12 @@ def classify(run_dir, dataset_name, work_dir, train_dataset):
     if not cases_file.exists():
         dataset.cases['inference'] = None
         for i, case_i in tqdm(dataset.cases.iterrows()):
-            dataset.cases.loc[i, "inference"] = find_inference(Path(case_i.subject_dir)/str(case_i.name[1]), experiment.name)
+            case_dir = Path(case_i.subject_dir) / str(case_i.name[1])
+            try:
+                inference_path = find_inference(case_dir, experiment.name)
+            except IndexError:
+                continue
+            dataset.cases.loc[i, "inference"] = inference_path
             
         all_results = {}
         for subid in tqdm(dataset.cases.index.get_level_values("subid").unique()):
