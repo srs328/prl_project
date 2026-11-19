@@ -137,16 +137,16 @@ src/
 │   ├── loaders.py            # load_run_data() — build experiment data dicts
 │   ├── _cache.py             # Orthogonal caching layer for run data
 │   ├── compile.py            # compile_all_metrics, compile_experiment_metrics, compile_grid_metrics
-│   ├── metrics/
-│   │   ├── __init__.py       # Re-exports from submodules
-│   │   ├── performance.py    # confusion matrix, derived metrics, casewise stats, performance_metrics()
-│   │   ├── mlflow.py         # MLflow metric loading, aggregation, mlflow_metrics()
-│   │   └── display.py        # format_param_value, rename_metric, order_columns
-│   └── image/
+│   └── metrics/
 │       ├── __init__.py       # Re-exports from submodules
-│       ├── geometry.py       # convex hull, enclosing sphere radius
-│       ├── lesion_analysis.py  # rim extraction, PRL case analysis, bounding box parsing
-│       └── plotting.py       # 3D visualization (plot_lesion_rim_3d)
+│       ├── performance.py    # confusion matrix, derived metrics, casewise stats, performance_metrics()
+│       ├── mlflow.py         # MLflow metric loading, aggregation, mlflow_metrics()
+│       └── display.py        # format_param_value, rename_metric, order_columns
+├── classification/
+│   ├── classify.py           # PRL classification
+│   ├── geometry.py           # convex hull, enclosing sphere radius
+│   ├── lesion_analysis.py    # rim extraction, PRL case analysis, bounding box parsing
+│   └── plotting.py           # 3D visualization
 ├── helpers/                  # paths.py, shell_interface.py, parallel.py, utils.py
 ├── preprocessing/            # create_rois.py, create_datalist.py, prepare_training_data.py
 ├── resources/

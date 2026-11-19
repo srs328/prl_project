@@ -13,7 +13,7 @@ from helpers.shell_interface import command, run_if_missing
 from core.dataset import Dataset
 from core.experiment import Experiment
 
-from analysis.image import classify
+from classification import classify
 
 
 ## Inputs: 

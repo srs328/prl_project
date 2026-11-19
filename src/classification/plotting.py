@@ -157,4 +157,24 @@ def plot_3d(images: list[np.ndarray], colors=None, slice_index=None, random_seed
     ax.set_aspect('equal')
     ax.view_init(elev=-90, roll=90, azim=0)
     return fig, ax
-    
+
+
+def plot_lesion_rim_3d(
+    prl_case: dict,
+    label_source: str = "infer",
+    alpha_wireframe: float = 0.15,
+    alpha_lesion: float = 0.05,
+    alpha_hull: float = 0.4,
+    alpha_rim: float = 0.3,
+):
+    """Display the original diagnostics plot using the shared plotting code."""
+    fig, _ = plot_lesion_rim_3d_orig(
+        prl_case,
+        label_source,
+        wireframe={"alpha": alpha_wireframe},
+        lesion={"alpha": alpha_lesion},
+        hull={"alpha": alpha_hull},
+        rim={"alpha": alpha_rim},
+    )
+    fig.tight_layout()
+    plt.show()

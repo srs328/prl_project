@@ -11,6 +11,7 @@ dependencies = [
     "attrs",
     "click",
     "loguru",
+    "matplotlib",
     "nibabel",
     "numpy",
     "pandas",
@@ -32,7 +33,6 @@ packages = [
     "scripts",
     "analysis",
     "analysis.metrics",
-    "analysis.image",
     "classification",
 ]
 package-dir = {"" = "src"}

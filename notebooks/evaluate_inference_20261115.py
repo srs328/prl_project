@@ -1,7 +1,6 @@
 # %%
 import matplotlib.pyplot as plt
 
-from scripts import lesion_diagnostics
 import os
 from pathlib import Path
 import pandas as pd
@@ -29,9 +28,9 @@ from scripts.compile_run_metrics import EXPERIMENT_KEYS
 reload_recursive(scripts.inference)
 from scripts.inference import uncrop_predictions
 
-import analysis.image
-reload_recursive(analysis.image)
-from analysis.image import lesion_analysis as lesion_dx
+import classification
+reload_recursive(classification)
+from classification import lesion_analysis as lesion_dx
 
 reload_recursive(helpers.utils)
 from helpers.utils import dice_score, get_prl_indices
@@ -51,7 +50,6 @@ from loguru import logger
 
 import scripts
 reload_recursive(scripts)
-# from scripts import lesion_diagnostics as lesion_dx
 from scripts.compile_run_metrics import load_or_cache_run
 
 # %%

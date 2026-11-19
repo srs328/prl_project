@@ -11,7 +11,7 @@ import pandas as pd
 from loguru import logger
 from scipy import ndimage
 
-from analysis.image.geometry import (
+from .geometry import (
     compute_pca_features,
     compute_radial_metrics,
     get_convex_hull,
