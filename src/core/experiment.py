@@ -8,14 +8,18 @@ is delegated to Dataset; Experiment adds inference output paths.
 from __future__ import annotations
 
 import json
-from pathlib import Path
 from functools import cached_property
+from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pandas as pd
 from loguru import logger
 
-from core.configs import PreprocessingConfig, AlgoConfig
+from core.configs import AlgoConfig, PreprocessingConfig
 from core.dataset import Dataset
+
+if TYPE_CHECKING:
+    from rich.panel import Panel
 
 
 class Experiment:
@@ -127,6 +131,163 @@ class Experiment:
         path = self.datalist_dst if self.datalist_dst.exists() else self.datalist_src
         with open(path) as f:
             return json.load(f)
+
+    @property
+    def input_yaml_path(self) -> Path:
+        """Path to MONAI AutoRunner's generated input.yaml."""
+        return self.run_dir / "input.yaml"
+
+    @property
+    def input_config(self) -> dict:
+        """Load MONAI AutoRunner's input.yaml as a dictionary."""
+        import yaml
+
+        if not self.input_yaml_path.exists():
+            raise FileNotFoundError(
+                f"input.yaml not found at {self.input_yaml_path}. Has train() been run?"
+            )
+        with open(self.input_yaml_path, "r", encoding="utf-8") as f:
+            return yaml.safe_load(f) or {}
+
+    def show_input_config(self, expand: bool = False) -> Panel:
+        """Render input.yaml as a Rich Tree inside a Panel.
+
+        Returns the Panel renderable so Jupyter displays it natively as a cell
+        output and multiple experiments can be composed side-by-side via Columns.
+        """
+        from rich.panel import Panel
+        from rich.tree import Tree
+
+        cfg = self.input_config
+        tree = Tree(f"[bold cyan]{self.input_yaml_path.name}[/bold cyan]")
+
+        def _format_scalar(val) -> str:
+            text = str(val)
+            if isinstance(val, str) and text.startswith(("$", "@")):
+                return f"[magenta]{text}[/magenta]"
+            return f"[green]{text}[/green]"
+
+        def _populate(node: Tree, current_data) -> None:
+            if isinstance(current_data, dict):
+                for k, v in current_data.items():
+                    if isinstance(v, dict):
+                        branch = node.add(f"[bold yellow]{k}[/bold yellow]")
+                        _populate(branch, v)
+                    elif isinstance(v, list):
+                        # Keep short scalar lists inline (e.g., roi_size:)
+                        if all(not isinstance(item, (dict, list)) for item in v):
+                            node.add(f"[bold white]{k}:[/bold white] [green]{v}[/green]")
+                        else:
+                            branch = node.add(f"[bold yellow]{k}[/bold yellow] [dim](list)[/dim]")
+                            _populate(branch, v)
+                    else:
+                        node.add(f"[bold white]{k}:[/bold white] {_format_scalar(v)}")
+            elif isinstance(current_data, list):
+                for i, item in enumerate(current_data):
+                    if isinstance(item, (dict, list)):
+                        branch = node.add(f"[dim][{i}][/dim]")
+                        _populate(branch, item)
+                    else:
+                        node.add(_format_scalar(item))
+
+        _populate(tree, cfg)
+
+        return Panel(
+            tree,
+            title=f"[bold magenta]{self.id}[/bold magenta]",
+            subtitle=f"[dim]{self.run_dir}[/dim]",
+            border_style="cyan",
+            expand=expand,
+            padding=(1, 2),
+        )
+
+    def show_config(
+        self,
+        source: str | Path | dict = "input.yaml",
+        fold: int | None = None,
+        hide_none: bool = False,
+        expand: bool = False,
+    ) -> Panel:
+        """Render any experiment config (YAML, JSON, or dict) as a Rich Tree inside a Panel.
+
+        Args:
+            source: Filename relative to run_dir (e.g. 'input.yaml', 'label_config.json',
+                'monai_config.json', 'hyper_parameters.yaml'), an explicit Path, or a dict.
+            fold: If provided (e.g. fold=0), resolves relative filenames inside
+                '{algo}_{fold}/configs/' (or '{algo}_{fold}/').
+            hide_none: Omit keys whose value is None / null (useful for monai_config.json).
+            expand: Stretch Panel to full notebook cell width.
+        """
+        from rich.panel import Panel
+        from rich.tree import Tree
+
+        if isinstance(source, dict):
+            data = source
+            label = "config"
+            subtitle = str(self.run_dir)
+        else:
+            path = Path(source)
+            if not path.is_absolute():
+                if fold is not None:
+                    fold_dir = self.run_dir / f"{self.training_config.algo}_{fold}"
+                    candidate = fold_dir / "configs" / path
+                    path = candidate if candidate.exists() else fold_dir / path
+                else:
+                    path = self.run_dir / path
+
+            data = self._load_config_file(path)
+            label = f"{path.parent.name}/{path.name}" if fold is not None else path.name
+            subtitle = str(path.parent)
+
+        tree = Tree(f"[bold cyan]{label}[/bold cyan]")
+
+        def _format_scalar(val) -> str:
+            if val is None:
+                return "[dim italic]null[/dim italic]"
+            if isinstance(val, bool):
+                return f"[bold blue]{val}[/bold blue]"
+            text = str(val)
+            if isinstance(val, str) and text.startswith(("$", "@")):
+                return f"[magenta]{text}[/magenta]"
+            return f"[green]{text}[/green]"
+
+        def _populate(node: Tree, current_data) -> None:
+            if isinstance(current_data, dict):
+                for k, v in current_data.items():
+                    if k == "_meta_" and not v:
+                        continue
+                    if hide_none and v is None:
+                        continue
+
+                    if isinstance(v, dict):
+                        branch = node.add(f"[bold yellow]{k}[/bold yellow]")
+                        _populate(branch, v)
+                    elif isinstance(v, list):
+                        if all(not isinstance(item, (dict, list)) for item in v):
+                            node.add(f"[bold white]{k}:[/bold white] [green]{v}[/green]")
+                        else:
+                            branch = node.add(f"[bold yellow]{k}[/bold yellow] [dim](list)[/dim]")
+                            _populate(branch, v)
+                    else:
+                        node.add(f"[bold white]{k}:[/bold white] {_format_scalar(v)}")
+            elif isinstance(current_data, list):
+                for i, item in enumerate(current_data):
+                    if isinstance(item, (dict, list)):
+                        branch = node.add(f"[dim][{i}][/dim]")
+                        _populate(branch, item)
+                    else:
+                        node.add(_format_scalar(item))
+
+        _populate(tree, data)
+
+        return Panel(
+            tree,
+            title=f"[bold magenta]{self.id}[/bold magenta]",
+            subtitle=f"[dim]{subtitle}[/dim]",
+            border_style="cyan",
+            expand=expand,
+            padding=(1, 2),
+        )
 
     @cached_property
     def cases(self) -> pd.DataFrame:
