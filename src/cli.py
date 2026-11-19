@@ -9,10 +9,12 @@ Usage:
     prl predict /path/to/run_dir
     prl metrics /path/to/run_dir
 """
-
-import click
-from pathlib import Path
 import pickle as pkl
+import re
+from pathlib import Path
+
+import attrs
+import click
 
 
 @click.group()
@@ -60,7 +62,8 @@ def preprocess(
     DATASET_NAME is the name of the dataset (e.g., 'roi_train2').
     Looks up PROJECT_ROOT/training/{name}/dataset.yaml.
     """
-    import attrs
+    
+
     from core.dataset import Dataset
     from core.experiment import Experiment
 
@@ -131,7 +134,7 @@ def train(
     If --run-dir points to an existing run, configs are loaded from disk
     and CLI parameter overrides are ignored (with a warning).
     """
-    import attrs
+
     from core.dataset import Dataset
     from core.experiment import Experiment
 
@@ -459,10 +462,10 @@ def infer(run_dir, subject, data_root, process_all, subjects_file, processes):
     SUBJECT is a subject folder name (resolved under --data-root) or absolute path.
     Use --all to process every subject under --data-root, or --subjects-file for a list.
     """
-    import re
-    from scripts.inference import infer_subject
-    from helpers.paths import load_config
+
     from core.dataset import Dataset
+    from helpers.paths import load_config
+    from src.core.inference import infer_subject
 
     # Resolve data_root from dataset.yaml via the trained run's label_config
     if data_root is None:
@@ -527,8 +530,9 @@ def infer(run_dir, subject, data_root, process_all, subjects_file, processes):
     ]
 
     if processes is not None and len(tasks) > 1:
-        from helpers.parallel import BetterPool
         from tqdm import tqdm
+
+        from helpers.parallel import BetterPool
 
         click.echo(f"Using {processes} parallel processes")
         with BetterPool(processes) as pool:
@@ -547,7 +551,7 @@ def infer(run_dir, subject, data_root, process_all, subjects_file, processes):
 
 def _infer_wrapper(kwargs):
     """Wrapper for BetterPool — unpacks dict args and returns (name, result)."""
-    from scripts.inference import infer_subject
+    from src.core.inference import infer_subject
 
     name = kwargs["subject_dir"].name
     result = infer_subject(**kwargs)
