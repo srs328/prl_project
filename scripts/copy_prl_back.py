@@ -2,12 +2,13 @@ from pathlib import Path
 import os
 import shutil
 import pandas as pd
+from prl.helpers.paths import RESOURCES_DIR
 import subprocess
 
-subject_sessions = pd.read_csv("/home/srs-9/Projects/prl_project/resources/subject-sessions.csv",
+subject_sessions = pd.read_csv(RESOURCES_DIR / "subject-sessions.csv",
                                index_col="sub")
 
-new_index_df = pd.read_csv("/home/srs-9/Projects/prl_project/PRL_spreadsheet-lstai_update_label_reference.csv",
+new_index_df = pd.read_csv(RESOURCES_DIR / "PRL_spreadsheet-lstai_update_label_reference.csv",
                         index_col="subid")
 
 dst_root = Path("/media/smbshare/3Tpioneer_bids")

@@ -5,10 +5,10 @@ import subprocess
 import sys
 import pandas as pd
 
-sys.path.append("/home/srs-9/Projects/prl_project/helpers")
-from shell_interface import open_itksnap_workspace_cmd
+from prl.helpers.shell_interface import open_itksnap_workspace_cmd
+from prl.helpers.paths import RESOURCES_DIR
 
-label_ref = pd.read_csv("/home/srs-9/Projects/prl_project/src/resources/PRL_spreadsheet-lstai_update_label_reference.csv",
+label_ref = pd.read_csv(RESOURCES_DIR / "PRL_spreadsheet-lstai_update_label_reference.csv",
                         index_col="subid")
 
 # dataroot = Path("/media/smbshare/srs-9/prl_project/data")

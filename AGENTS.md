@@ -1,10 +1,10 @@
 # AGENTS.md
 
-This repository contains a PRL segmentation/classification pipeline for detecting perilesional rim lesions in MS MRI. The code is research-oriented and somewhat exploratory, but the main pipeline lives under `src/`.
+This repository contains a PRL segmentation/classification pipeline for detecting perilesional rim lesions in MS MRI. The code is research-oriented and somewhat exploratory, but the main pipeline lives under `src/prl/`.
 
 ## Primary entry point
 
-Use the `prl` CLI defined in `src/cli.py`.
+Use the `prl` CLI defined in `src/prl/cli.py`.
 
 Common commands:
 
@@ -22,7 +22,7 @@ The CLI uses Click. Avoid adding standalone scripts when the behavior belongs in
 
 ## Project roots and config loading
 
-Path roots are centralized in `src/helpers/paths.py`.
+Path roots are centralized in `src/prl/helpers/paths.py`.
 
 Environment variables:
 
@@ -30,39 +30,39 @@ Environment variables:
 * `PRL_DATA_ROOT`: root directory containing subject imaging data
 * `PRL_TRAIN_ROOT`: root directory for training outputs
 
-Use `helpers.paths.load_config()` instead of raw `json.load()` or `yaml.safe_load()` when loading project configs. It supports JSON, JSONC, YAML, and token expansion for `${PROJECT_ROOT}`, `${DATA_ROOT}`, and `${TRAIN_ROOT}`.
+Use `prl.helpers.paths.load_config()` instead of raw `json.load()` or `yaml.safe_load()` when loading project configs. It supports JSON, JSONC, YAML, and token expansion for `${PROJECT_ROOT}`, `${DATA_ROOT}`, and `${TRAIN_ROOT}`.
 
 ## Core architecture
 
 The current pipeline is organized around these classes:
 
-* `core.dataset.Dataset`
+* `prl.core.dataset.Dataset`
 
   * Represents a named dataset such as `roi_train2`.
   * Loads `training/{dataset_name}/dataset.yaml`.
   * Owns dataset-level information: subject list, PRL label dataframe, rater suffix mapping, fold count, test split, and `datalist_template.json`.
   * The only pipeline stage it owns is `create_datalist()`, because fold assignments belong to the dataset.
 
-* `core.experiment.Experiment`
+* `prl.core.experiment.Experiment`
 
   * Represents one training run with fixed preprocessing and training parameters.
   * Owns per-run ROI creation, data preparation, setup, training, prediction, and evaluation.
   * Writes run-local configs and copies the prepared datalist into the run directory.
   * Can reconstruct an existing run with `Experiment.from_run_dir()`.
 
-* `core.grid.ExperimentGrid`
+* `prl.core.grid.ExperimentGrid`
 
   * Handles hyperparameter/grid-search experiments.
   * Expands Cartesian products of preprocessing and training parameters.
   * Creates run directories, writes manifests/configs, and can launch locally or via HPC/LSF.
   * When preprocessing parameters vary, it prepares unique ROI/datalist combinations once.
 
-* `core.configs.PreprocessingConfig`
+* `prl.core.configs.PreprocessingConfig`
 
   * Frozen attrs config for preprocessing parameters: `expand_xy`, `expand_z`, `images`, `processes`, `dry_run`.
   * Provides suffix helpers such as `xy20_z2` and `flair.phase_xy20_z2`.
 
-* `core.configs.AlgoConfig` / `SegResNetConfig`
+* `prl.core.configs.AlgoConfig` / `SegResNetConfig`
 
   * Attrs-based training config.
   * Training parameters flow into MONAI Auto3DSeg through `to_input_dict()`.
@@ -104,7 +104,7 @@ The high-level training flow is:
 
 ## Fresh-subject inference
 
-Fresh-subject inference lives in `src/scripts/inference.py` and is exposed through `prl infer`.
+Fresh-subject inference lives in `src/prl/core/inference.py` and is exposed through `prl infer`.
 
 The inference pipeline:
 
@@ -179,12 +179,12 @@ Do not assume all of these exist before training/prediction/metrics have been ru
 
 ## Development guidelines for agents
 
-* Prefer editing code under `src/`.
+* Prefer editing code under `src/prl/`.
 * Prefer the `prl` CLI over adding one-off scripts.
 * Keep dataset-level logic in `Dataset`.
 * Keep per-run logic in `Experiment`.
 * Keep grid/HPO logic in `ExperimentGrid`.
-* Keep config schema changes in `core.configs`.
+* Keep config schema changes in `prl.core.configs`.
 * Use `attrs.evolve()` when deriving modified config objects.
 * Be careful with path handling: many paths are on SMB/HPC filesystems and can be slow.
 * Avoid repeatedly validating or stat-ing thousands of files unless necessary.

@@ -3,7 +3,7 @@ name: roi_train2
 # Data identity
 subjects: subjects.txt
 suffix_to_use: labels_to_use.csv
-prl_df: ${PROJECT_ROOT}/src/resources/PRL_spreadsheet-lstai_update_label_reference.csv
+prl_df: ${PROJECT_ROOT}/resources/PRL_spreadsheet-lstai_update_label_reference.csv
 # Fold/split config (used once to create datalist_template.json)
 n_folds: 5
 test_split: 0.2

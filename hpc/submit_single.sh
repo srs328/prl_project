@@ -42,7 +42,7 @@ echo "Starting training in RUN_DIR"
 echo "Host: $(hostname)"
 echo "GPU: $(nvidia-smi --query-gpu=name --format=csv,noheader 2>/dev/null || echo 'N/A')"
 cd RUN_DIR
-python PROJECT_ROOT/training/roi_train2/train.py --run-dir RUN_DIR
+prl train roi_train2 --run-dir "RUN_DIR"
 echo "Training completed"
 JOBEOF
 

@@ -41,19 +41,19 @@ Once the current paradigm is lean and clean and extensible with all it's current
 What changed
 New files:
 
-src/core/configs.py — PreprocessingConfig (frozen/hashable) and TrainingConfig attrs classes with validators, evolve() support, and serialization methods
-src/core/dataset.py — Dataset class that loads from dataset.yaml, owns subjects/folds, and exposes create_rois(), create_datalist(), prepare_data(), preprocess()
-src/core/experiment.py — Experiment class with setup(), train(), predict(), evaluate(), and from_run_dir() for reconstructing from existing runs
-src/core/grid.py — ExperimentGrid with generate() (Cartesian product + auto ROI creation) and launch() (local/HPC)
-src/cli.py — Click CLI with preprocess, train, grid, predict, metrics subcommands
+src/prl/core/configs.py — PreprocessingConfig (frozen/hashable) and TrainingConfig attrs classes with validators, evolve() support, and serialization methods
+src/prl/core/dataset.py — Dataset class that loads from dataset.yaml, owns subjects/folds, and exposes create_rois(), create_datalist(), prepare_data(), preprocess()
+src/prl/core/experiment.py — Experiment class with setup(), train(), predict(), evaluate(), and from_run_dir() for reconstructing from existing runs
+src/prl/core/grid.py — ExperimentGrid with generate() (Cartesian product + auto ROI creation) and launch() (local/HPC)
+src/prl/cli.py — Click CLI with preprocess, train, grid, predict, metrics subcommands
 training/roi_train2/dataset.yaml — Single source of truth replacing label_config + monai_config + experiment_config identity fields
 pyproject.toml — Package config with prl console_scripts entry point
 Refactored files:
 
-src/preprocessing/create_rois.py — Extracted create_rois_for_subjects() and prepare_rois(data_root=...), eliminated global dataroot
-src/preprocessing/create_datalist.py — Extracted create_datalist_template() with all explicit params, eliminated global dataroot
-src/preprocessing/prepare_training_data.py — Extracted prepare_training_data() with explicit params, eliminated global dataroot
-src/helpers/paths.py — Added YAML support to load_config(), added load_dataset_config()
+src/prl/preprocessing/create_rois.py — Extracted create_rois_for_subjects() and prepare_rois(data_root=...), eliminated global dataroot
+src/prl/preprocessing/create_datalist.py — Extracted create_datalist_template() with all explicit params, eliminated global dataroot
+src/prl/preprocessing/prepare_training_data.py — Extracted prepare_training_data() with explicit params, eliminated global dataroot
+src/prl/helpers/paths.py — Added YAML support to load_config(), added load_dataset_config()
 training/roi_train2/train.py — Thin wrapper delegating to Experiment.train()
 Key improvements:
 

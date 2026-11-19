@@ -22,17 +22,13 @@ dependencies = [
 ]
 
 [project.scripts]
-prl = "cli:cli"
+prl = "prl.cli:cli"
 
-[tool.setuptools]
-py-modules = ["cli"]
-packages = [
-    "core",
-    "helpers",
-    "preprocessing",
-    "scripts",
-    "analysis",
-    "analysis.metrics",
-    "classification",
-]
-package-dir = {"" = "src"}
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["prl", "prl.*"]
+namespaces = false
+
+[tool.setuptools.package-data]
+"prl.preprocessing" = ["concatImages.sh", "define_bounding_boxes.sh"]
+"prl.scripts" = ["lst_ai.sh"]

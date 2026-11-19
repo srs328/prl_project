@@ -27,6 +27,13 @@ Before running jobs on HPC, ensure:
    - Python 3.x with MONAI and dependencies
    - CUDA (if using GPU acceleration)
 
+3. **Install this checkout in the HPC environment** once, from the checkout root:
+
+   ```bash
+   source .venv/bin/activate
+   python -m pip install -e .
+   ```
+
 ### Single Job Submission
 
 To submit a single training run:
@@ -39,14 +46,10 @@ This creates a temporary job script and submits it via `bsub`.
 
 ### Job Array Submission (HPO)
 
-For hyperparameter optimization, `launch_experiments.py` auto-generates an array submission script:
+The `prl grid` command generates the experiments and an array submission script:
 
 ```bash
-# First, generate the experiments
-python scripts/generate_experiments.py training/roi_train2/experiment_config.json
-
-# Then, submit the array job
-python scripts/launch_experiments.py training/roi_train2/experiment_config.json --hpc
+prl grid /path/to/experiment_config.json --launch --hpc
 ```
 
 This will:

@@ -64,7 +64,7 @@ This is subject to change because I want it to be more organized. In my projects
 put directory structure here when ready
 ```
 
-The main pipeline code lives under `src`. However there was a time when I had the code at the top level, and so some resource files live in the top level `resources` folder and I haven't migrated all those references to `src/resources`, nor have I copied all the files from the former to the latter.
+The main pipeline code lives under `src`. However there was a time when I had the code at the top level, and so some resource files live in the top level `resources` folder and I haven't migrated all those references to `resources`, nor have I copied all the files from the former to the latter.
 
 #### Some notes about legacy top level folders
 
@@ -85,7 +85,7 @@ The main pipeline code lives under `src`. However there was a time when I had th
 
 #### Production code in src
 
-`src/cli.py` is the entry point for anything production level. `src/analysis` contains modules for various post deep learning steps like gathering performance metrics or doing radiomic classification. `src/helpers` has many important helper modules. `src/resources` has a few things that aren't referenced much in code but which I still need sometimes. `src/hpc` has scripts needed for running training on the HPC. `src/preprocessing` is for preprocessing labels and images before deep learning. This includes creating image stacks and cropping segmentations
+`src/prl/cli.py` is the entry point for anything production level. `src/prl/analysis` contains modules for various post deep learning steps like gathering performance metrics or doing radiomic classification. `src/prl/helpers` has many important helper modules. `resources` has a few things that aren't referenced much in code but which I still need sometimes. `src/hpc` has scripts needed for running training on the HPC. `src/prl/preprocessing` is for preprocessing labels and images before deep learning. This includes creating image stacks and cropping segmentations
 
 ### Training work directories
 
@@ -189,7 +189,7 @@ I need to think of a good interface for me to use to vary the parameters in `lab
 
 ~~Below I'll describe how I run everything under the current paradigm. Any part of this pipeline is subject to change if there is room for improvement based on what I have in [[Training Pipeline#Goals]]~~
 
-The description below is out of date in terms of how I actually initiate the steps, but it still accurately describes the key concepts. My current approach all starts in `src/cli.py` and is mostly implemented there and in `src/core` modules.
+The description below is out of date in terms of how I actually initiate the steps, but it still accurately describes the key concepts. My current approach all starts in `src/prl/cli.py` and is mostly implemented there and in `src/prl/core` modules.
 
 #### Step 0: 
 

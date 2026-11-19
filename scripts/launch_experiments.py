@@ -15,9 +15,8 @@ import subprocess
 from pathlib import Path
 from tqdm import tqdm
 
-sys.path.insert(0, str(Path(__file__).parent.parent))
-from helpers.paths import load_config, PROJECT_ROOT
-from helpers.parallel import BetterPool
+from prl.helpers.paths import load_config, PROJECT_ROOT
+from prl.helpers.parallel import BetterPool
 
 
 def make_argument_parser(argv):
@@ -55,17 +54,14 @@ def launch_run_local(run_info, dry_run=False):
     """Launch a single training run locally."""
     run_dir = Path(run_info["run_dir"])
     run_name = Path(run_dir).name
-    train_script = PROJECT_ROOT / "training" / "roi_train2" / "train.py"
-
-    # Change to run directory and run train.py
-    cmd = f"cd {run_dir} && python {train_script} --run-dir {run_dir}"
+    cmd = [sys.executable, "-m", "prl.cli", "train", "roi_train2", "--run-dir", str(run_dir)]
 
     if dry_run:
-        print(f"[DRY RUN] {run_name}: {cmd}")
+        print(f"[DRY RUN] {run_name}: {' '.join(cmd)}")
     else:
         print(f"Launching {run_name}...")
         try:
-            subprocess.run(cmd, shell=True, check=True)
+            subprocess.run(cmd, cwd=run_dir, check=True)
             print(f"  ✓ {run_name} completed")
         except subprocess.CalledProcessError as e:
             print(f"  ✗ {run_name} FAILED: {e}")
@@ -121,7 +117,7 @@ run_dir=${{runs[$LSB_JOBINDEX - 1]}}
 
 echo "Starting training in $run_dir"
 cd "$run_dir"
-python {PROJECT_ROOT}/training/roi_train2/train.py --run-dir "$run_dir"
+prl train roi_train2 --run-dir "$run_dir"
 echo "Training in $run_dir completed"
 """
 

@@ -5,12 +5,12 @@ The version used in roi_train1. The issue here was that if a lesion had a prl, i
 import sys
 import os
 import pandas as pd
+from prl.helpers.paths import RESOURCES_DIR
 from pathlib import Path
 from tqdm import tqdm
 
-sys.path.append("/home/srs-9/Projects/prl_project")
-from helpers.parallel import BetterPool
-from preprocessing.verify_segmentations import verify_prl, verify_lesion
+from prl.helpers.parallel import BetterPool
+from prl.preprocessing.verify_segmentations import verify_prl, verify_lesion
 
 PROCESSES = 12
 EXPAND_XY = 20
@@ -46,7 +46,7 @@ def prepare_segmentation(seg_path):
     if not verify_prl(f"{seg_path.parent}/prl_label_final.nii.gz"):
         raise Exception
 
-from helpers.shell_interface import command
+from prl.helpers.shell_interface import command
 
 # subject_list = sys.argv[1]
 subject_list = "/home/srs-9/Projects/prl_project/training/roi_train1/subjects.txt"
@@ -56,7 +56,7 @@ with open(subject_list, 'r') as f:
     subjects = [int(line.strip()) for line in f.readlines()]
     
 prl_df = pd.read_csv(
-    "/home/srs-9/Projects/prl_project/PRL_spreadsheet-lstai_update_label_reference.csv",
+    RESOURCES_DIR / "PRL_spreadsheet-lstai_update_label_reference.csv",
     index_col="subid"
 )
 

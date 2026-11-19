@@ -3,7 +3,6 @@ Example usage: python scripts/check_prl_case.py /media/smbshare/srs-9/prl_projec
 """
 
 from collections import defaultdict
-import sys
 import os
 import pandas as pd
 from pathlib import Path
@@ -12,11 +11,10 @@ import argparse
 from functools import partial
 import json
 
-sys.path.append("/home/srs-9/Projects/prl_project")
-from helpers.shell_interface import command, run_if_missing, open_itksnap_workspace_cmd, open_fsleyes_cmd
-from helpers.parallel import BetterPool
-from helpers.paths import load_config
-from preprocessing.verify_segmentations import verify_prl, verify_lesion
+from prl.helpers.shell_interface import command, run_if_missing, open_itksnap_workspace_cmd, open_fsleyes_cmd
+from prl.helpers.parallel import BetterPool
+from prl.helpers.paths import load_config
+from prl.preprocessing.verify_segmentations import verify_prl, verify_lesion
 
 
 def main():

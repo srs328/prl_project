@@ -10,47 +10,47 @@ import json
 import pickle as pkl
 from collections import defaultdict
 
-import scripts.compile_run_metrics
-import helpers.utils
-import scripts.inference
+import prl.scripts.compile_run_metrics
+import prl.helpers.utils
+import prl.core.inference
 from IPython.display import clear_output
 
 from reload_recursive import reload_recursive
 from tqdm.notebook import tqdm
 
-from helpers.parallel import BetterPool
+from prl.helpers.parallel import BetterPool
 
 # %%
-reload_recursive(scripts.compile_run_metrics)
+reload_recursive(prl.scripts.compile_run_metrics)
 #TODO Thi
-from scripts.compile_run_metrics import EXPERIMENT_KEYS
+from prl.scripts.compile_run_metrics import EXPERIMENT_KEYS
 
-reload_recursive(scripts.inference)
-from scripts.inference import uncrop_predictions
+reload_recursive(prl.core.inference)
+from prl.core.inference import uncrop_predictions
 
-import classification
-reload_recursive(classification)
-from classification import lesion_analysis as lesion_dx
+import prl.classification
+reload_recursive(prl.classification)
+from prl.classification import lesion_analysis as lesion_dx
 
-reload_recursive(helpers.utils)
-from helpers.utils import dice_score, get_prl_indices
+reload_recursive(prl.helpers.utils)
+from prl.helpers.utils import dice_score, get_prl_indices
 
-import helpers.shell_interface
-reload_recursive(helpers.shell_interface)
-from helpers.shell_interface import open_itksnap_workspace_cmd
+import prl.helpers.shell_interface
+reload_recursive(prl.helpers.shell_interface)
+from prl.helpers.shell_interface import open_itksnap_workspace_cmd
 
-import core.dataset
-reload_recursive(core.dataset)
-from core.dataset import Dataset
+import prl.core.dataset
+reload_recursive(prl.core.dataset)
+from prl.core.dataset import Dataset
 
-import core.experiment
-reload_recursive(core.experiment)
-from core.experiment import Experiment
+import prl.core.experiment
+reload_recursive(prl.core.experiment)
+from prl.core.experiment import Experiment
 from loguru import logger
 
-import scripts
-reload_recursive(scripts)
-from scripts.compile_run_metrics import load_or_cache_run
+import prl.scripts
+reload_recursive(prl.scripts)
+from prl.scripts.compile_run_metrics import load_or_cache_run
 
 # %%
 def get_infer_path(dataset, test_case, experiment_name) -> Path:

@@ -12,11 +12,10 @@ from tqdm import tqdm
 import argparse
 from functools import partial
 
-sys.path.append("/home/srs-9/Projects/prl_project")
-from helpers.shell_interface import command, run_if_missing
-from helpers.parallel import BetterPool
-from helpers.paths import load_config
-from preprocessing.verify_segmentations import verify_prl, verify_lesion
+from prl.helpers.shell_interface import command, run_if_missing
+from prl.helpers.parallel import BetterPool
+from prl.helpers.paths import load_config
+from prl.preprocessing.verify_segmentations import verify_prl, verify_lesion
 
 curr_dir = Path(__file__).parent
 

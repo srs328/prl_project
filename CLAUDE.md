@@ -10,7 +10,7 @@ PRL (Perilesional Rim Lesion) detection pipeline for 3D medical image segmentati
 
 ```bash
 source setup_env.sh  # Sets PRL_PROJECT_ROOT, PRL_DATA_ROOT, PRL_TRAIN_ROOT
-pip install -e .     # Installs `prl` CLI entry point
+python -m pip install -e .  # Installs the prl package and CLI
 ```
 
 Python environment: `~/.virtualenvs/monai/bin/python`
@@ -35,7 +35,7 @@ The existing segresnet template trains on pre-cropped per-lesion NIfTI ROIs. Thi
   - `crop_lesion_rois(subject_data, bboxes, image_keys)` — Batch crop all channels + labels per lesion.
   - `preprocess_subject()` / `preprocess_subjects()` — Orchestrators. The batch version writes per-ROI NIfTIs and generates a segresnet-compatible datalist JSON.
   - `save_bboxes()` / `load_bboxes()` — Read/write the existing `lstai_bounding_boxes_xy{X}_z{Z}.txt` format for backward compat.
-- **`scripts/postprocess.py`** — Fan-in: per-ROI predictions → full-brain volume. Ported from `src/scripts/inference.py::uncrop_predictions()`. Uses `np.maximum` for overlapping ROIs. Has both file-based (`uncrop_predictions()`) and in-memory (`uncrop_from_arrays()`) versions.
+- **`scripts/postprocess.py`** — Fan-in: per-ROI predictions → full-brain volume. Ported from `src/prl/core/inference.py::uncrop_predictions()`. Uses `np.maximum` for overlapping ROIs. Has both file-based (`uncrop_predictions()`) and in-memory (`uncrop_from_arrays()`) versions.
 - **`scripts/{segmenter,train,infer,algo,utils,validate}.py`** — Copied verbatim from `training/algorithm_templates/segresnet/scripts/`.
 - **`configs/preprocessing.yaml`** — ROI extraction params (expand_xy, expand_z, images, etc.).
 - **`configs/hyper_parameters.yaml`** — Copied from segresnet template.
@@ -43,13 +43,13 @@ The existing segresnet template trains on pre-cropped per-lesion NIfTI ROIs. Thi
 
 ### What's deferred
 
-In-pipeline label construction (currently offline with c3d), PersistentDataset caching, MonaiLabel metadata, integration with `src/core/` Experiment/Dataset classes.
+In-pipeline label construction (currently offline with c3d), PersistentDataset caching, MonaiLabel metadata, integration with `src/prl/core/` Experiment/Dataset classes.
 
-## Architecture of src/
+## Architecture of src/prl/
 
-Inside src/ is my pipeline code with my custom "core" library which prepares data for Auto3dSeg's auto_runner, handles parameter configs for auto_runner, and then my custom postprocessing.
+Inside `src/prl/` is the pipeline code with my custom "core" library which prepares data for Auto3dSeg's auto_runner, handles parameter configs for auto_runner, and then my custom postprocessing.
 
-### Core Classes (`src/core/`)
+### Core Classes (`src/prl/core/`)
 
 - **`Dataset`** (`dataset.py`) — Represents a named dataset (e.g., "roi_train2"). Owns subject lists, fold assignments, `create_datalist()`, and a `cases` DataFrame with fully resolved paths. Accepts optional `preprocess` parameter for path resolution (defaults to dataset.yaml defaults). Has `Subject` helper class for per-subject data access.
 - **`Experiment`** (`experiment.py`) — A single training run. Owns ROI creation (`create_rois`), data preparation (`prepare_data`), setup, training, and prediction. `cases` property delegates to `Dataset.cases` and adds an `inference` column with model prediction paths.
@@ -99,9 +99,9 @@ Scripts take a single positional `run_dir` (or dataset name) argument and derive
 
 ## Key Helpers
 
-- `src/helpers/paths.py` — `load_config()`, centralized path constants
-- `src/helpers/shell_interface.py` — `command()`, `run_if_missing()` for shell execution with dry-run support
-- `src/helpers/parallel.py` — `BetterPool` for graceful multiprocessing
+- `src/prl/helpers/paths.py` — `load_config()`, centralized path constants
+- `src/prl/helpers/shell_interface.py` — `command()`, `run_if_missing()` for shell execution with dry-run support
+- `src/prl/helpers/parallel.py` — `BetterPool` for graceful multiprocessing
 - `my_python_utils` — User's personal utility package (located at ~/python/my_python_utils.py; it's on my PYTHONPATH)
 
 ## Data Layout
@@ -126,31 +126,17 @@ $TRAIN_ROOT/roi_train2/run2/
 
 ```
 src/
-├── cli.py                    # Click CLI entry point
-├── core/
-│   ├── configs.py            # PreprocessingConfig, AlgoConfig, SegResNetConfig, etc. (attrs)
-│   ├── dataset.py            # Dataset class (owns cases DataFrame + Subject)
-│   ├── experiment.py         # Experiment class (training runs, inference paths)
-│   └── grid.py               # ExperimentGrid class
-├── analysis/
-│   ├── __init__.py           # Public API
-│   ├── loaders.py            # load_run_data() — build experiment data dicts
-│   ├── _cache.py             # Orthogonal caching layer for run data
-│   ├── compile.py            # compile_all_metrics, compile_experiment_metrics, compile_grid_metrics
-│   └── metrics/
-│       ├── __init__.py       # Re-exports from submodules
-│       ├── performance.py    # confusion matrix, derived metrics, casewise stats, performance_metrics()
-│       ├── mlflow.py         # MLflow metric loading, aggregation, mlflow_metrics()
-│       └── display.py        # format_param_value, rename_metric, order_columns
-├── classification/
-│   ├── classify.py           # PRL classification
-│   ├── geometry.py           # convex hull, enclosing sphere radius
-│   ├── lesion_analysis.py    # rim extraction, PRL case analysis, bounding box parsing
-│   └── plotting.py           # 3D visualization
-├── helpers/                  # paths.py, shell_interface.py, parallel.py, utils.py
-├── preprocessing/            # create_rois.py, create_datalist.py, prepare_training_data.py
-├── resources/
-└── scripts/                  # Legacy shims (re-export from analysis.*), inference, fold predictions
+└── prl/
+    ├── cli.py                # Click CLI entry point
+    ├── core/                 # Datasets, experiments, grids, inference
+    ├── helpers/              # Path and shell utilities
+    ├── preprocessing/       # ROI extraction and training datalists
+    ├── scripts/             # Supporting command-line modules
+    ├── analysis/
+    │   └── metrics/
+    └── classification/      # Lesion analysis, geometry, and plotting
+
+resources/                    # Workspace data and run registry
 
 training/roi_train2/
 ├── dataset.yaml              # Single source of truth for dataset config
@@ -161,11 +147,11 @@ training/roi_train2/
 
 ## Data Analysis
 
-analysis package
+`prl.analysis` package
 
 ## HPO
 
-`ExperimentGrid` in `src/core/grid.py` handles HPO. Define an experiment YAML:
+`ExperimentGrid` in `src/prl/core/grid.py` handles HPO. Define an experiment YAML:
 
 ```yaml
 dataset: roi_train2

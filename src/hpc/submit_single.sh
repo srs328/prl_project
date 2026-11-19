@@ -38,7 +38,7 @@ source PROJECT_ROOT/hpc/setup_env_hpc.sh
 
 echo "Starting training in RUN_DIR"
 cd RUN_DIR
-python PROJECT_ROOT/training/roi_train2/train.py --run-dir RUN_DIR
+prl train roi_train2 --run-dir "RUN_DIR"
 echo "Training completed"
 JOBEOF
 

@@ -5,7 +5,7 @@ import shutil
 from pathlib import Path
 import os
 
-from helpers.paths import DATA_ROOT
+from prl.helpers.paths import DATA_ROOT
 
 # %%
 train_home = Path("/home/srs-9/Projects/prl_project/training/full_brain")

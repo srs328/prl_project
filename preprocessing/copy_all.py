@@ -1,7 +1,7 @@
 from pathlib import Path
 import shutil
 import pandas as pd
-from helpers.paths import load_config, PROJECT_ROOT, DATA_ROOT
+from prl.helpers.paths import load_config, PROJECT_ROOT, DATA_ROOT
 from tqdm import tqdm
 import subprocess
 

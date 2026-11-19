@@ -1,7 +1,7 @@
 from pathlib import Path
 import shutil
 import pandas as pd
-from helpers.paths import load_config, PROJECT_ROOT, DATA_ROOT
+from prl.helpers.paths import load_config, PROJECT_ROOT, DATA_ROOT
 
 label_config = load_config(PROJECT_ROOT / "training/roi_train2/label_config.jsonc")
 new_index_df = pd.read_csv(label_config["prl_df"], index_col="subid")

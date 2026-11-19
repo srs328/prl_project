@@ -1,19 +1,15 @@
 #!/bin/bash
 # Setup environment variables for local PRL pipeline execution
-# Source this before running any pipeline scripts:
-#   source setup_env.sh
+# Source this template from the checkout:
+#   source resources/setup_env_template.sh
 
-export PRL_PROJECT_ROOT="/home/srs-9/Projects/prl_project"
-export PRL_DATA_ROOT="/media/smbshare/srs-9/prl_project/data"
-export PRL_TRAIN_ROOT="/media/smbshare/srs-9/prl_project/training"
-export PRL_PROJECT_ROOT="/home/shridhar.singh9-umw/prl_project/prl_project"
-export PRL_DATA_ROOT="/home/shridhar.singh9-umw/prl_project/data"
-export PRL_TRAIN_ROOT="/home/shridhar.singh9-umw/prl_project/training"
-export PRL_TRAIN_HOME="/home/shridhar.singh9-umw/prl_project/prl_project/training"
+export PRL_PROJECT_ROOT="${PRL_PROJECT_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
+export PRL_DATA_ROOT="${PRL_DATA_ROOT:-/media/smbshare/srs-9/prl_project/data}"
+export PRL_TRAIN_ROOT="${PRL_TRAIN_ROOT:-/media/smbshare/srs-9/prl_project/training}"
+export PRL_TRAIN_HOME="${PRL_TRAIN_HOME:-$PRL_PROJECT_ROOT/training}"
 
-source $PRL_PROJECT_ROOT/.venv/bin/activate
-export PYTHONPATH="${PRL_PROJECT_ROOT}/src:$PYTHONPATH"
-
+# Install this checkout from its root with python -m pip install -e . once.
+source "${PRL_VENV:-$PRL_PROJECT_ROOT/.venv}/bin/activate"
 
 echo "PRL Pipeline environment configured:"
 echo "  PRL_PROJECT_ROOT=$PRL_PROJECT_ROOT"
