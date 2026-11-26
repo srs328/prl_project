@@ -1,0 +1,27 @@
+name: roi_train1
+
+# Data identity
+data_root: /media/smbshare/srs-9/prl_project/data-roi_train1
+subjects: subjects.txt
+suffix_to_use: labels_to_use.csv
+prl_df: ${PROJECT_ROOT}/src/resources/PRL_spreadsheet-lstai_update_label_reference.csv
+# Fold/split config (used once to create datalist_template.json)
+n_folds: 5
+test_split: 0.2
+
+# Preprocessing defaults (overridable by ExperimentGrid)
+defaults:
+  images: [flair, phase]
+  expand_xy: 20
+  expand_z: 2
+
+  # Training defaults (overridable per-experiment)
+  training:
+    algo: segresnet
+    learning_rate: 0.0002
+    num_images_per_batch: 1
+    num_epochs: 250
+    num_warmup_epochs: 1
+    num_epochs_per_validation: 1
+    roi_size: [44, 44, 8]
+    crop_ratios: null

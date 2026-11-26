@@ -1,0 +1,5 @@
+/media/smbshare/srs-9/prl_project/training/test_train3/imagesTs/sub2095.nii.gz
+/media/smbshare/srs-9/prl_project/training/test_train3/imagesTs/sub2087.nii.gz
+/media/smbshare/srs-9/prl_project/training/test_train3/imagesTs/sub2086.nii.gz
+/media/smbshare/srs-9/prl_project/training/test_train3/imagesTs/sub2060.nii.gz
+/media/smbshare/srs-9/prl_project/training/test_train3/imagesTs/sub2041.nii.gz

@@ -1,0 +1,12 @@
+{
+    "save_dir": "/media/smbshare/srs-9/prl_project/training/test_train3/labelsTs",
+    "dataroot": "/media/smbshare/srs-9/prl_project/training/test_train3/imagesTs",
+    "network_bundle_path": "/home/srs-9/Projects/prl_project/training_work_dirs/test_train3_segresnet",
+    "task_name": "test_train3_PRL",
+    "save_params": {
+        "output_postfix": "",
+        "separate_folder": false
+    },
+
+    "files": "inference_files2.txt"
+}

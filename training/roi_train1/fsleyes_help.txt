@@ -1,0 +1,1067 @@
+FSLeyes version 1.12.6
+Usage: fsleyes [options] file [displayOpts] file [displayOpts] ...
+FSLeyes - the FSL image viewer.
+Use the '--scene' option to load a saved layout (default, defaultlb, default3d, melodic, feat, ortho, 3d, lightbox, mrs).
+If no '--scene' is specified, a default layout is shown or the
+previous layout is restored. If a script is provided via
+the '--runscript' argument, it is assumed that the script sets
+up the scene.
+Main options:
+  -r SCRIPTFILE, --runscript SCRIPTFILE
+                        Run custom FSLeyes script
+  -cs, --cliserver      Pass all command-line arguments to a single FSLeyes
+                        instance
+  -h, --help            Display basic FSLeyes options and exit
+  -fh, --fullhelp       Display all FSLeyes options and exit
+  -V, --version         Print the current version and exit
+  -S, --skipfslcheck    Skip $FSLDIR check/warning
+  -U, --updatecheck     Check for FSLeyes updates on startup
+  -gl MAJOR MINOR, --glversion MAJOR MINOR
+                        Desired (major, minor) OpenGL compatibility version
+  -s SCENE, --scene SCENE
+                        Scene to show
+  -vl X Y Z, --voxelLoc X Y Z
+                        Location to show (voxel coordinates of first overlay)
+  -wl X Y Z, --worldLoc X Y Z
+                        Location to show (world coordinates, takes precedence
+                        over --voxelLoc)
+  -o INDEX, --selectedOverlay INDEX
+                        Selected overlay (index, starting from 0)
+  -u, --ungroupOverlays
+                        Do not group overlays via the chainlink button
+  -ad, --autoDisplay    Automatically configure overlay display settings
+                        (unless any display settings are specified)
+  -ds DISPLAYSPACE, --displaySpace DISPLAYSPACE
+                        Space in which all overlays are displayed - can be
+                        "world", "scaledVoxels", "fslview", or a NIFTI image.
+  -no, --neuroOrientation
+                        Display images in neurological orientation (default:
+                        radiological)
+  -how, --hideOrientationWarnings
+                        Hides location panel warnings when displaying images
+                        of different FOVs or orientations.
+  -std, --standard      Add the MNI152 2mm standard image as an underlay (only
+                        if $FSLDIR is set).
+  -stdb, --standard_brain
+                        Add the MNI152 brain-extracted 2mm standard image as
+                        an underlay (only if $FSLDIR is set).
+  -std1mm, --standard1mm
+                        Add the MNI152 1mm standard image as an underlay (only
+                        if $FSLDIR is set).
+  -std1mmb, --standard1mm_brain
+                        Add the MNI152 brain-extracted 1mm standard image as
+                        an underlay (only if $FSLDIR is set).
+  -idr LO HI, --initialDisplayRange LO HI
+                        Initial display range to use for volume overlays,
+                        expressed as (low, high) intensity values. The values
+                        can be expresseed as percentiles by appending a "%" to
+                        the high value.
+  -cy, --cmapCycle      Automatically assign a different colour map to each
+                        volume overlay (unless one is explicitly specified).
+  -b, --bigmem          Load all images into memory, regardless of size.
+  -fs FONTSIZE, --fontSize FONTSIZE
+                        Application font size
+  -nb, --notebook       Start the Jupyter notebook server
+  -nbf NOTEBOOKFILE, --notebookFile NOTEBOOKFILE
+                        Start the Jupyter notebook server and open the
+                        specified notebook file.
+  -nbp NOTEBOOKPORT, --notebookPort NOTEBOOKPORT
+                        Jupyter notebook server port
+  -nbb, --noBrowser     Start the jupyter notebook server, but do not open the
+                        Jupyter notebook home page in a web browser.
+  -a ANNOTATIONS, --annotations ANNOTATIONS
+                        Load annotations from file (only applied to ortho
+                        views)
+  -ni, --no3DInterp     Do not automatically enable interpolation for volume
+                        overlays when opening a 3D view
+  -ap, --showAllPlugins
+                        Expose plugins from third party packages
+  -an, --autoName       Automatically give each overlay a unique name based on
+                        its file path
+Scene options:
+  These settings are applied to every orthographic, lightbox, and 3D view.
+  -hc, --hideCursor     Do not display the green cursor highlighting the
+                        current location
+  -cw REAL, --cursorWidth REAL
+                        Location cursor thickness
+  -bg R G B, --bgColour R G B
+                        Canvas background colour (0-1)
+  -fg R G B, --fgColour R G B
+                        Canvas foreground colour (0-1)
+  -cc R G B, --cursorColour R G B
+                        Cursor location colour (0-1)
+  -cb, --showColourBar  Show colour bar
+  -cbl {top,bottom,left,right}, --colourBarLocation {top,bottom,left,right}
+                        Colour bar location
+  -cbs {top-left,bottom-right}, --colourBarLabelSide {top-left,bottom-right}
+                        Colour bar label orientation
+  -cbi PERC, --colourBarSize PERC
+                        Colour bar size (%)
+  -ls INT, --labelSize INT
+                        Orientation/colour bar label font size (4-96, default:
+                        12)
+  -p {1,2,3}, --performance {1,2,3}
+                        Rendering performance (1=fastest, 2=faster, 3=best
+                        looking)
+  -ms, --movieSync      Toggle the canvas refresh strategy in movie mode.
+Ortho display options:
+  These settings are applied to every ortho view.
+  -xz PERC, --xzoom PERC
+                        X canvas zoom (100-5000, default: 100)
+  -yz PERC, --yzoom PERC
+                        Y canvas zoom (100-5000, default: 100)
+  -zz PERC, --zzoom PERC
+                        Z canvas zoom (100-5000, default: 100)
+  -cg, --cursorGap      Show a gap at the cursor centre
+  -hl, --hideLabels     Hide orientation labels
+  -sl {no,X,Y,Z}, --showLocation {no,X,Y,Z}
+                        Show cursor location coordinates
+  -lo {horizontal,vertical,grid}, --layout {horizontal,vertical,grid}
+                        Canvas layout
+  -xh, --hidex          Hide the X canvas
+  -yh, --hidey          Hide the Y canvas
+  -zh, --hidez          Hide the Z canvas
+  -ixv, --invertXVertical
+                        Invert the X canvas along the vertical axis
+  -ixh, --invertXHorizontal
+                        Invert the X canvas along the horizontal axis
+  -iyv, --invertYVertical
+                        Invert the Y canvas along the vertical axis
+  -iyh, --invertYHorizontal
+                        Invert the Y canvas along the horizontal axis
+  -izv, --invertZVertical
+                        Invert the Z canvas along the vertical axis
+  -izh, --invertZHorizontal
+                        Invert the Z canvas along the horizontal axis
+  -xc Y Z, --xcentre Y Z
+                        X canvas centre ([-1, 1])
+  -yc X Z, --ycentre X Z
+                        Y canvas centre ([-1, 1])
+  -zc X Y, --zcentre X Y
+                        Z canvas centre ([-1, 1])
+LightBox display options:
+  These settings are applied to every lightbox view.
+  -zx {2,0,1,z,Z,x,X,y,Y}, --zaxis {2,0,1,z,Z,x,X,y,Y}
+                        Z axis
+  -zr LO HI, --zrange LO HI
+                        Slice range, specified as proportions between 0 and 1,
+                        or as voxel coordinates if --asVoxels is provided.
+  -ss REAL, --sliceSpacing REAL
+                        Slice spacing, specified as a proportion between 0 and
+                        1, or as voxel coordinates if --asVoxels is provided.
+  -sa {centre,start}, --sampleSlices {centre,start}
+                        Control how slices are sampled (either "centre" or
+                        "start").
+  -sg, --showGridLines  Show grid lines
+  -hs, --highlightSlice
+                        Highlight current slice
+  -sp {none,voxel,world}, --labelSpace {none,voxel,world}
+                        Show slice locations in this coordinate system.
+  -rs, --reverseSlices  Display slices from high to low Z value, instead of
+                        low to high.
+  -so PERC, --sliceOverlap PERC
+                        Overlap adjacent slices by this much, specified as a
+                        percentage.
+  -ro, --reverseOverlap
+                        Draw lower slices on top of higher slices instead of
+                        higher on top of lower.
+  -av, --asVoxels       Causes the --zrange and --sliceSpacing settings to be
+                        interpreted as voxel coordinates. Has no effect if
+                        --zrange is not provided.
+  -ns N, --numSlices N  Number of slices. Ignored if --sliceSpacing is
+                        specified.
+  -ll, --sliceLocation  Show location in world coordinates on each slice.
+                        Ignored if --labelSpace is specified
+3D display options:
+  These settings are applied to every 3D view.
+  -z PERC, --zoom PERC  Zoom (1-5000, default: 100)
+  -he, --hideLegend     Hide the orientation legend
+  -dl, --disableLight   Disable light effect
+  -lp N N N, --lightPos N N N
+                        Light position, as XYZ rotations in degrees (-180 -
+                        180)
+  -ld REAL, --lightDistance REAL
+                        Distance of light source from centre of display
+                        bounding box (0.5 - 10)
+  -off N N, --offset N N
+                        Offset from centre ([-1, 1])
+  -rot YAW PITCH ROLL, --cameraRotation YAW PITCH ROLL
+                        Rotation (degrees), specified as yaw (rotation about
+                        the vertical axis), pitch (rotation about the
+                        horizontal axis) and roll (rotation about the depth
+                        axis).
+###############
+Display options
+###############
+  Each display option will be applied to the overlay which is
+  listed before that option. Passing any display option for an
+  overlay will override the '--autoDisplay' setting for that
+  overlay.
+  -n NAME, --name NAME  Overlay name
+  -d, --disabled        Disable (hide) overlay
+  -ot TYPE, --overlayType TYPE
+                        Overlay type
+  -a PERC, --alpha PERC
+                        Opacity (0-100, default: 100)
+  -b PERC, --brightness PERC
+                        Brightness (0-100, default: 50)
+  -c PERC, --contrast PERC
+                        Contrast (0-100, default: 50)
+Available overlay types: complex, label, linevector, mask, mesh, mip, rgb,
+rgbvector, sh, tensor, tractogram, volume
+##############
+Volume options
+##############
+  These options are applied to 'volume' overlays.
+  -ll, --unlinkLowRanges
+                        Unlink low display/clipping ranges
+  -lh, --linkHighRanges
+                        Link high display/clipping ranges
+  -or LO HI, --overrideDataRange LO HI
+                        Override data range. Setting this effectively causes
+                        FSLeyes to ignore the actual image data range, and use
+                        this range instead. This is useful for images with a
+                        large data range that is driven by outliers.
+  -cm CMAP, --cmap CMAP
+                        Colour map
+  -nc CMAP, --negativeCmap CMAP
+                        Colour map for negative values
+  -un, --useNegativeCmap
+                        Use negative colour map (automatically enabled if
+                        --negativeCmap is specified)
+  -dr LO HI, --displayRange LO HI
+                        Display range. Setting this will override
+                        brightnes/contrast settings. For volume overlays only:
+                        append a "%" to the high value to set range by
+                        percentile.
+  -cr LO HI, --clippingRange LO HI
+                        Clipping range. Setting this will override the low
+                        display range (unless low ranges are unlinked). For
+                        volume overlays only: append a "%" to the high value
+                        to clip by percentile.
+  -mr LO HI, --modulateRange LO HI
+                        Modulate range. Sets the range by which opacity should
+                        be modulated by. For volume overlays only: append a
+                        "%" to the high value to modulate by percentile.
+  -g REAL, --gamma REAL
+                        Gamma correction [-1-+1, default: 0]
+  -ls, --logScale       Logarithmic scaling
+  -ch {R,G,B,A}, --channel {R,G,B,A}
+                        Channel to display, for RGB(A) images
+  -ic, --invertClipping
+                        Invert clipping
+  -cmr INT, --cmapResolution INT
+                        Colour map resolution
+  -in {none,linear,spline}, --interpolation {none,linear,spline}
+                        Interpolation
+  -inc, --interpolateCmaps
+                        Interpolate between colours in colour maps
+  -i, --invert          Invert colour map
+  -ma, --modulateAlpha  Modulate alpha by intensity
+  -ima, --invertModulateAlpha
+                        no help
+  -ns INT, --numSteps INT
+                        3D only. Maximum number of samples per pixel
+  -bf REAL, --blendFactor REAL
+                        3D only Sample blending factor [0.001-1, default: 0.1]
+  -bi, --noBlendByIntensity
+                        3D only. Disable modulation of sample colours by voxel
+                        intensity when blending.
+  -s INT, --smoothing INT
+                        3D only. Smoothing radius [0-10, default: 0]
+  -r INT, --resolution INT
+                        3D only. Resolution/quality [1-100, default: 100]
+  -nis INT, --numInnerSteps INT
+                        3D/GL14 only. Number of samples to run on GPU
+  -m {intersection,union,complement}, --clipMode {intersection,union,complement}
+                        3D only. How to apply the clipping plane(s).
+  -v INT, --volume INT  Volume (index, starting from 0).
+  -cl FILE, --clipImage FILE
+                        Image containing clipping values (defaults to the
+                        image itself)
+  -mi FILE, --modulateImage FILE
+                        Image containing modulation values (defaults to the
+                        image itself)
+  -cp POS AZI INC, --clipPlane POS AZI INC
+                        3D only. Add a clipping plane. Requires three values:
+                        position [0-100], azimuth [-180, 180], inclination
+                        [-180, 180]. Can be used up to 10 times.
+  -x IDX4,IDX5,..., --index IDX4,IDX5,...
+                        Index into each dimension, for images with more than
+                        four dimensions, Specify as a comma-separated list of
+                        indices (starting from 0), where the first value is
+                        the index into the fourth dimension.
+Available colour maps: blue, blue-lightblue, brain_colours_1hot,
+brain_colours_1hot_iso, brain_colours_2winter, brain_colours_2winter_iso,
+brain_colours_3warm, brain_colours_3warm_iso, brain_colours_4cool,
+brain_colours_4cool_iso, brain_colours_5redyell, brain_colours_5redyell_iso,
+brain_colours_6bluegrn, brain_colours_6bluegrn_iso, brain_colours_actc,
+brain_colours_actc_iso, brain_colours_blackbdy, brain_colours_blackbdy_iso,
+brain_colours_bluegray, brain_colours_bluegray_iso, brain_colours_bone,
+brain_colours_bone_iso, brain_colours_cardiac, brain_colours_cardiac_iso,
+brain_colours_cortex, brain_colours_cortex_iso, brain_colours_diverging_bgy,
+brain_colours_diverging_bgy_iso, brain_colours_diverging_bwr,
+brain_colours_diverging_bwr_iso, brain_colours_flow, brain_colours_flow_iso,
+brain_colours_french, brain_colours_french_iso, brain_colours_ge_color,
+brain_colours_ge_color_iso, brain_colours_gold, brain_colours_gold_iso,
+brain_colours_gooch, brain_colours_gooch_iso, brain_colours_greengray,
+brain_colours_greengray_iso, brain_colours_hotiron, brain_colours_hotiron_iso,
+brain_colours_nih, brain_colours_nih_fire, brain_colours_nih_fire_iso,
+brain_colours_nih_ice, brain_colours_nih_ice_iso, brain_colours_nih_iso,
+brain_colours_nih_new, brain_colours_nih_new_iso, brain_colours_pink,
+brain_colours_pink_iso, brain_colours_rainramp, brain_colours_rainramp_iso,
+brain_colours_redgray, brain_colours_redgray_iso, brain_colours_spectrum,
+brain_colours_spectrum_iso, brain_colours_surface, brain_colours_surface_iso,
+brain_colours_x_hot, brain_colours_x_hot_iso, brain_colours_x_rain,
+brain_colours_x_rain_iso, cool, copper, cortical, green, greyscale, hot, hsv,
+pink, random, red, red-yellow, render1, render1t, render2, render2t, render3,
+retino, subcortical, yellow. You can also specify any matplotlib colour map,
+or a colour map file.
+#####################
+RGB(A) volume options
+#####################
+  These options are applied to 'rgb' overlays.
+  -in {none,linear,spline}, --interpolation {none,linear,spline}
+                        Interpolation
+  -rc R G B, --rColour R G B
+                        R colour (0-1)
+  -gc R G B, --gColour R G B
+                        G colour (0-1)
+  -bc R G B, --bColour R G B
+                        B colour (0-1)
+  -rs, --suppressR      Suppress R channel
+  -gs, --suppressG      Suppress G channel
+  -bs, --suppressB      Suppress B channel
+  -as, --suppressA      Suppress A channel
+  -sm {white,black,transparent}, --suppressMode {white,black,transparent}
+                        Replace suppressed channels with 'white' (default),
+                        'black', or 'transparent'.
+  -v INT, --volume INT  Volume (index, starting from 0).
+  -x IDX4,IDX5,..., --index IDX4,IDX5,...
+                        Index into each dimension, for images with more than
+                        four dimensions, Specify as a comma-separated list of
+                        indices (starting from 0), where the first value is
+                        the index into the fourth dimension.
+######################
+Complex volume options
+######################
+  These options are applied to 'complex' overlays.
+  -co {real,imag,mag,phase}, --component {real,imag,mag,phase}
+                        Component to display - real (default), imaginary,
+                        magnitude, or phase.
+  -ll, --unlinkLowRanges
+                        Unlink low display/clipping ranges
+  -lh, --linkHighRanges
+                        Link high display/clipping ranges
+  -or LO HI, --overrideDataRange LO HI
+                        Override data range. Setting this effectively causes
+                        FSLeyes to ignore the actual image data range, and use
+                        this range instead. This is useful for images with a
+                        large data range that is driven by outliers.
+  -cm CMAP, --cmap CMAP
+                        Colour map
+  -nc CMAP, --negativeCmap CMAP
+                        Colour map for negative values
+  -un, --useNegativeCmap
+                        Use negative colour map (automatically enabled if
+                        --negativeCmap is specified)
+  -dr LO HI, --displayRange LO HI
+                        Display range. Setting this will override
+                        brightnes/contrast settings. For volume overlays only:
+                        append a "%" to the high value to set range by
+                        percentile.
+  -cr LO HI, --clippingRange LO HI
+                        Clipping range. Setting this will override the low
+                        display range (unless low ranges are unlinked). For
+                        volume overlays only: append a "%" to the high value
+                        to clip by percentile.
+  -mr LO HI, --modulateRange LO HI
+                        Modulate range. Sets the range by which opacity should
+                        be modulated by. For volume overlays only: append a
+                        "%" to the high value to modulate by percentile.
+  -g REAL, --gamma REAL
+                        Gamma correction [-1-+1, default: 0]
+  -ls, --logScale       Logarithmic scaling
+  -ch {R,G,B,A}, --channel {R,G,B,A}
+                        Channel to display, for RGB(A) images
+  -ic, --invertClipping
+                        Invert clipping
+  -cmr INT, --cmapResolution INT
+                        Colour map resolution
+  -in {none,linear,spline}, --interpolation {none,linear,spline}
+                        Interpolation
+  -inc, --interpolateCmaps
+                        Interpolate between colours in colour maps
+  -i, --invert          Invert colour map
+  -ma, --modulateAlpha  Modulate alpha by intensity
+  -ima, --invertModulateAlpha
+                        no help
+  -ns INT, --numSteps INT
+                        3D only. Maximum number of samples per pixel
+  -bf REAL, --blendFactor REAL
+                        3D only Sample blending factor [0.001-1, default: 0.1]
+  -bi, --noBlendByIntensity
+                        3D only. Disable modulation of sample colours by voxel
+                        intensity when blending.
+  -s INT, --smoothing INT
+                        3D only. Smoothing radius [0-10, default: 0]
+  -r INT, --resolution INT
+                        3D only. Resolution/quality [1-100, default: 100]
+  -nis INT, --numInnerSteps INT
+                        3D/GL14 only. Number of samples to run on GPU
+  -m {intersection,union,complement}, --clipMode {intersection,union,complement}
+                        3D only. How to apply the clipping plane(s).
+  -v INT, --volume INT  Volume (index, starting from 0).
+  -cl FILE, --clipImage FILE
+                        Image containing clipping values (defaults to the
+                        image itself)
+  -mi FILE, --modulateImage FILE
+                        Image containing modulation values (defaults to the
+                        image itself)
+  -cp POS AZI INC, --clipPlane POS AZI INC
+                        3D only. Add a clipping plane. Requires three values:
+                        position [0-100], azimuth [-180, 180], inclination
+                        [-180, 180]. Can be used up to 10 times.
+  -x IDX4,IDX5,..., --index IDX4,IDX5,...
+                        Index into each dimension, for images with more than
+                        four dimensions, Specify as a comma-separated list of
+                        indices (starting from 0), where the first value is
+                        the index into the fourth dimension.
+Available colour maps: blue, blue-lightblue, brain_colours_1hot,
+brain_colours_1hot_iso, brain_colours_2winter, brain_colours_2winter_iso,
+brain_colours_3warm, brain_colours_3warm_iso, brain_colours_4cool,
+brain_colours_4cool_iso, brain_colours_5redyell, brain_colours_5redyell_iso,
+brain_colours_6bluegrn, brain_colours_6bluegrn_iso, brain_colours_actc,
+brain_colours_actc_iso, brain_colours_blackbdy, brain_colours_blackbdy_iso,
+brain_colours_bluegray, brain_colours_bluegray_iso, brain_colours_bone,
+brain_colours_bone_iso, brain_colours_cardiac, brain_colours_cardiac_iso,
+brain_colours_cortex, brain_colours_cortex_iso, brain_colours_diverging_bgy,
+brain_colours_diverging_bgy_iso, brain_colours_diverging_bwr,
+brain_colours_diverging_bwr_iso, brain_colours_flow, brain_colours_flow_iso,
+brain_colours_french, brain_colours_french_iso, brain_colours_ge_color,
+brain_colours_ge_color_iso, brain_colours_gold, brain_colours_gold_iso,
+brain_colours_gooch, brain_colours_gooch_iso, brain_colours_greengray,
+brain_colours_greengray_iso, brain_colours_hotiron, brain_colours_hotiron_iso,
+brain_colours_nih, brain_colours_nih_fire, brain_colours_nih_fire_iso,
+brain_colours_nih_ice, brain_colours_nih_ice_iso, brain_colours_nih_iso,
+brain_colours_nih_new, brain_colours_nih_new_iso, brain_colours_pink,
+brain_colours_pink_iso, brain_colours_rainramp, brain_colours_rainramp_iso,
+brain_colours_redgray, brain_colours_redgray_iso, brain_colours_spectrum,
+brain_colours_spectrum_iso, brain_colours_surface, brain_colours_surface_iso,
+brain_colours_x_hot, brain_colours_x_hot_iso, brain_colours_x_rain,
+brain_colours_x_rain_iso, cool, copper, cortical, green, greyscale, hot, hsv,
+pink, random, red, red-yellow, render1, render1t, render2, render2t, render3,
+retino, subcortical, yellow. You can also specify any matplotlib colour map,
+or a colour map file.
+############
+Mask options
+############
+  These options are applied to 'mask' overlays.
+  -mc R G B, --maskColour R G B
+                        Colour (0-1)
+  -i, --maskInvert      Invert
+  -t LO HI, --threshold LO HI
+                        Threshold
+  -o, --outline         Show mask outline
+  -w INT, --outlineWidth INT
+                        Mask outline width (1-10, default: 2)
+  -in {none,linear,spline}, --interpolation {none,linear,spline}
+                        Interpolation
+  -v INT, --volume INT  Volume (index, starting from 0).
+  -x IDX4,IDX5,..., --index IDX4,IDX5,...
+                        Index into each dimension, for images with more than
+                        four dimensions, Specify as a comma-separated list of
+                        indices (starting from 0), where the first value is
+                        the index into the fourth dimension.
+#############
+Label options
+#############
+  These options are applied to 'label' overlays.
+  -l LUT, --lut LUT     Label image LUT
+  -o, --outline         Show label outlines
+  -w INT, --outlineWidth INT
+                        Label outline width (proportion of one voxel; 0-1,
+                        default: 0.25)
+  -v INT, --volume INT  Volume (index, starting from 0).
+  -x IDX4,IDX5,..., --index IDX4,IDX5,...
+                        Index into each dimension, for images with more than
+                        four dimensions, Specify as a comma-separated list of
+                        indices (starting from 0), where the first value is
+                        the index into the fourth dimension.
+Available lookup tables: freesurfercolorlut, harvard-oxford-cortical, harvard-
+oxford-subcortical, melodic-classes, mgh-cma-freesurfer, paul_tol_accessible,
+random, random_big. You can also specify a lookup table file.
+############
+Mesh options
+############
+  These options are applied to 'mesh' overlays.
+  -vd FILE, --vertexData FILE
+                        A file (e.g. Freesurfer .curv file, GIFTI functional,
+                        shape, label, or time series file, or a plain text
+                        file) containing one or more values for each vertex in
+                        the mesh.
+  -vdi INT, --vertexDataIndex INT
+                        If the vertex data (-vd/--vertexData) file contains
+                        more than one value per vertex, specify the the index
+                        of the data to display.
+  -vs FILE, --vertexSet FILE
+                        A file containing an additional (compatible) mesh
+                        definition.
+  -md FILE, --modulateData FILE
+                        Vertex data file by which to modulate transparency by.
+  -mc R G B, --colour R G B
+                        Mesh colour (0-1)
+  -o, --outline         Show mesh outline
+  -w REAL, --outlineWidth REAL
+                        Mesh outline width (0-20, default: 2)
+  -s {affine,pixdim,pixdim-flip,id,torig}, --coordSpace {affine,pixdim,pixdim-flip,id,torig}
+                        Mesh vertex coordinate space (relative to reference
+                        image)
+  -ul, --useLut         Use a lookup table instead of colour map(S) when
+                        colouring the mesh with vertex data.
+  -l LUT, --lut LUT     Lookup table to use (see -ul/--useLut).
+  -ll, --unlinkLowRanges
+                        Unlink low display/clipping ranges
+  -lh, --linkHighRanges
+                        Link high display/clipping ranges
+  -un, --useNegativeCmap
+                        Use negative colour map (automatically enabled if
+                        --negativeCmap is specified)
+  -dr LO HI, --displayRange LO HI
+                        Display range. Setting this will override
+                        brightnes/contrast settings. For volume overlays only:
+                        append a "%" to the high value to set range by
+                        percentile.
+  -cr LO HI, --clippingRange LO HI
+                        Clipping range. Setting this will override the low
+                        display range (unless low ranges are unlinked). For
+                        volume overlays only: append a "%" to the high value
+                        to clip by percentile.
+  -mr LO HI, --modulateRange LO HI
+                        Modulate range. Sets the range by which opacity should
+                        be modulated by. For volume overlays only: append a
+                        "%" to the high value to modulate by percentile.
+  -g REAL, --gamma REAL
+                        Gamma correction [-1-+1, default: 0]
+  -dc, --discardClipped
+                        Discard clipped regions, rather than colouring them
+                        with the flat colour
+  -ic, --invertClipping
+                        Invert clipping
+  -cm CMAP, --cmap CMAP
+                        Colour map
+  -nc CMAP, --negativeCmap CMAP
+                        Colour map for negative values
+  -cmr INT, --cmapResolution INT
+                        Colour map resolution
+  -in {linear,nearest}, --interpolation {linear,nearest}
+                        Interpolation method, when colouring a mesh with
+                        vertex data.
+  -inc, --interpolateCmaps
+                        Interpolate between colours in colour maps
+  -i, --invert          Invert colour map
+  -ma, --modulateAlpha  Modulate alpha by intensity
+  -ima, --invertModulateAlpha
+                        no help
+  -wf, --wireframe      3D only. Draw as wireframe
+  -r FILE, --refImage FILE
+                        Reference image for mesh
+  -f, --flatShading     Deprecated - use the --interpolation option instead.
+#####################
+GIFTI surface options
+#####################
+  These options are applied to 'mesh' overlays.
+  -vd FILE, --vertexData FILE
+                        A file (e.g. Freesurfer .curv file, GIFTI functional,
+                        shape, label, or time series file, or a plain text
+                        file) containing one or more values for each vertex in
+                        the mesh.
+  -vdi INT, --vertexDataIndex INT
+                        If the vertex data (-vd/--vertexData) file contains
+                        more than one value per vertex, specify the the index
+                        of the data to display.
+  -vs FILE, --vertexSet FILE
+                        A file containing an additional (compatible) mesh
+                        definition.
+  -md FILE, --modulateData FILE
+                        Vertex data file by which to modulate transparency by.
+  -mc R G B, --colour R G B
+                        Mesh colour (0-1)
+  -o, --outline         Show mesh outline
+  -w REAL, --outlineWidth REAL
+                        Mesh outline width (0-20, default: 2)
+  -s {affine,pixdim,pixdim-flip,id,torig}, --coordSpace {affine,pixdim,pixdim-flip,id,torig}
+                        Mesh vertex coordinate space (relative to reference
+                        image)
+  -ul, --useLut         Use a lookup table instead of colour map(S) when
+                        colouring the mesh with vertex data.
+  -l LUT, --lut LUT     Lookup table to use (see -ul/--useLut).
+  -ll, --unlinkLowRanges
+                        Unlink low display/clipping ranges
+  -lh, --linkHighRanges
+                        Link high display/clipping ranges
+  -un, --useNegativeCmap
+                        Use negative colour map (automatically enabled if
+                        --negativeCmap is specified)
+  -dr LO HI, --displayRange LO HI
+                        Display range. Setting this will override
+                        brightnes/contrast settings. For volume overlays only:
+                        append a "%" to the high value to set range by
+                        percentile.
+  -cr LO HI, --clippingRange LO HI
+                        Clipping range. Setting this will override the low
+                        display range (unless low ranges are unlinked). For
+                        volume overlays only: append a "%" to the high value
+                        to clip by percentile.
+  -mr LO HI, --modulateRange LO HI
+                        Modulate range. Sets the range by which opacity should
+                        be modulated by. For volume overlays only: append a
+                        "%" to the high value to modulate by percentile.
+  -g REAL, --gamma REAL
+                        Gamma correction [-1-+1, default: 0]
+  -dc, --discardClipped
+                        Discard clipped regions, rather than colouring them
+                        with the flat colour
+  -ic, --invertClipping
+                        Invert clipping
+  -cm CMAP, --cmap CMAP
+                        Colour map
+  -nc CMAP, --negativeCmap CMAP
+                        Colour map for negative values
+  -cmr INT, --cmapResolution INT
+                        Colour map resolution
+  -in {linear,nearest}, --interpolation {linear,nearest}
+                        Interpolation method, when colouring a mesh with
+                        vertex data.
+  -inc, --interpolateCmaps
+                        Interpolate between colours in colour maps
+  -i, --invert          Invert colour map
+  -ma, --modulateAlpha  Modulate alpha by intensity
+  -ima, --invertModulateAlpha
+                        no help
+  -wf, --wireframe      3D only. Draw as wireframe
+  -r FILE, --refImage FILE
+                        Reference image for mesh
+  -f, --flatShading     Deprecated - use the --interpolation option instead.
+##########################
+Freesurfer surface options
+##########################
+  These options are applied to 'mesh' overlays.
+  -vd FILE, --vertexData FILE
+                        A file (e.g. Freesurfer .curv file, GIFTI functional,
+                        shape, label, or time series file, or a plain text
+                        file) containing one or more values for each vertex in
+                        the mesh.
+  -vdi INT, --vertexDataIndex INT
+                        If the vertex data (-vd/--vertexData) file contains
+                        more than one value per vertex, specify the the index
+                        of the data to display.
+  -vs FILE, --vertexSet FILE
+                        A file containing an additional (compatible) mesh
+                        definition.
+  -md FILE, --modulateData FILE
+                        Vertex data file by which to modulate transparency by.
+  -mc R G B, --colour R G B
+                        Mesh colour (0-1)
+  -o, --outline         Show mesh outline
+  -w REAL, --outlineWidth REAL
+                        Mesh outline width (0-20, default: 2)
+  -s {affine,pixdim,pixdim-flip,id,torig}, --coordSpace {affine,pixdim,pixdim-flip,id,torig}
+                        Mesh vertex coordinate space (relative to reference
+                        image)
+  -ul, --useLut         Use a lookup table instead of colour map(S) when
+                        colouring the mesh with vertex data.
+  -l LUT, --lut LUT     Lookup table to use (see -ul/--useLut).
+  -ll, --unlinkLowRanges
+                        Unlink low display/clipping ranges
+  -lh, --linkHighRanges
+                        Link high display/clipping ranges
+  -un, --useNegativeCmap
+                        Use negative colour map (automatically enabled if
+                        --negativeCmap is specified)
+  -dr LO HI, --displayRange LO HI
+                        Display range. Setting this will override
+                        brightnes/contrast settings. For volume overlays only:
+                        append a "%" to the high value to set range by
+                        percentile.
+  -cr LO HI, --clippingRange LO HI
+                        Clipping range. Setting this will override the low
+                        display range (unless low ranges are unlinked). For
+                        volume overlays only: append a "%" to the high value
+                        to clip by percentile.
+  -mr LO HI, --modulateRange LO HI
+                        Modulate range. Sets the range by which opacity should
+                        be modulated by. For volume overlays only: append a
+                        "%" to the high value to modulate by percentile.
+  -g REAL, --gamma REAL
+                        Gamma correction [-1-+1, default: 0]
+  -dc, --discardClipped
+                        Discard clipped regions, rather than colouring them
+                        with the flat colour
+  -ic, --invertClipping
+                        Invert clipping
+  -cm CMAP, --cmap CMAP
+                        Colour map
+  -nc CMAP, --negativeCmap CMAP
+                        Colour map for negative values
+  -cmr INT, --cmapResolution INT
+                        Colour map resolution
+  -in {linear,nearest}, --interpolation {linear,nearest}
+                        Interpolation method, when colouring a mesh with
+                        vertex data.
+  -inc, --interpolateCmaps
+                        Interpolate between colours in colour maps
+  -i, --invert          Invert colour map
+  -ma, --modulateAlpha  Modulate alpha by intensity
+  -ima, --invertModulateAlpha
+                        no help
+  -wf, --wireframe      3D only. Draw as wireframe
+  -r FILE, --refImage FILE
+                        Reference image for mesh
+  -f, --flatShading     Deprecated - use the --interpolation option instead.
+###################
+Line vector options
+###################
+  These options are applied to 'linevector' overlays.
+  -of, --orientFlip     Flip L/R orientation within each voxel. Default: true
+                        for images with neurological storage order, false for
+                        images with radiological storage order. Passing this
+                        flag will invert the default behaviour.
+  -lw REAL, --lineWidth REAL
+                        Line width (1-10, default: 1)
+  -ld, --directed       Interpret vectors as directed
+  -nu, --notunit        Do not scale lines to unit length
+  -ls PERC, --lengthScale PERC
+                        Scale line length by this percentage (10-500, default:
+                        100)
+  -cm CMAP, --cmap CMAP
+                        Colour map (only used if a colour image is provided)
+  -or LO HI, --colourRange LO HI
+                        Colour-by range (only used if a colour image is
+                        provided)
+  -mr LO HI, --modulateRange LO HI
+                        Modulation range (only used if a modulation image is
+                        provided)
+  -mm {brightness,alpha}, --modulateMode {brightness,alpha}
+                        Modulate vector 'brightness' (default) or 'alpha'
+  -cr LO HI, --clippingRange LO HI
+                        Clipping range (only used if a clipping image is
+                        provided)
+  -xc R G B, --xColour R G B
+                        X colour (0-1)
+  -yc R G B, --yColour R G B
+                        Y colour (0-1)
+  -zc R G B, --zColour R G B
+                        Z colour (0-1)
+  -xs, --suppressX      Suppress X magnitude
+  -ys, --suppressY      Suppress Y magnitude
+  -zs, --suppressZ      Suppress Z magnitude
+  -sm {white,black,transparent}, --suppressMode {white,black,transparent}
+                        Replace suppressed colours with 'white' (default),
+                        'black', or 'transparent'.
+  -co FILE, --colourImage FILE
+                        Image to colour vectors with
+  -mo FILE, --modulateImage FILE
+                        Image to modulate vector brightness/alpha with
+  -cl FILE, --clipImage FILE
+                        Image to clip vectors with
+  -x IDX4,IDX5,..., --index IDX4,IDX5,...
+                        Index into each dimension, for images with more than
+                        four dimensions, Specify as a comma-separated list of
+                        indices (starting from 0), where the first value is
+                        the index into the fourth dimension.
+##################
+RGB vector options
+##################
+  These options are applied to 'rgbvector' overlays.
+  -in {none,linear,spline}, --interpolation {none,linear,spline}
+                        Interpolation
+  -u, --unitLengh       Scale vectors to unit length.
+  -cm CMAP, --cmap CMAP
+                        Colour map (only used if a colour image is provided)
+  -or LO HI, --colourRange LO HI
+                        Colour-by range (only used if a colour image is
+                        provided)
+  -mr LO HI, --modulateRange LO HI
+                        Modulation range (only used if a modulation image is
+                        provided)
+  -mm {brightness,alpha}, --modulateMode {brightness,alpha}
+                        Modulate vector 'brightness' (default) or 'alpha'
+  -cr LO HI, --clippingRange LO HI
+                        Clipping range (only used if a clipping image is
+                        provided)
+  -xc R G B, --xColour R G B
+                        X colour (0-1)
+  -yc R G B, --yColour R G B
+                        Y colour (0-1)
+  -zc R G B, --zColour R G B
+                        Z colour (0-1)
+  -xs, --suppressX      Suppress X magnitude
+  -ys, --suppressY      Suppress Y magnitude
+  -zs, --suppressZ      Suppress Z magnitude
+  -sm {white,black,transparent}, --suppressMode {white,black,transparent}
+                        Replace suppressed colours with 'white' (default),
+                        'black', or 'transparent'.
+  -co FILE, --colourImage FILE
+                        Image to colour vectors with
+  -mo FILE, --modulateImage FILE
+                        Image to modulate vector brightness/alpha with
+  -cl FILE, --clipImage FILE
+                        Image to clip vectors with
+  -x IDX4,IDX5,..., --index IDX4,IDX5,...
+                        Index into each dimension, for images with more than
+                        four dimensions, Specify as a comma-separated list of
+                        indices (starting from 0), where the first value is
+                        the index into the fourth dimension.
+##############
+Tensor options
+##############
+  These options are applied to 'tensor' overlays.
+  -dl, --disableLighting
+                        Disable lighting effect
+  -of, --orientFlip     Flip L/R orientation within each voxel. Default: true
+                        for images with neurological storage order, false for
+                        images with radiological storage order. Passing this
+                        flag will invert the default behaviour.
+  -tr INT, --tensorResolution INT
+                        Tensor resolution/quality (4-20, default: 10)
+  -s PERC, --scale PERC
+                        Tensor size (percentage of voxel size; 50-600,
+                        default: 100)
+  -cm CMAP, --cmap CMAP
+                        Colour map (only used if a colour image is provided)
+  -or LO HI, --colourRange LO HI
+                        Colour-by range (only used if a colour image is
+                        provided)
+  -mr LO HI, --modulateRange LO HI
+                        Modulation range (only used if a modulation image is
+                        provided)
+  -mm {brightness,alpha}, --modulateMode {brightness,alpha}
+                        Modulate vector 'brightness' (default) or 'alpha'
+  -cr LO HI, --clippingRange LO HI
+                        Clipping range (only used if a clipping image is
+                        provided)
+  -xc R G B, --xColour R G B
+                        X colour (0-1)
+  -yc R G B, --yColour R G B
+                        Y colour (0-1)
+  -zc R G B, --zColour R G B
+                        Z colour (0-1)
+  -xs, --suppressX      Suppress X magnitude
+  -ys, --suppressY      Suppress Y magnitude
+  -zs, --suppressZ      Suppress Z magnitude
+  -sm {white,black,transparent}, --suppressMode {white,black,transparent}
+                        Replace suppressed colours with 'white' (default),
+                        'black', or 'transparent'.
+  -co FILE, --colourImage FILE
+                        Image to colour vectors with
+  -mo FILE, --modulateImage FILE
+                        Image to modulate vector brightness/alpha with
+  -cl FILE, --clipImage FILE
+                        Image to clip vectors with
+  -x IDX4,IDX5,..., --index IDX4,IDX5,...
+                        Index into each dimension, for images with more than
+                        four dimensions, Specify as a comma-separated list of
+                        indices (starting from 0), where the first value is
+                        the index into the fourth dimension.
+##########
+SH options
+##########
+  These options are applied to 'sh' overlays.
+  -of, --orientFlip     Flip L/R orientation within each voxel. Default: true
+                        for images with neurological storage order, false for
+                        images with radiological storage order. Passing this
+                        flag will invert the default behaviour.
+  -sr INT, --shResolution INT
+                        FOD resolution/quality (3-10, default: 5)
+  -so ORDER, --shOrder ORDER
+                        Maximum SH function order (0-maximum determined from
+                        image [up to 16], default: maximum)
+  -s PERC, --size PERC  FOD size (10-500, default: 100)
+  -no, --normalise      Normalise FOD sizes
+  -l, --lighting        Enable dodgy lighting effect
+  -t REAL, --radiusThreshold REAL
+                        Hide FODs with radius less than this (min: 0, max: 1,
+                        default: 0.05)
+  -m {direction,radius}, --colourMode {direction,radius}
+                        Colour by 'direction' or 'radius' (default: direction)
+  -cm CMAP, --cmap CMAP
+                        Colour map (only used if a colour image is provided)
+  -or LO HI, --colourRange LO HI
+                        Colour-by range (only used if a colour image is
+                        provided)
+  -mr LO HI, --modulateRange LO HI
+                        Modulation range (only used if a modulation image is
+                        provided)
+  -mm {brightness,alpha}, --modulateMode {brightness,alpha}
+                        Modulate vector 'brightness' (default) or 'alpha'
+  -cr LO HI, --clippingRange LO HI
+                        Clipping range (only used if a clipping image is
+                        provided)
+  -xc R G B, --xColour R G B
+                        X colour, if colouring by 'direction'
+  -yc R G B, --yColour R G B
+                        Y colour, if colouring by 'direction'
+  -zc R G B, --zColour R G B
+                        Z colour, if colouring by 'direction'
+  -xs, --suppressX      Suppress X magnitude
+  -ys, --suppressY      Suppress Y magnitude
+  -zs, --suppressZ      Suppress Z magnitude
+  -sm {white,black,transparent}, --suppressMode {white,black,transparent}
+                        Replace suppressed colours with 'white' (default),
+                        'black', or 'transparent'.
+  -co FILE, --colourImage FILE
+                        Image to colour vectors with
+  -mo FILE, --modulateImage FILE
+                        Image to modulate vector brightness/alpha with
+  -cl FILE, --clipImage FILE
+                        Image to clip vectors with
+  -x IDX4,IDX5,..., --index IDX4,IDX5,...
+                        Index into each dimension, for images with more than
+                        four dimensions, Specify as a comma-separated list of
+                        indices (starting from 0), where the first value is
+                        the index into the fourth dimension.
+Available colour maps: blue, blue-lightblue, brain_colours_1hot,
+brain_colours_1hot_iso, brain_colours_2winter, brain_colours_2winter_iso,
+brain_colours_3warm, brain_colours_3warm_iso, brain_colours_4cool,
+brain_colours_4cool_iso, brain_colours_5redyell, brain_colours_5redyell_iso,
+brain_colours_6bluegrn, brain_colours_6bluegrn_iso, brain_colours_actc,
+brain_colours_actc_iso, brain_colours_blackbdy, brain_colours_blackbdy_iso,
+brain_colours_bluegray, brain_colours_bluegray_iso, brain_colours_bone,
+brain_colours_bone_iso, brain_colours_cardiac, brain_colours_cardiac_iso,
+brain_colours_cortex, brain_colours_cortex_iso, brain_colours_diverging_bgy,
+brain_colours_diverging_bgy_iso, brain_colours_diverging_bwr,
+brain_colours_diverging_bwr_iso, brain_colours_flow, brain_colours_flow_iso,
+brain_colours_french, brain_colours_french_iso, brain_colours_ge_color,
+brain_colours_ge_color_iso, brain_colours_gold, brain_colours_gold_iso,
+brain_colours_gooch, brain_colours_gooch_iso, brain_colours_greengray,
+brain_colours_greengray_iso, brain_colours_hotiron, brain_colours_hotiron_iso,
+brain_colours_nih, brain_colours_nih_fire, brain_colours_nih_fire_iso,
+brain_colours_nih_ice, brain_colours_nih_ice_iso, brain_colours_nih_iso,
+brain_colours_nih_new, brain_colours_nih_new_iso, brain_colours_pink,
+brain_colours_pink_iso, brain_colours_rainramp, brain_colours_rainramp_iso,
+brain_colours_redgray, brain_colours_redgray_iso, brain_colours_spectrum,
+brain_colours_spectrum_iso, brain_colours_surface, brain_colours_surface_iso,
+brain_colours_x_hot, brain_colours_x_hot_iso, brain_colours_x_rain,
+brain_colours_x_rain_iso, cool, copper, cortical, green, greyscale, hot, hsv,
+pink, random, red, red-yellow, render1, render1t, render2, render2t, render3,
+retino, subcortical, yellow. You can also specify any matplotlib colour map,
+or a colour map file.
+###########
+MIP options
+###########
+  These options are applied to 'mip' overlays.
+  -ll, --unlinkLowRanges
+                        Unlink low display/clipping ranges
+  -lh, --linkHighRanges
+                        Link high display/clipping ranges
+  -dr LO HI, --displayRange LO HI
+                        Display range. Setting this will override
+                        brightnes/contrast settings. For volume overlays only:
+                        append a "%" to the high value to set range by
+                        percentile.
+  -cr LO HI, --clippingRange LO HI
+                        Clipping range. Setting this will override the low
+                        display range (unless low ranges are unlinked). For
+                        volume overlays only: append a "%" to the high value
+                        to clip by percentile.
+  -g REAL, --gamma REAL
+                        Gamma correction [-1-+1, default: 0]
+  -ic, --invertClipping
+                        Invert clipping
+  -cm CMAP, --cmap CMAP
+                        Colour map
+  -cmr INT, --cmapResolution INT
+                        Colour map resolution
+  -in {none,linear,spline}, --interpolation {none,linear,spline}
+                        Interpolation
+  -inc, --interpolateCmaps
+                        Interpolate between colours in colour maps
+  -i, --invert          Invert colour map
+  -w PERC, --window PERC
+                        Length of the window along which the MIP is
+                        calculated. Specified as a proportion of the image
+                        length. The window is centred at the current display
+                        location.
+  -m, --minimum         Use the minimum intensity, rather than the maximum
+                        intensity, in the projection.
+  -ab, --absolute       Use the absolute intensity, rather than the maximum
+                        intensity, in the projection. This overrides the
+                        minimum intensity setting.
+  -v INT, --volume INT  Volume (index, starting from 0).
+  -x IDX4,IDX5,..., --index IDX4,IDX5,...
+                        Index into each dimension, for images with more than
+                        four dimensions, Specify as a comma-separated list of
+                        indices (starting from 0), where the first value is
+                        the index into the fourth dimension.
+##################
+Tractogram options
+##################
+  These options are applied to 'tractogram' overlays.
+  -lw REAL, --lineWidth REAL
+                        Streamline width/diameter
+  -r INT, --resolution INT
+                        Streamline resolution/quality
+  -s PERC, --subsample PERC
+                        Draw a randomly selected subsample of streamlines.
+  -ll, --unlinkLowRanges
+                        Unlink low display/clipping ranges
+  -lh, --linkHighRanges
+                        Link high display/clipping ranges
+  -un, --useNegativeCmap
+                        Use negative colour map (automatically enabled if
+                        --negativeCmap is specified)
+  -dr LO HI, --displayRange LO HI
+                        Display range. Setting this will override
+                        brightnes/contrast settings. For volume overlays only:
+                        append a "%" to the high value to set range by
+                        percentile.
+  -cr LO HI, --clippingRange LO HI
+                        Clipping range. Setting this will override the low
+                        display range (unless low ranges are unlinked). For
+                        volume overlays only: append a "%" to the high value
+                        to clip by percentile.
+  -mr LO HI, --modulateRange LO HI
+                        Modulate range. Sets the range by which opacity should
+                        be modulated by. For volume overlays only: append a
+                        "%" to the high value to modulate by percentile.
+  -g REAL, --gamma REAL
+                        Gamma correction [-1-+1, default: 0]
+  -ls, --logScale       Logarithmic scaling
+  -ic, --invertClipping
+                        Invert clipping
+  -cm CMAP, --cmap CMAP
+                        Colour map
+  -nc CMAP, --negativeCmap CMAP
+                        Colour map for negative values
+  -cmr INT, --cmapResolution INT
+                        Colour map resolution
+  -inc, --interpolateCmaps
+                        Interpolate between colours in colour maps
+  -i, --invert          Invert colour map
+  -ma, --modulateAlpha  Modulate alpha by intensity
+  -ima, --invertModulateAlpha
+                        no help
+  -xc R G B, --xColour R G B
+                        X colour (0-1)
+  -yc R G B, --yColour R G B
+                        Y colour (0-1)
+  -zc R G B, --zColour R G B
+                        Z colour (0-1)
+  -xs, --suppressX      Suppress X magnitude
+  -ys, --suppressY      Suppress Y magnitude
+  -zs, --suppressZ      Suppress Z magnitude
+  -sm {white,black,transparent}, --suppressMode {white,black,transparent}
+                        Replace suppressed colours with 'white' (default),
+                        'black', or 'transparent'.
+  -co FILE, --colourBy FILE
+                        NIFTI image, or file containing per-vertex/streamline
+                        scalar values for colouring, or name of a a per-
+                        vertex/streamline data set contained within the
+                        tractogram file.
+  -cl FILE, --clipBy FILE
+                        NIFTI image, or file containing per-vertex/streamline
+                        scalar values for clipping, or name of a a per-
+                        vertex/streamline data set contained within the
+                        tractogram file.
+

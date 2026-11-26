@@ -1,0 +1,65 @@
+{
+    "testing": [
+        {
+            "image": "/media/smbshare/srs-9/prl_project/training/test_train2/imagesTs/sub1215.nii.gz"
+        },
+        {
+            "image": "/media/smbshare/srs-9/prl_project/training/test_train2/imagesTs/sub1348.nii.gz"
+        },
+        {
+            "image": "/media/smbshare/srs-9/prl_project/training/test_train2/imagesTs/sub1453.nii.gz"
+        }
+    ],
+    "training": [
+        {
+            "image": "/media/smbshare/srs-9/prl_project/training/test_train2/imagesTr/sub1011.nii.gz",
+            "label": "/media/smbshare/srs-9/prl_project/training/test_train2/labelsTr/sub1011_2.nii.gz",
+            "fold": 0
+        },
+        {
+            "image": "/media/smbshare/srs-9/prl_project/training/test_train2/imagesTr/sub1033.nii.gz",
+            "label": "/media/smbshare/srs-9/prl_project/training/test_train2/labelsTr/sub1033_2.nii.gz",
+            "fold": 1
+        },
+        {
+            "image": "/media/smbshare/srs-9/prl_project/training/test_train2/imagesTr/sub1038.nii.gz",
+            "label": "/media/smbshare/srs-9/prl_project/training/test_train2/labelsTr/sub1038_2.nii.gz",
+            "fold": 0
+        },
+        {
+            "image": "/media/smbshare/srs-9/prl_project/training/test_train2/imagesTr/sub1080.nii.gz",
+            "label": "/media/smbshare/srs-9/prl_project/training/test_train2/labelsTr/sub1080_2.nii.gz",
+            "fold": 0
+        },
+        {
+            "image": "/media/smbshare/srs-9/prl_project/training/test_train2/imagesTr/sub1124.nii.gz",
+            "label": "/media/smbshare/srs-9/prl_project/training/test_train2/labelsTr/sub1124_2.nii.gz",
+            "fold": 1
+        },
+        {
+            "image": "/media/smbshare/srs-9/prl_project/training/test_train2/imagesTr/sub1131.nii.gz",
+            "label": "/media/smbshare/srs-9/prl_project/training/test_train2/labelsTr/sub1131_2.nii.gz",
+            "fold": 1
+        },
+        {
+            "image": "/media/smbshare/srs-9/prl_project/training/test_train2/imagesTr/sub1293.nii.gz",
+            "label": "/media/smbshare/srs-9/prl_project/training/test_train2/labelsTr/sub1293_2.nii.gz",
+            "fold": 0
+        },
+        {
+            "image": "/media/smbshare/srs-9/prl_project/training/test_train2/imagesTr/sub1298.nii.gz",
+            "label": "/media/smbshare/srs-9/prl_project/training/test_train2/labelsTr/sub1298_2.nii.gz",
+            "fold": 1
+        },
+        {
+            "image": "/media/smbshare/srs-9/prl_project/training/test_train2/imagesTr/sub1348.nii.gz",
+            "label": "/media/smbshare/srs-9/prl_project/training/test_train2/labelsTr/sub1348_2.nii.gz",
+            "fold": 0
+        },
+        {
+            "image": "/media/smbshare/srs-9/prl_project/training/test_train2/imagesTr/sub2026.nii.gz",
+            "label": "/media/smbshare/srs-9/prl_project/training/test_train2/labelsTr/sub2026_2.nii.gz",
+            "fold": 1
+        }
+    ]
+}

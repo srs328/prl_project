@@ -1,0 +1,10 @@
+{
+    "testing": [
+        {
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1183/ses-20170328/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        },
+        {
+            "image": "/media/smbshare/3Tpioneer_bids/sub-ms1281/ses-20180705/lesion.t3m20/lesion_and_prl_labels_tmp.nii.gz"
+        }
+    ]
+}

@@ -1,0 +1,102 @@
+
+====================================================================================================
+PERFORMANCE METRICS: TESTING
+====================================================================================================
+
+AGGREGATED METRICS (summed across 195 cases)
+----------------------------------------------------------------------------------------------------
+  Confusion Matrix:
+    TP:     2098  |  FP:     2721
+    FN:      766  |  TN:    78159
+
+  Metrics:
+    Sensitivity (Recall):  0.7325  (TP / (TP+FN))
+    Specificity:           0.9664  (TN / (TN+FP))
+    FPR:                   0.0336  (1 - Specificity)
+    FNR:                   0.2675  (1 - Sensitivity)
+    Precision (PPV):       0.4354  (TP / (TP+FP))
+    NPV:                   0.9903  (TN / (TN+FN))
+    Accuracy:              0.9584
+    F1 Score:              0.5461
+
+
+PER-CASE STATISTICS
+----------------------------------------------------------------------------------------------------
+
+  SENSITIVITY:
+    Mean:   0.7168
+    Std:    0.1863
+    Min:    0.3828
+    Max:    0.9474
+
+  SPECIFICITY:
+    Mean:   0.9876
+    Std:    0.0446
+    Min:    0.6901
+    Max:    1.0000
+
+  FPR:
+    Mean:   0.0124
+    Std:    0.0446
+    Min:    0.0000
+    Max:    0.3099
+
+  FNR:
+    Mean:   0.2832
+    Std:    0.1863
+    Min:    0.0526
+    Max:    0.6172
+
+  PRECISION:
+    Mean:   0.1688
+    Std:    0.3052
+    Min:    0.0000
+    Max:    0.9608
+
+  ACCURACY:
+    Mean:   0.9860
+    Std:    0.0471
+    Min:    0.6986
+    Max:    1.0000
+
+  F1:
+    Mean:   0.6724
+    Std:    0.1254
+    Min:    0.3575
+    Max:    0.8092
+
+
+PER-CASE BREAKDOWN (sorted by accuracy)
+------------------------------------------------------------------------------------------------------------------------
+Case                                     Sens       Spec       Prec       Acc        F1         Type      
+------------------------------------------------------------------------------------------------------------------------
+Sub1529-L20                                     N/A     1.0000        N/A     1.0000        N/A Lesion    
+Sub1293-L35                                     N/A     1.0000        N/A     1.0000        N/A Lesion    
+Sub1050-L95                                     N/A     1.0000        N/A     1.0000        N/A Lesion    
+Sub1125-L38                                     N/A     1.0000        N/A     1.0000        N/A Lesion    
+Sub1215-L17                                     N/A     1.0000        N/A     1.0000        N/A Lesion    
+Sub1010-L24                                     N/A     1.0000        N/A     1.0000        N/A Lesion    
+Sub2041-L40                                     N/A     1.0000        N/A     1.0000        N/A Lesion    
+Sub1011-L32                                     N/A     1.0000        N/A     1.0000        N/A Lesion    
+Sub1529-L38                                     N/A     1.0000        N/A     1.0000        N/A Lesion    
+Sub1293-L14                                     N/A     1.0000        N/A     1.0000        N/A Lesion    
+Sub1125-L53                                     N/A     1.0000        N/A     1.0000        N/A Lesion    
+Sub1038-L80                                     N/A     1.0000        N/A     1.0000        N/A Lesion    
+Sub1348-L28                                     N/A     1.0000        N/A     1.0000        N/A Lesion    
+Sub1044-L43                                     N/A     1.0000        N/A     1.0000        N/A Lesion    
+Sub1050-L90                                     N/A     1.0000        N/A     1.0000        N/A Lesion    
+Sub1298-L8                                      N/A     1.0000        N/A     1.0000        N/A Lesion    
+Sub1038-L30                                     N/A     1.0000        N/A     1.0000        N/A Lesion    
+Sub1080-L44                                     N/A     1.0000        N/A     1.0000        N/A Lesion    
+Sub1033-L14                                     N/A     1.0000        N/A     1.0000        N/A Lesion    
+Sub1529-L17                                     N/A     1.0000        N/A     1.0000        N/A Lesion    
+Sub1124-L41                                     N/A     1.0000        N/A     1.0000        N/A Lesion    
+Sub1044-L71                                     N/A     1.0000        N/A     1.0000        N/A Lesion    
+Sub1529-L18                                     N/A     1.0000        N/A     1.0000        N/A Lesion    
+Sub1125-L66                                     N/A     1.0000        N/A     1.0000        N/A Lesion    
+Sub1010-L6                                      N/A     1.0000        N/A     1.0000        N/A Lesion    
+Sub1050-L9                                      N/A     1.0000        N/A     1.0000        N/A Lesion    
+Sub1396-L13                                     N/A     1.0000        N/A     1.0000        N/A Lesion    
+Sub1010-L25                                     N/A     1.0000        N/A     1.0000        N/A Lesion    
+Sub1529-L9                                      N/A     1.0000        N/A     1.0000        N/A Lesion    
+Sub1044-L18                                     N/A     1.0000        N/A     1.0000        N/A Lesion    
