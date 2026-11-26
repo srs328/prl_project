@@ -4,10 +4,10 @@
 # - Spherical Disproportion
 
 setting:
-  label: 1
+  label: 2
   interpolator: 'sitkBSpline' # This is an enumerated value, here None is not allowed
   resampledPixelSpacing: # This disables resampling, as it is interpreted as None, to enable it, specify spacing in x, y, z as [x, y , z]
-  geometryTolerance: 0.00001
+  geometryTolerance: 0.001
   normalize: true
   normalizeScale: 100  # This allows you to use more or less the same bin width.
 
@@ -57,3 +57,6 @@ featureClass:
     - 'MaximumProbability'
     - 'SumEntropy'
     - 'SumSquares'
+  glrlm: # for lists none values are allowed, in this case, all features are enabled
+  glszm:
+  gldm:

@@ -85,11 +85,15 @@ class Experiment:
 
     @property
     def name(self) -> str:
-        return str(self.run_dir.relative_to(self.dataset.work_home))
+        return str(self.run_dir.relative_to(self.dataset.work_home)).replace("/", "_")
+
+    @property
+    def relpath(self) -> str:
+        return self.run_dir.relative_to(self.dataset.work_home.parent)
 
     @property
     def id(self) -> str:
-        return str(self.run_dir.relative_to(self.dataset.work_home.parent))
+        return str(self.relpath).replace("/", "_")
 
     # --- Preprocessing ---
 
@@ -194,7 +198,7 @@ class Experiment:
 
         return Panel(
             tree,
-            title=f"[bold magenta]{self.id}[/bold magenta]",
+            title=f"[bold magenta]{self.relpath}[/bold magenta]",
             subtitle=f"[dim]{self.run_dir}[/dim]",
             border_style="cyan",
             expand=expand,
@@ -282,7 +286,7 @@ class Experiment:
 
         return Panel(
             tree,
-            title=f"[bold magenta]{self.id}[/bold magenta]",
+            title=f"[bold magenta]{self.relpath}[/bold magenta]",
             subtitle=f"[dim]{subtitle}[/dim]",
             border_style="cyan",
             expand=expand,
@@ -616,4 +620,4 @@ class Experiment:
         return self.dataset.work_home / f"run{run_num}"
 
     def __repr__(self) -> str:
-        return f"Experiment(id={self.id}, run_dir={self.run_dir}, dataset={self.dataset.name})"
+        return f"Experiment(id={self.relpath}, run_dir={self.run_dir}, dataset={self.dataset.name})"

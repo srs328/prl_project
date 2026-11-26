@@ -62,12 +62,12 @@ def compile_experiment_metrics(
     if not isinstance(experiment, Experiment):
         experiment = Experiment.from_run_dir(experiment)
 
-    logger.info(f"Starting Experiment {experiment.id}")
+    logger.info(f"Starting Experiment {experiment.relpath}")
     cached = cached_load_run_data(experiment, use_cache=use_cache)
     if cached is None:
-        return {"ID": experiment.id, "status": "missing"}
+        return {"ID": experiment.relpath, "status": "missing"}
 
-    row = _build_generic_row(experiment.id, cached, params_to_gather)
+    row = _build_generic_row(experiment.relpath, cached, params_to_gather)
     return {**row, **func(cached)}
 
 
@@ -107,7 +107,7 @@ def compile_grid_metrics(
         if not (run_dir / "ensemble_output").exists() or (
             runs_to_skip is not None and run_dir.name in runs_to_skip
         ):
-            logger.debug(f"Skipped {experiment.id} for {grid.experiment_name}")
+            logger.debug(f"Skipped {experiment.relpath} for {grid.experiment_name}")
             continue
         row = compile_experiment_metrics(
             experiment, func, params_to_gather, use_cache=use_cache

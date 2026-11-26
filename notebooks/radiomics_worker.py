@@ -1,29 +1,35 @@
+
 import json
 import sys
 from radiomics import featureextractor
 
 
-def extract_radiomic_features(maskName, imageName, params_file=None):
+def extract_radiomic_features(image_path, mask_path, params_file):
     extractor = featureextractor.RadiomicsFeatureExtractor(params_file)
-    result = extractor.execute(imageName, maskName)
-    features = {
-        k[len("original_"):]: float(v) for k,v in result.items() if k.startswith("original_")
+
+    result = extractor.execute(
+        imageFilepath=image_path,
+        maskFilepath=mask_path,
+    )
+
+    return {
+        key[len("original_"):]: float(value)
+        for key, value in result.items()
+        if key.startswith("original_")
     }
-    return features
 
 
 if __name__ == "__main__":
-    # Get the input/output JSON paths from command line arguments
-    input_json_path = sys.argv[1]
-    output_json_path = sys.argv[2]
-    
-    # Load input arguments
-    with open(input_json_path, 'r') as f:
+    input_json_path, output_json_path = sys.argv[1:3]
+
+    with open(input_json_path) as f:
         args = json.load(f)
-        
-    # Execute the pyradiomics function
-    features = extract_radiomic_features(args['image_path'], args['mask_path'], args['params'])
-    
-    # Save the output data back to the file system
-    with open(output_json_path, 'w') as f:
+
+    features = extract_radiomic_features(
+        image_path=args["image_path"],
+        mask_path=args["mask_path"],
+        params_file=args["params"],
+    )
+
+    with open(output_json_path, "w") as f:
         json.dump(features, f, indent=4)

@@ -26,6 +26,8 @@ from ..helpers.paths import (
 )
 from .configs import PreprocessingConfig, AlgoConfig
 
+#TODO: this isnt set up for subjects with multiple sessions since Dataset assumes one sesid per subid
+
 
 DEFAULT_EXPAND_XY = 20
 DEFAULT_EXPAND_Z = 2
@@ -223,11 +225,11 @@ class Dataset:
             subid = int(subid)
             sesid = self.prl_df.loc[subid, "date_mri"]
             subject_root = self.data_root / f"sub{subid}-{sesid}"
-            prl_labels = set(
+            prl_labels = {
                 int(self.prl_df.loc[subid, f"PRL{i}_label"])
                 for i in range(1, 21)
                 if self.prl_df.loc[subid, f"confidence.{i-1}"] in ["definite", "probable"]
-            )
+            }
 
             folders = [
                 Path(item.path) for item in os.scandir(subject_root)

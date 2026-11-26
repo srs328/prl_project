@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import math
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import nibabel as nib
 import numpy as np
@@ -18,11 +19,15 @@ from .geometry import (
     rim_enclosing_sphere_radius,
 )
 
+if TYPE_CHECKING:
+    from prl.core import Dataset, Subject
+    import numpy.typing as npt
+
+
 __all__ = [
     "analyze_label",
     "analyze_prl_case",
     "analyze_subject_prl",
-    "analyze_subject_prl0",
     "compute_pca_features",
     "compute_radial_metrics",
     "count_predicted_prls",
@@ -199,7 +204,9 @@ def count_rim_for_lesion(
     return int(get_lesion_rim(index_crop, label_data, lesion_id, n_dilate).sum())
 
 
-def _load_subject_geometry(subject):
+def _load_subject_geometry(subject: Subject) \
+    -> tuple[npt.NDArray[np.int32], list[tuple[int, list[int]]]]:
+
     index_volume = np.asanyarray(subject.load_nifti("lstai_lesion_index").dataobj)
     return index_volume.astype(np.int32, copy=False), dict(subject.bounding_boxes)
 
@@ -246,8 +253,15 @@ def screen_for_iron(dataset, subid, label_key) -> dict[int, bool]:
 
 
 def _measure_label(
-    index_crop, label_data, lesion_index, voxel_size, *,
-    include_data, key, screen_iron, shape_features,
+    index_crop,
+    label_data,
+    lesion_index,
+    voxel_size,
+    *,
+    include_data,
+    key,
+    screen_iron,
+    shape_features,
 ):
     key = key.removeprefix("_")
     has_iron = _has_iron(index_crop, label_data, lesion_index)
@@ -308,8 +322,15 @@ def analyze_label(
 
 
 def _analyze_subject_prl(
-    subid, dataset, label_keys, lesion_indices, include_data, cases, *,
-    screen_iron, legacy=False,
+    subid,
+    dataset,
+    label_keys,
+    lesion_indices,
+    include_data,
+    cases,
+    *,
+    screen_iron,
+    legacy=False,
 ) -> tuple[list[dict], list[dict]]:
     if isinstance(label_keys, str):
         label_keys = (label_keys,)
@@ -327,12 +348,10 @@ def _analyze_subject_prl(
     index_volume, boxes = _load_subject_geometry(dataset.subject(subid))
     subject_stats = []
     subject_data = []
-    label_suffixes = {} if legacy else {"inference": "infer", "label": "truth"}
+    label_suffixes = {"inference": "infer", "label": "truth"}
     for lesion_index in lesion_indices:
         case = subject_cases.loc[lesion_index]
-        identifiers = {"subid": subid, "lesion_index": lesion_index}
-        if not legacy:
-            identifiers["case_type"] = case.get("case_type")
+        identifiers = {"subid": subid, "lesion_index": lesion_index, "case_type": case.get("case_type")}
         lesion_stats = identifiers.copy()
         lesion_data = identifiers.copy()
         index_crop = crop_from_volume(index_volume, boxes[lesion_index])
@@ -351,7 +370,7 @@ def _analyze_subject_prl(
                     include_data=include_data,
                     key=label_key,
                     screen_iron=screen_iron,
-                    shape_features=not legacy,
+                    shape_features=True,
                 )
             except (OSError, ValueError, nib.filebasedimages.ImageFileError):
                 logger.opt(exception=True).warning(
@@ -383,28 +402,23 @@ def analyze_subject_prl(
     other labels intact.
     """
     return _analyze_subject_prl(
-        subid, dataset, label_keys, lesion_indices, include_data, cases,
+        subid,
+        dataset,
+        label_keys,
+        lesion_indices,
+        include_data,
+        cases,
         screen_iron=screen_iron,
     )
 
 
-def analyze_subject_prl0(
-    dataset, subid, label_keys, include_data=True, cases: pd.DataFrame | None = None
-) -> tuple[list[dict], list[dict]]:
-    """Original subject analysis with unscreened geometry and column-name suffixes."""
-    return _analyze_subject_prl(
-        subid, dataset, label_keys, None, include_data, cases,
-        screen_iron=False, legacy=True,
-    )
-
-
 def analyze_prl_case(
-    case,
-    dataset,
-    include_data=True,
-    screen_iron=False,
-    count_rim=False,
-):
+    case: pd.Series,
+    dataset: Dataset,
+    include_data: bool = True,
+    screen_iron: bool = False,
+    count_rim: bool = False,
+) -> tuple[dict, dict]:
     """Analyze a single case from a Dataset or experiment.
 
     Returns statistics and optional label arrays for the available truth and
@@ -413,7 +427,9 @@ def analyze_prl_case(
     in truth-then-inference order. count_rim is accepted for older callers.
     """
     subid, lesion_index = (
-        case.name if isinstance(case, pd.Series) else (case["subid"], case["lesion_index"])
+        case.name
+        if isinstance(case, pd.Series)
+        else (case["subid"], case["lesion_index"])
     )
     label_paths = {}
     for column, key in (("label", "truth"), ("inference", "infer")):
@@ -421,7 +437,9 @@ def analyze_prl_case(
         if path is not None:
             label_paths[key] = path
     if not label_paths:
-        logger.warning(f"No label or inference found for sub{subid} lesion {lesion_index}")
+        logger.warning(
+            f"No label or inference found for sub{subid} lesion {lesion_index}"
+        )
         return None
 
     index_volume, boxes = _load_subject_geometry(dataset.subject(subid))
@@ -485,12 +503,14 @@ def count_predicted_prls(dataset, subid, *, cases: pd.DataFrame | None = None) -
         rim = get_lesion_rim(index_crop, label, lesion_index)
         voxel_size = nifti.header.get_zooms()[:3]
         hull = get_convex_hull(rim, voxel_sizes=voxel_size)
-        prls.append({
-            "lesion_index": lesion_index,
-            "rim_voxels": int(rim.sum()),
-            "hull_volume_mm3": hull.volume if hull is not None else None,
-            "sphere_radius_mm": rim_enclosing_sphere_radius(rim, voxel_size),
-        })
+        prls.append(
+            {
+                "lesion_index": lesion_index,
+                "rim_voxels": int(rim.sum()),
+                "hull_volume_mm3": hull.volume if hull is not None else None,
+                "sphere_radius_mm": rim_enclosing_sphere_radius(rim, voxel_size),
+            }
+        )
 
     return {
         "subject": subject.dir.name,
