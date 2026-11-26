@@ -4,6 +4,8 @@ import os
 from pathlib import Path
 import pandas as pd
 import pickle
+from sklearn.model_selection import BaseCrossValidator
+
 
 def dice_score(seg1: os.PathLike | np.ndarray, seg2: os.PathLike | np.ndarray,
                seg1_val: int = 1, seg2_val: int = 1):
@@ -85,3 +87,80 @@ def assign_prl_folds(
         subject_fold[subject] = fold + 1
 
     return df[subject_col].map(subject_fold).astype(int).rename("fold")
+
+
+
+
+class PrlKFold(BaseCrossValidator):
+
+    def __init__(
+        self,
+        n_splits: int = 5,
+        *,
+        positive_label=1,
+        random_state: int = 42,
+    ):
+        self.n_splits = n_splits
+        self.positive_label = positive_label
+        self.random_state = random_state
+
+    def get_n_splits(self, X=None, y=None, groups=None) -> int:
+        return self.n_splits
+
+    def _assign_folds(self, y, groups) -> np.ndarray:
+        if groups is None:
+            raise ValueError(
+                "The 'groups' parameter (subject IDs) must be provided."
+            )
+        if y is None:
+            raise ValueError(
+                "The 'y' parameter (target labels) must be provided."
+            )
+
+        meta = pd.DataFrame({"subid": np.asarray(groups), "target": np.asarray(y)})
+        if meta.isna().any().any():
+            raise ValueError(
+                "Subject IDs and target labels must be non-missing."
+            )
+
+        subjects = (
+            meta["target"]
+            .eq(self.positive_label)
+            .groupby(meta["subid"], observed=True, sort=False)
+            .agg(n_prl="sum", n_lesions="size")
+        )
+
+        if not 2 <= self.n_splits <= len(subjects):
+            raise ValueError(
+                f"n_splits must be between 2 and {len(subjects)} subjects."
+            )
+
+        # Randomize ties reproducibly, then place largest PRL/lesion counts first
+        subjects = subjects.sample(
+            frac=1, random_state=self.random_state
+        ).sort_values(["n_prl", "n_lesions"], ascending=False)
+
+        # Greedy load balancing: each tuple tracks (PRLs, lesions, subjects)
+        loads = [(0, 0, 0) for _ in range(self.n_splits)]
+        subject_fold = {}
+
+        for subject, row in subjects.iterrows():
+            fold = min(range(self.n_splits), key=loads.__getitem__)
+            n_prl, n_lesions, n_subjects = loads[fold]
+            loads[fold] = (
+                n_prl + row.n_prl,
+                n_lesions + row.n_lesions,
+                n_subjects + 1,
+            )
+            subject_fold[subject] = fold
+
+        return meta["subid"].map(subject_fold).to_numpy(dtype=int)
+
+    def split(self, X, y=None, groups=None):
+        folds = self._assign_folds(y, groups)
+        all_inds = np.arange(len(folds))
+
+        for fold_idx in range(self.n_splits):
+            test_inds = np.where(folds == fold_idx)[0]
+            train_inds = np.setdiff1d(all_inds, test_inds, assume_unique=True)
+            yield train_inds, test_inds
