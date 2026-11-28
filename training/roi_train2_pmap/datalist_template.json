@@ -5,273 +5,273 @@
             "lesion_index": 5,
             "fold": 4,
             "image": "sub1136-20171109/5",
-            "label": "sub1136-20171109/5/prl_rim_CH_"
+            "label": "sub1136-20171109/5/prl_rim_mask_def_prob_CH_"
         },
         {
             "subid": 1038,
             "lesion_index": 1,
             "fold": 0,
             "image": "sub1038-20161031/1",
-            "label": "sub1038-20161031/1/prl_rim_CH_"
+            "label": "sub1038-20161031/1/prl_rim_mask_def_prob_CH_"
         },
         {
             "subid": 1131,
             "lesion_index": 1,
             "fold": 1,
             "image": "sub1131-20161209/1",
-            "label": "sub1131-20161209/1/prl_rim_LR_"
+            "label": "sub1131-20161209/1/prl_rim_mask_def_prob_LR_"
         },
         {
             "subid": 1044,
             "lesion_index": 11,
             "fold": 2,
             "image": "sub1044-20170317/11",
-            "label": "sub1044-20170317/11/prl_rim_CH_"
+            "label": "sub1044-20170317/11/prl_rim_mask_def_prob_CH_"
         },
         {
             "subid": 1529,
             "lesion_index": 2,
             "fold": 3,
             "image": "sub1529-20170119/2",
-            "label": "sub1529-20170119/2/prl_rim_LR_"
+            "label": "sub1529-20170119/2/prl_rim_mask_def_prob_LR_"
         },
         {
             "subid": 1011,
             "lesion_index": 3,
             "fold": 4,
             "image": "sub1011-20180911/3",
-            "label": "sub1011-20180911/3/prl_rim_SRS_CH_"
+            "label": "sub1011-20180911/3/prl_rim_mask_def_prob_SRS_CH_"
         },
         {
             "subid": 1011,
             "lesion_index": 12,
             "fold": 0,
             "image": "sub1011-20180911/12",
-            "label": "sub1011-20180911/12/prl_rim_SRS_CH_"
+            "label": "sub1011-20180911/12/prl_rim_mask_def_prob_SRS_CH_"
         },
         {
             "subid": 1358,
             "lesion_index": 1,
             "fold": 1,
             "image": "sub1358-20170311/1",
-            "label": "sub1358-20170311/1/prl_rim_LR_"
+            "label": "sub1358-20170311/1/prl_rim_mask_def_prob_LR_"
         },
         {
             "subid": 1136,
             "lesion_index": 3,
             "fold": 2,
             "image": "sub1136-20171109/3",
-            "label": "sub1136-20171109/3/prl_rim_CH_"
+            "label": "sub1136-20171109/3/prl_rim_mask_def_prob_CH_"
         },
         {
             "subid": 1348,
             "lesion_index": 6,
             "fold": 3,
             "image": "sub1348-20181009/6",
-            "label": "sub1348-20181009/6/prl_rim_SRS_"
+            "label": "sub1348-20181009/6/prl_rim_mask_def_prob_SRS_"
         },
         {
             "subid": 1011,
             "lesion_index": 6,
             "fold": 4,
             "image": "sub1011-20180911/6",
-            "label": "sub1011-20180911/6/prl_rim_SRS_CH_"
+            "label": "sub1011-20180911/6/prl_rim_mask_def_prob_SRS_CH_"
         },
         {
             "subid": 1358,
             "lesion_index": 2,
             "fold": 0,
             "image": "sub1358-20170311/2",
-            "label": "sub1358-20170311/2/prl_rim_LR_"
+            "label": "sub1358-20170311/2/prl_rim_mask_def_prob_LR_"
         },
         {
             "subid": 1076,
             "lesion_index": 3,
             "fold": 1,
             "image": "sub1076-20170912/3",
-            "label": "sub1076-20170912/3/prl_rim_CH_SRS_"
+            "label": "sub1076-20170912/3/prl_rim_mask_def_prob_CH_SRS_"
         },
         {
             "subid": 1215,
             "lesion_index": 2,
             "fold": 2,
             "image": "sub1215-20180429/2",
-            "label": "sub1215-20180429/2/prl_rim_CH_"
+            "label": "sub1215-20180429/2/prl_rim_mask_def_prob_CH_"
         },
         {
             "subid": 2026,
             "lesion_index": 2,
             "fold": 3,
             "image": "sub2026-20160917/2",
-            "label": "sub2026-20160917/2/prl_rim_CH_"
+            "label": "sub2026-20160917/2/prl_rim_mask_def_prob_CH_"
         },
         {
             "subid": 1125,
             "lesion_index": 1,
             "fold": 4,
             "image": "sub1125-20160919/1",
-            "label": "sub1125-20160919/1/prl_rim_CH_"
+            "label": "sub1125-20160919/1/prl_rim_mask_def_prob_CH_"
         },
         {
             "subid": 1076,
             "lesion_index": 16,
             "fold": 0,
             "image": "sub1076-20170912/16",
-            "label": "sub1076-20170912/16/prl_rim_CH_SRS_"
+            "label": "sub1076-20170912/16/prl_rim_mask_def_prob_CH_SRS_"
         },
         {
             "subid": 1529,
             "lesion_index": 6,
             "fold": 1,
             "image": "sub1529-20170119/6",
-            "label": "sub1529-20170119/6/prl_rim_LR_"
+            "label": "sub1529-20170119/6/prl_rim_mask_def_prob_LR_"
         },
         {
             "subid": 1080,
             "lesion_index": 1,
             "fold": 2,
             "image": "sub1080-20180416/1",
-            "label": "sub1080-20180416/1/prl_rim_SRS_"
+            "label": "sub1080-20180416/1/prl_rim_mask_def_prob_SRS_"
         },
         {
             "subid": 1011,
             "lesion_index": 4,
             "fold": 3,
             "image": "sub1011-20180911/4",
-            "label": "sub1011-20180911/4/prl_rim_SRS_CH_"
+            "label": "sub1011-20180911/4/prl_rim_mask_def_prob_SRS_CH_"
         },
         {
             "subid": 1050,
             "lesion_index": 1,
             "fold": 4,
             "image": "sub1050-20170624/1",
-            "label": "sub1050-20170624/1/prl_rim_CH_"
+            "label": "sub1050-20170624/1/prl_rim_mask_def_prob_CH_"
         },
         {
             "subid": 1010,
             "lesion_index": 1,
             "fold": 0,
             "image": "sub1010-20180208/1",
-            "label": "sub1010-20180208/1/prl_rim_CH_"
+            "label": "sub1010-20180208/1/prl_rim_mask_def_prob_CH_"
         },
         {
             "subid": 1078,
             "lesion_index": 8,
             "fold": 1,
             "image": "sub1078-20180412/8",
-            "label": "sub1078-20180412/8/prl_rim_CH_"
+            "label": "sub1078-20180412/8/prl_rim_mask_def_prob_CH_"
         },
         {
             "subid": 2041,
             "lesion_index": 5,
             "fold": 2,
             "image": "sub2041-20170515/5",
-            "label": "sub2041-20170515/5/prl_rim_SRS_CH_"
+            "label": "sub2041-20170515/5/prl_rim_mask_def_prob_SRS_CH_"
         },
         {
             "subid": 1050,
             "lesion_index": 6,
             "fold": 3,
             "image": "sub1050-20170624/6",
-            "label": "sub1050-20170624/6/prl_rim_CH_"
+            "label": "sub1050-20170624/6/prl_rim_mask_def_prob_CH_"
         },
         {
             "subid": 1044,
             "lesion_index": 57,
             "fold": 4,
             "image": "sub1044-20170317/57",
-            "label": "sub1044-20170317/57/prl_rim_CH_"
+            "label": "sub1044-20170317/57/prl_rim_mask_def_prob_CH_"
         },
         {
             "subid": 1074,
             "lesion_index": 1,
             "fold": 0,
             "image": "sub1074-20190518/1",
-            "label": "sub1074-20190518/1/prl_rim_CH_"
+            "label": "sub1074-20190518/1/prl_rim_mask_def_prob_CH_"
         },
         {
             "subid": 1396,
             "lesion_index": 1,
             "fold": 1,
             "image": "sub1396-20170126/1",
-            "label": "sub1396-20170126/1/prl_rim_LR_"
+            "label": "sub1396-20170126/1/prl_rim_mask_def_prob_LR_"
         },
         {
             "subid": 1078,
             "lesion_index": 2,
             "fold": 2,
             "image": "sub1078-20180412/2",
-            "label": "sub1078-20180412/2/prl_rim_CH_"
+            "label": "sub1078-20180412/2/prl_rim_mask_def_prob_CH_"
         },
         {
             "subid": 1010,
             "lesion_index": 4,
             "fold": 3,
             "image": "sub1010-20180208/4",
-            "label": "sub1010-20180208/4/prl_rim_CH_"
+            "label": "sub1010-20180208/4/prl_rim_mask_def_prob_CH_"
         },
         {
             "subid": 1010,
             "lesion_index": 3,
             "fold": 4,
             "image": "sub1010-20180208/3",
-            "label": "sub1010-20180208/3/prl_rim_CH_"
+            "label": "sub1010-20180208/3/prl_rim_mask_def_prob_CH_"
         },
         {
             "subid": 1033,
             "lesion_index": 2,
             "fold": 0,
             "image": "sub1033-20171117/2",
-            "label": "sub1033-20171117/2/prl_rim_LR_"
+            "label": "sub1033-20171117/2/prl_rim_mask_def_prob_LR_"
         },
         {
             "subid": 1215,
             "lesion_index": 3,
             "fold": 1,
             "image": "sub1215-20180429/3",
-            "label": "sub1215-20180429/3/prl_rim_CH_"
+            "label": "sub1215-20180429/3/prl_rim_mask_def_prob_CH_"
         },
         {
             "subid": 2041,
             "lesion_index": 3,
             "fold": 2,
             "image": "sub2041-20170515/3",
-            "label": "sub2041-20170515/3/prl_rim_SRS_CH_"
+            "label": "sub2041-20170515/3/prl_rim_mask_def_prob_SRS_CH_"
         },
         {
             "subid": 1298,
             "lesion_index": 1,
             "fold": 3,
             "image": "sub1298-20190506/1",
-            "label": "sub1298-20190506/1/prl_rim_LR_"
+            "label": "sub1298-20190506/1/prl_rim_mask_def_prob_LR_"
         },
         {
             "subid": 2026,
             "lesion_index": 1,
             "fold": 4,
             "image": "sub2026-20160917/1",
-            "label": "sub2026-20160917/1/prl_rim_CH_"
+            "label": "sub2026-20160917/1/prl_rim_mask_def_prob_CH_"
         },
         {
             "subid": 1011,
             "lesion_index": 1,
             "fold": 0,
             "image": "sub1011-20180911/1",
-            "label": "sub1011-20180911/1/prl_rim_SRS_CH_"
+            "label": "sub1011-20180911/1/prl_rim_mask_def_prob_SRS_CH_"
         },
         {
             "subid": 1124,
             "lesion_index": 2,
             "fold": 1,
             "image": "sub1124-20160929/2",
-            "label": "sub1124-20160929/2/prl_rim_LR_"
+            "label": "sub1124-20160929/2/prl_rim_mask_def_prob_LR_"
         },
         {
             "subid": 2041,
             "lesion_index": 8,
             "fold": 2,
             "image": "sub2041-20170515/8",
-            "label": "sub2041-20170515/8/prl_rim_SRS_CH_"
+            "label": "sub2041-20170515/8/prl_rim_mask_def_prob_SRS_CH_"
         },
         {
             "subid": 1125,
@@ -5564,55 +5564,55 @@
             "subid": 1293,
             "lesion_index": 1,
             "image": "sub1293-20161129/1",
-            "label": "sub1293-20161129/1/prl_rim_SRS_CH_"
+            "label": "sub1293-20161129/1/prl_rim_mask_def_prob_SRS_CH_"
         },
         {
             "subid": 1074,
             "lesion_index": 3,
             "image": "sub1074-20190518/3",
-            "label": "sub1074-20190518/3/prl_rim_CH_"
+            "label": "sub1074-20190518/3/prl_rim_mask_def_prob_CH_"
         },
         {
             "subid": 1080,
             "lesion_index": 3,
             "image": "sub1080-20180416/3",
-            "label": "sub1080-20180416/3/prl_rim_SRS_"
+            "label": "sub1080-20180416/3/prl_rim_mask_def_prob_SRS_"
         },
         {
             "subid": 2131,
             "lesion_index": 1,
             "image": "sub2131-20190117/1",
-            "label": "sub2131-20190117/1/prl_rim_LR_"
+            "label": "sub2131-20190117/1/prl_rim_mask_def_prob_LR_"
         },
         {
             "subid": 1011,
             "lesion_index": 7,
             "image": "sub1011-20180911/7",
-            "label": "sub1011-20180911/7/prl_rim_SRS_CH_"
+            "label": "sub1011-20180911/7/prl_rim_mask_def_prob_SRS_CH_"
         },
         {
             "subid": 1529,
             "lesion_index": 5,
             "image": "sub1529-20170119/5",
-            "label": "sub1529-20170119/5/prl_rim_LR_"
+            "label": "sub1529-20170119/5/prl_rim_mask_def_prob_LR_"
         },
         {
             "subid": 2041,
             "lesion_index": 1,
             "image": "sub2041-20170515/1",
-            "label": "sub2041-20170515/1/prl_rim_SRS_CH_"
+            "label": "sub2041-20170515/1/prl_rim_mask_def_prob_SRS_CH_"
         },
         {
             "subid": 1348,
             "lesion_index": 1,
             "image": "sub1348-20181009/1",
-            "label": "sub1348-20181009/1/prl_rim_SRS_"
+            "label": "sub1348-20181009/1/prl_rim_mask_def_prob_SRS_"
         },
         {
             "subid": 1529,
             "lesion_index": 11,
             "image": "sub1529-20170119/11",
-            "label": "sub1529-20170119/11/prl_rim_LR_"
+            "label": "sub1529-20170119/11/prl_rim_mask_def_prob_LR_"
         },
         {
             "subid": 1529,

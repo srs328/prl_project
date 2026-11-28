@@ -13,8 +13,8 @@ from tqdm import tqdm
 
 from loguru import logger
 
-from ..helpers.shell_interface import run_if_missing
-from ..helpers.paths import load_config
+from prl.helpers.shell_interface import run_if_missing
+from prl.helpers.paths import load_config
 
 curr_dir = Path(__file__).parent
 CONCAT_SH = str(curr_dir / "concatImages.sh")
@@ -44,7 +44,7 @@ def prepare_training_data(datalist_template_path, data_root, images,
     with open(datalist_template_path, "r") as f:
         datalist = json.load(f)
 
-    image_basenames = [im.removesuffix(".nii.gz") for im in sorted(images)]
+    image_basenames = [im.removesuffix(".nii.gz").split("/")[-1] for im in sorted(images)]
     image_prefix = ".".join(image_basenames) + "_"
     bbox_suffix = f"xy{expand_xy}_z{expand_z}"
     image_names = [f"{im}_{bbox_suffix}.nii.gz" for im in image_basenames]
@@ -102,7 +102,7 @@ def main(argv=None):
     args, _ = parser.parse_known_args()
     config = load_config(args.config)
 
-    train_home = Path(config["train_home"])
+    train_home = Path(config["train_home"]) / config["dataset_name"]
     expand_xy, expand_z = config["expand_xy"], config["expand_z"]
 
     prepare_training_data(

@@ -22,6 +22,18 @@ if TYPE_CHECKING:
     from rich.panel import Panel
 
 
+import monai.apps.auto3dseg.bundle_gen as bundle_gen
+
+_original_run_cmd = bundle_gen.run_cmd
+
+
+def run_cmd_live(cmd_list, **kwargs):
+    kwargs.setdefault("capture_output", False)
+    return _original_run_cmd(cmd_list, **kwargs)
+
+
+bundle_gen.run_cmd = run_cmd_live
+
 class Experiment:
     """A single training run with fixed hyperparameters.
 

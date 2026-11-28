@@ -67,15 +67,32 @@ def ensure_ring_seg(subject_root, suffix=None, dry_run=False, output_dir=None):
     if output_dir is None:
         output_dir = subject_root
     ring_seg_path = output_dir / f"prl_rim_def_prob_{suffix}.nii.gz"
-    ring_mask_path = output_dir / f"prl_rim_mask_def_prob_{suffix}.nii.gz"
     
     if not ring_seg_path.exists():
         command(f"fslmaths {full_seg_path} -thr 2 -uthr 2 {ring_seg_path}", dry_run=dry_run)
 
-    if not ring_seg_path.exists():
+    return ring_seg_path
+
+
+def ensure_ring_mask_seg(subject_root, suffix=None, dry_run=False, output_dir=None):
+    """Extract ring segmentation from full PRL probability mask."""
+    full_seg_path = subject_root / f"prl_mask_def_prob_{suffix}.nii.gz"
+    if suffix is None:
+        for suffix in ["CH", "SRS", "LR"]:
+            full_seg_path = subject_root / f"prl_mask_def_prob_{suffix}.nii.gz"
+            if full_seg_path.exists():
+                break
+        else:
+            raise FileNotFoundError(f"No segmentation in {subject_root}")
+
+    if output_dir is None:
+        output_dir = subject_root
+    ring_mask_path = output_dir / f"prl_rim_mask_def_prob_{suffix}.nii.gz"
+    
+    if not ring_mask_path.exists():
         command(f"fslmaths {full_seg_path} -thr 2 -uthr 2 -bin {ring_mask_path}", dry_run=dry_run)
 
-    return ring_seg_path
+    return ring_mask_path
 
 
 def ensure_ring_label():
@@ -176,7 +193,20 @@ def prepare_rois(subid, suffix, prl_df, expand_xy, expand_z, data_root, dry_run=
         ring_in = ensure_ring_seg(subject_root, suffix=suffix, dry_run=dry_run)
         ring_basename = ring_in.name.removesuffix(".nii.gz")
         ring_outname = f"{ring_basename}_xy{expand_xy}_z{expand_z}.nii.gz"
+
+        ring_mask_in = ensure_ring_mask_seg(subject_root, suffix=suffix, dry_run=dry_run)
+        ring_mask_basename = ring_mask_in.name.removesuffix(".nii.gz")
+        ring_mask_outname = f"{ring_mask_basename}_xy{expand_xy}_z{expand_z}.nii.gz"
+
         if index in prl_labels:
+            ring_mask_out = output_path / ring_mask_outname
+            run_if_missing(
+                ring_mask_out,
+                f"fslroi {ring_mask_in} {ring_mask_out} {box}",
+                dry_run=dry_run,
+                verbose=True,
+            )
+
             ring_out = output_path / ring_outname
             run_if_missing(
                 ring_out,
@@ -337,25 +367,25 @@ def main(argv=None):
             suffix_to_use[int(subid)] = suffix
 
     #! this is what normally runs for the main pipeline
-    # create_rois_for_subjects(
-    #     subjects=subjects,
-    #     suffix_to_use=suffix_to_use,
-    #     prl_df=prl_df,
-    #     data_root=Path(label_config["dataroot"]),
-    #     expand_xy=label_config["expand_xy"],
-    #     expand_z=label_config["expand_z"],
-    #     processes=args.processes,
-    #     dry_run=args.dry_run,
-    # )
-    #! just quickly wanted to produce full PRL segmentations
-    create_full_prls_for_subjects(
+    create_rois_for_subjects(
         subjects=subjects,
         suffix_to_use=suffix_to_use,
         prl_df=prl_df,
         data_root=Path(label_config["dataroot"]),
+        expand_xy=label_config["expand_xy"],
+        expand_z=label_config["expand_z"],
         processes=args.processes,
         dry_run=args.dry_run,
     )
+    #! just quickly wanted to produce full PRL segmentations
+    # create_full_prls_for_subjects(
+    #     subjects=subjects,
+    #     suffix_to_use=suffix_to_use,
+    #     prl_df=prl_df,
+    #     data_root=Path(label_config["dataroot"]),
+    #     processes=args.processes,
+    #     dry_run=args.dry_run,
+    # )
     #! just trying to do this quick and dirty, clean up later
     # stack_images_for_subjects(
     #     subjects=subjects,

@@ -8,6 +8,7 @@ for path lookups.
 
 from __future__ import annotations
 
+from collections import defaultdict
 import os
 import re
 import random
@@ -28,6 +29,7 @@ from .configs import PreprocessingConfig, AlgoConfig
 
 #TODO: this isnt set up for subjects with multiple sessions since Dataset assumes one sesid per subid
 
+random.seed(42)
 
 DEFAULT_EXPAND_XY = 20
 DEFAULT_EXPAND_Z = 2
@@ -75,6 +77,7 @@ class Dataset:
             images=preprocess_defaults.get("images", DEFAULT_IMAGES),
             expand_xy=preprocess_defaults.get("expand_xy", DEFAULT_EXPAND_XY),
             expand_z=preprocess_defaults.get("expand_z", DEFAULT_EXPAND_Z),
+            prl_label_prefix=preprocess_defaults.get("prl_label_prefix", "prl_label")
         )
         training_defaults = defaults.get("training", {})
         if training_defaults is None:
@@ -219,9 +222,11 @@ class Dataset:
                 suffix_to_use[k] = "_" + suffix
 
         # Scan subject directories and categorize PRL vs lesion-only
-        prl_folders = []
-        lesion_folders = []
+        subject_folder_list = []
+        total_prl = 0
         for subid in self.subjects:
+            prl_folders = []
+            lesion_folders = []
             subid = int(subid)
             sesid = self.prl_df.loc[subid, "date_mri"]
             subject_root = self.data_root / f"sub{subid}-{sesid}"
@@ -240,16 +245,173 @@ class Dataset:
                 if index < 1:
                     continue
                 if index in prl_labels:
-                    prl_folders.append((folder, subid, index))
+                    # prl_folders.append((folder, subid, index))
+                    prl_folders.append((folder, index))
                 else:
-                    lesion_folders.append((folder, subid, index))
+                    # lesion_folders.append((folder, subid, index))
+                    lesion_folders.append((folder, index))
+
+            subject_folder_list.append((
+                subid, 
+                prl_folders, 
+                lesion_folders
+            ))
+            total_prl += len(prl_folders)
+
+        from itertools import combinations
+
+        # Each subject record:
+        # (subid, prl_folders, lesion_folders)
+
+        rng = np.random.default_rng(42)
+
+        def counts(subject):
+            _, prls, lesions = subject
+            return len(prls), len(lesions)
+
+
+        def subject_counts(subject):
+            """Return counts in order: PRLs, subjects, non-PRL lesions."""
+            return np.array([
+                len(subject[1]),
+                1,
+                len(subject[2]),
+            ], dtype=float)
+
+
+        def imbalance_score(loads, targets, weights):
+            """Weighted sum of squared relative deviations from targets."""
+            return np.sum(
+                weights * ((loads - targets) / targets)**2
+            )
+
+
+        # --------------------------------------------------
+        # Stage 1: Select test subjects
+        # --------------------------------------------------
+
+        n_subjects = len(subject_folder_list)
+        n_test_subjects = round(n_subjects * self.test_split)
+
+        total_prls = sum(len(s[1]) for s in subject_folder_list)
+        total_lesions = sum(len(s[2]) for s in subject_folder_list)
+
+        target_test_prls = total_prls * self.test_split
+        target_test_lesions = total_lesions * self.test_split
+
+        # Exhaustive search is feasible for ~24 subjects.
+        best_score = float("inf")
+        best_indices = None
+
+        for indices in combinations(range(n_subjects), n_test_subjects):
+            test_prls = sum(len(subject_folder_list[i][1]) for i in indices)
+            test_lesions = sum(len(subject_folder_list[i][2]) for i in indices)
+
+            score = (
+                3.0 * ((test_prls - target_test_prls) / max(target_test_prls, 1))**2
+                + 1.0 * ((test_lesions - target_test_lesions) / max(target_test_lesions, 1))**2
+            )
+
+            if score < best_score:
+                best_score = score
+                best_indices = set(indices)
+
+        test_fold_subjects = [
+            s for i, s in enumerate(subject_folder_list)
+            if i in best_indices
+        ]
+
+        train_subjects = [
+            s for i, s in enumerate(subject_folder_list)
+            if i not in best_indices
+        ]
+
+
+        # --------------------------------------------------
+        # Stage 2: Assign training folds
+        # --------------------------------------------------
+
+        def assign_folds(
+            subjects,
+            n_folds,
+            rng,
+            weights=(3.0, 2.0, 1.0),
+            n_restarts=200,
+        ):
+            weights = np.asarray(weights, dtype=float)
+
+            counts = np.array([
+                subject_counts(s) for s in subjects
+            ])
+
+            targets = np.maximum(counts.sum(axis=0) / n_folds, 1.0)
+
+            best_score = np.inf
+            best_folds = None
+
+            for _ in range(n_restarts):
+
+                ordered_subjects = list(subjects)
+                rng.shuffle(ordered_subjects)
+                ordered_subjects.sort(
+                    key=lambda s: len(s[1]),
+                    reverse=True,
+                )
+
+                folds = [[] for _ in range(n_folds)]
+                loads = np.zeros((n_folds, 3))
+
+                for subject in ordered_subjects:
+                    contribution = subject_counts(subject)
+
+                    # Evaluate the change in objective from adding
+                    # this subject to each candidate fold.
+                    scores = (
+                        np.sum(
+                            weights * (
+                                (loads + contribution - targets) / targets
+                            )**2,
+                            axis=1,
+                        )
+                        - np.sum(
+                            weights * (
+                                (loads - targets) / targets
+                            )**2,
+                            axis=1,
+                        )
+                    )
+
+                    k = int(np.argmin(scores))
+
+                    folds[k].append(subject)
+                    loads[k] += contribution
+
+                score = imbalance_score(loads, targets, weights)
+
+                if score < best_score:
+                    best_score = score
+                    best_folds = folds
+
+            return {
+                k: group for k, group in enumerate(best_folds)
+            }
+
+
+        weights = (3.0, 2.0, 1.0)
+
+        fold_subjects = assign_folds(
+            train_subjects,
+            self.n_folds,
+            rng,
+            weights=weights,
+        )
 
         def _make_entry(folder, subid, index, case_type, suffix=""):
             if len(suffix) > 0 and suffix[0] != "_":
                 suffix = "_" + suffix
             rel = str(folder.relative_to(self.data_root))
             if case_type == "PRL":
-                label = f"{rel}/prl_label{suffix}_"
+                label = f"{rel}/{self.preprocess.prl_label_prefix}{suffix}_"
             else:
                 label = f"{rel}/lesion_"
             return {
@@ -260,35 +422,52 @@ class Dataset:
             }
 
         datalist: dict[str, list] = {"training": [], "testing": []}
+        label_types: dict[str, list] = {"prl_labels": [], "lesion_labels": []}
 
-        for group, case_type in [(prl_folders, "PRL"), (lesion_folders, "Lesion")]:
-            inds = list(range(len(group)))
-            random.shuffle(inds)
-            test_end = floor(len(inds) * self.test_split)
+        for fold, ith_fold_subjects in fold_subjects.items():
+            for subid, prl_folders, lesion_folders in ith_fold_subjects:
+                for folder, index in prl_folders:
+                    suffix = suffix_to_use.get(subid, "")
+                    entry = _make_entry(
+                        folder, subid, index, "PRL", suffix
+                    )
+                    entry['fold'] = fold
+                    datalist['training'].append(entry)
+                    label_types['prl_labels'].append(entry['label'])
 
-            for i in range(test_end):
-                folder, subid, index = group[inds[i]]
-                suffix = suffix_to_use.get(subid, "") if case_type == "PRL" else ""
-                entry = _make_entry(folder, subid, index, case_type, suffix)
-                datalist["testing"].append(entry)
+                for folder, index in lesion_folders:
+                    suffix = ""
+                    entry = _make_entry(
+                        folder, subid, index, "Lesion", suffix
+                    )
+                    entry['fold'] = fold
+                    datalist['training'].append(entry)
+                    label_types['lesion_labels'].append(entry['label'])
 
-            for i in range(test_end, len(inds)):
-                folder, subid, index = group[inds[i]]
-                suffix = suffix_to_use.get(subid, "") if case_type == "PRL" else ""
-                entry = _make_entry(folder, subid, index, case_type, suffix)
-                entry["fold"] = i % self.n_folds
-                datalist["training"].append(entry)
 
+        for subid, prl_folders, lesion_folders in test_fold_subjects:
+            for folder, index in prl_folders:
+                suffix = suffix_to_use.get(subid, "")
+                entry = _make_entry(
+                    folder, subid, index, "PRL", suffix
+                )
+                entry['fold'] = fold
+                datalist['testing'].append(entry)
+                label_types['prl_labels'].append(entry['label'])
+                
+            for folder, index in lesion_folders:
+                suffix = ""
+                entry = _make_entry(
+                    folder, subid, index, "Lesion", suffix
+                )
+                entry['fold'] = fold
+                datalist['testing'].append(entry)
+                label_types['lesion_labels'].append(entry['label'])
+        
+        
         with open(output_path, "w") as f:
             json.dump(datalist, f, indent=4)
 
-        label_types = {
-            "prl_labels": [
-                str(item[0] / f"prl_label{suffix_to_use.get(item[1], '')}_")
-                for item in prl_folders
-            ],
-            "lesion_labels": [str(item[0]) for item in lesion_folders],
-        }
         with open(label_info_path, "w") as f:
             json.dump(label_types, f, indent=4)
 

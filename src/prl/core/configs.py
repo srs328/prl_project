@@ -27,10 +27,13 @@ def get_value(obj, key_path):
         return obj[keys[0]]
     else:
         return get_value(obj[keys[0]], "#".join(keys[1:]))
+    
+
+def _normalize_images(images) -> tuple[str, ...]:
+    return tuple(im.split("/")[-1].removesuffix(".nii.gz") for im in images)
 
 
-
-@attrs.define(frozen=True)
+@attrs.frozen
 class PreprocessingConfig:
     """ROI cropping and data preparation parameters.
 
@@ -41,10 +44,12 @@ class PreprocessingConfig:
     expand_xy: int = attrs.field(default=20, validator=attrs.validators.ge(0))
     expand_z: int = attrs.field(default=2, validator=attrs.validators.ge(0))
     images: tuple[str, ...] = attrs.field(
-        default=("flair", "phase"), converter=tuple,
+        default=("flair", "phase"), converter=_normalize_images,
     )
+    prl_label_prefix: str = attrs.field(default="prl_label")
     processes: int | None = None  # None = sequential
     dry_run: bool = False
+
 
     @property
     def image_prefix(self) -> str:
@@ -65,7 +70,7 @@ class PreprocessingConfig:
         try:
             return getattr(self, key)
         except AttributeError: 
-            raise KeyError(f"{self.__name__} has no property {key}")
+            raise KeyError(f"{type(self).__name__} has no property {key}")
 
 # ---------------------------------------------------------------------------
 # Algorithm training configs
