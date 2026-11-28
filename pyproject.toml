@@ -13,6 +13,7 @@ dependencies = [
     "click",
     "loguru",
     "rich>=15.0.0",
+    "requests",
     "tqdm",
 
     # Scientific computing
