@@ -2,12 +2,12 @@ import re
 import sys
 import os
 import pandas as pd
+from prl.helpers.paths import RESOURCES_DIR
 from pathlib import Path
 from tqdm import tqdm
 
-sys.path.append("/home/srs-9/Projects/prl_project")
-from preprocessing.verify_segmentations import verify_prl, verify_lesion
-from helpers.shell_interface import make_screenshot, command
+from prl.preprocessing.verify_segmentations import verify_prl, verify_lesion
+from prl.helpers.shell_interface import make_screenshot, command
 
 curr_dir = Path(__file__).parent
 screenshots = curr_dir / "screenshots"
@@ -20,7 +20,7 @@ with open(subject_list, 'r') as f:
     subjects = [int(line.strip()) for line in f.readlines()]
 
 prl_df = pd.read_csv(
-    "/home/srs-9/Projects/prl_project/PRL_spreadsheet-lstai_update_label_reference.csv",
+    RESOURCES_DIR / "PRL_spreadsheet-lstai_update_label_reference.csv",
     index_col="subid"
 )
 

@@ -3,12 +3,13 @@ import numpy as np
 import subprocess
 import os
 import pandas as pd
+from prl.helpers.paths import RESOURCES_DIR
 from pathlib import Path
 from tqdm import tqdm
 
-orig_index_df = pd.read_csv("/home/srs-9/Projects/prl_project/PRL_spreadsheet_label_reference.csv",
+orig_index_df = pd.read_csv(RESOURCES_DIR / "PRL_spreadsheet_label_reference.csv",
                          index_col="subid")
-new_index_df = pd.read_csv("/home/srs-9/Projects/prl_project/PRL_spreadsheet-lstai_update_label_reference.csv",
+new_index_df = pd.read_csv(RESOURCES_DIR / "PRL_spreadsheet-lstai_update_label_reference.csv",
                         index_col="subid")
 dataroot = Path("/media/smbshare/3Tpioneer_bids")
 work_dir = Path(__file__).parent / "tmp"

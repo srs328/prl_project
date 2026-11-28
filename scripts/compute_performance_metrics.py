@@ -21,8 +21,7 @@ import numpy as np
 import pandas as pd
 from my_python_utils import save_json
 
-sys.path.insert(0, str(Path(__file__).parent.parent))
-from helpers.paths import load_config
+from prl.helpers.paths import load_config
 
 try:
     import nibabel as nib

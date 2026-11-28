@@ -20,8 +20,7 @@ from typing import Dict, List, Optional
 import subprocess
 import shutil
 
-sys.path.insert(0, str(Path(__file__).parent.parent))
-from helpers.paths import load_config
+from prl.helpers.paths import load_config
 
 
 def get_validation_cases(datalist_path: Path, fold_num: int) -> List[Dict]:

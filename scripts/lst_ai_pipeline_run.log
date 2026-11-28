@@ -1,0 +1,453 @@
+2026-03-29 15:09:14.700 | INFO     | __main__:<module>:41 - Starting subject 1010
+2026-03-29 15:09:14.703 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1010-20180208
+2026-03-29 15:11:41.486 | DEBUG    | __main__:<module>:56 - RUN: producing /media/smbshare/srs-9/prl_project/data/sub1010-20180208/lst-ai/space-flair_seg-lst.nii.gz
+OK: produced /media/smbshare/srs-9/prl_project/data/sub1010-20180208/lst-ai/space-flair_seg-lst.nii.gz
+
+2026-03-29 15:11:41.487 | INFO     | __main__:<module>:41 - Starting subject 1011
+2026-03-29 15:11:41.487 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1011-20180911
+2026-03-29 15:14:05.360 | DEBUG    | __main__:<module>:56 - RUN: producing /media/smbshare/srs-9/prl_project/data/sub1011-20180911/lst-ai/space-flair_seg-lst.nii.gz
+OK: produced /media/smbshare/srs-9/prl_project/data/sub1011-20180911/lst-ai/space-flair_seg-lst.nii.gz
+
+2026-03-29 15:15:54.268 | INFO     | __main__:<module>:41 - Starting subject 1033
+2026-03-29 15:15:54.270 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1033-20171117
+2026-03-29 15:18:12.515 | DEBUG    | __main__:<module>:56 - RUN: producing /media/smbshare/srs-9/prl_project/data/sub1033-20171117/lst-ai/space-flair_seg-lst.nii.gz
+OK: produced /media/smbshare/srs-9/prl_project/data/sub1033-20171117/lst-ai/space-flair_seg-lst.nii.gz
+
+2026-03-29 15:18:12.515 | INFO     | __main__:<module>:41 - Starting subject 1038
+2026-03-29 15:18:12.516 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1038-20161031
+2026-03-29 15:20:43.532 | DEBUG    | __main__:<module>:56 - RUN: producing /media/smbshare/srs-9/prl_project/data/sub1038-20161031/lst-ai/space-flair_seg-lst.nii.gz
+OK: produced /media/smbshare/srs-9/prl_project/data/sub1038-20161031/lst-ai/space-flair_seg-lst.nii.gz
+
+2026-03-29 15:20:43.533 | INFO     | __main__:<module>:41 - Starting subject 1044
+2026-03-29 15:20:43.533 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1044-20170317
+2026-03-29 15:23:08.227 | DEBUG    | __main__:<module>:56 - RUN: producing /media/smbshare/srs-9/prl_project/data/sub1044-20170317/lst-ai/space-flair_seg-lst.nii.gz
+OK: produced /media/smbshare/srs-9/prl_project/data/sub1044-20170317/lst-ai/space-flair_seg-lst.nii.gz
+
+2026-03-29 15:23:08.227 | INFO     | __main__:<module>:41 - Starting subject 1050
+2026-03-29 15:23:08.227 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1050-20170624
+2026-03-29 15:25:40.288 | DEBUG    | __main__:<module>:56 - RUN: producing /media/smbshare/srs-9/prl_project/data/sub1050-20170624/lst-ai/space-flair_seg-lst.nii.gz
+OK: produced /media/smbshare/srs-9/prl_project/data/sub1050-20170624/lst-ai/space-flair_seg-lst.nii.gz
+
+2026-03-29 15:25:40.288 | INFO     | __main__:<module>:41 - Starting subject 1074
+2026-03-29 15:25:40.289 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1074-20190518
+2026-03-29 15:27:58.461 | DEBUG    | __main__:<module>:56 - RUN: producing /media/smbshare/srs-9/prl_project/data/sub1074-20190518/lst-ai/space-flair_seg-lst.nii.gz
+OK: produced /media/smbshare/srs-9/prl_project/data/sub1074-20190518/lst-ai/space-flair_seg-lst.nii.gz
+
+2026-03-29 15:27:58.461 | INFO     | __main__:<module>:41 - Starting subject 1076
+2026-03-29 15:27:58.461 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1076-20170912
+2026-03-29 15:30:24.753 | DEBUG    | __main__:<module>:56 - RUN: producing /media/smbshare/srs-9/prl_project/data/sub1076-20170912/lst-ai/space-flair_seg-lst.nii.gz
+OK: produced /media/smbshare/srs-9/prl_project/data/sub1076-20170912/lst-ai/space-flair_seg-lst.nii.gz
+
+2026-03-29 15:30:24.753 | INFO     | __main__:<module>:41 - Starting subject 1078
+2026-03-29 15:30:24.753 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1078-20180412
+2026-03-29 15:32:45.958 | DEBUG    | __main__:<module>:56 - RUN: producing /media/smbshare/srs-9/prl_project/data/sub1078-20180412/lst-ai/space-flair_seg-lst.nii.gz
+OK: produced /media/smbshare/srs-9/prl_project/data/sub1078-20180412/lst-ai/space-flair_seg-lst.nii.gz
+
+2026-03-29 15:32:45.958 | INFO     | __main__:<module>:41 - Starting subject 1080
+2026-03-29 15:32:45.958 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1080-20180416
+2026-03-29 15:35:09.389 | DEBUG    | __main__:<module>:56 - RUN: producing /media/smbshare/srs-9/prl_project/data/sub1080-20180416/lst-ai/space-flair_seg-lst.nii.gz
+OK: produced /media/smbshare/srs-9/prl_project/data/sub1080-20180416/lst-ai/space-flair_seg-lst.nii.gz
+
+2026-03-29 15:35:09.390 | INFO     | __main__:<module>:41 - Starting subject 1124
+2026-03-29 15:35:09.390 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1124-20160929
+2026-03-29 15:37:28.388 | DEBUG    | __main__:<module>:56 - RUN: producing /media/smbshare/srs-9/prl_project/data/sub1124-20160929/lst-ai/space-flair_seg-lst.nii.gz
+OK: produced /media/smbshare/srs-9/prl_project/data/sub1124-20160929/lst-ai/space-flair_seg-lst.nii.gz
+
+2026-03-29 15:37:28.388 | INFO     | __main__:<module>:41 - Starting subject 1125
+2026-03-29 15:37:28.388 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1125-20160919
+2026-03-29 15:39:56.177 | DEBUG    | __main__:<module>:56 - RUN: producing /media/smbshare/srs-9/prl_project/data/sub1125-20160919/lst-ai/space-flair_seg-lst.nii.gz
+OK: produced /media/smbshare/srs-9/prl_project/data/sub1125-20160919/lst-ai/space-flair_seg-lst.nii.gz
+
+2026-03-29 15:39:56.178 | INFO     | __main__:<module>:41 - Starting subject 1131
+2026-03-29 15:39:56.178 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1131-20161209
+2026-03-29 15:42:10.519 | DEBUG    | __main__:<module>:56 - RUN: producing /media/smbshare/srs-9/prl_project/data/sub1131-20161209/lst-ai/space-flair_seg-lst.nii.gz
+OK: produced /media/smbshare/srs-9/prl_project/data/sub1131-20161209/lst-ai/space-flair_seg-lst.nii.gz
+
+2026-03-29 15:42:10.520 | INFO     | __main__:<module>:41 - Starting subject 1136
+2026-03-29 15:42:10.520 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1136-20171109
+2026-03-29 15:44:27.392 | DEBUG    | __main__:<module>:56 - RUN: producing /media/smbshare/srs-9/prl_project/data/sub1136-20171109/lst-ai/space-flair_seg-lst.nii.gz
+OK: produced /media/smbshare/srs-9/prl_project/data/sub1136-20171109/lst-ai/space-flair_seg-lst.nii.gz
+
+2026-03-29 15:44:27.392 | INFO     | __main__:<module>:41 - Starting subject 1215
+2026-03-29 15:44:27.392 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1215-20180429
+2026-03-29 15:46:41.107 | DEBUG    | __main__:<module>:56 - RUN: producing /media/smbshare/srs-9/prl_project/data/sub1215-20180429/lst-ai/space-flair_seg-lst.nii.gz
+OK: produced /media/smbshare/srs-9/prl_project/data/sub1215-20180429/lst-ai/space-flair_seg-lst.nii.gz
+
+2026-03-29 15:46:41.107 | INFO     | __main__:<module>:41 - Starting subject 1293
+2026-03-29 15:46:41.107 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1293-20161129
+2026-03-29 15:49:04.291 | DEBUG    | __main__:<module>:56 - RUN: producing /media/smbshare/srs-9/prl_project/data/sub1293-20161129/lst-ai/space-flair_seg-lst.nii.gz
+OK: produced /media/smbshare/srs-9/prl_project/data/sub1293-20161129/lst-ai/space-flair_seg-lst.nii.gz
+
+2026-03-29 15:49:04.291 | INFO     | __main__:<module>:41 - Starting subject 1298
+2026-03-29 15:49:04.291 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1298-20190506
+2026-03-29 15:51:22.971 | DEBUG    | __main__:<module>:56 - RUN: producing /media/smbshare/srs-9/prl_project/data/sub1298-20190506/lst-ai/space-flair_seg-lst.nii.gz
+OK: produced /media/smbshare/srs-9/prl_project/data/sub1298-20190506/lst-ai/space-flair_seg-lst.nii.gz
+
+2026-03-29 15:51:22.971 | INFO     | __main__:<module>:41 - Starting subject 1348
+2026-03-29 15:51:22.972 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1348-20181009
+2026-03-29 15:53:44.496 | DEBUG    | __main__:<module>:56 - RUN: producing /media/smbshare/srs-9/prl_project/data/sub1348-20181009/lst-ai/space-flair_seg-lst.nii.gz
+OK: produced /media/smbshare/srs-9/prl_project/data/sub1348-20181009/lst-ai/space-flair_seg-lst.nii.gz
+
+2026-03-29 15:53:44.496 | INFO     | __main__:<module>:41 - Starting subject 1358
+2026-03-29 15:53:44.496 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1358-20170311
+2026-03-29 15:55:57.661 | DEBUG    | __main__:<module>:56 - RUN: producing /media/smbshare/srs-9/prl_project/data/sub1358-20170311/lst-ai/space-flair_seg-lst.nii.gz
+OK: produced /media/smbshare/srs-9/prl_project/data/sub1358-20170311/lst-ai/space-flair_seg-lst.nii.gz
+
+2026-03-29 15:55:57.661 | INFO     | __main__:<module>:41 - Starting subject 1396
+2026-03-29 15:55:57.662 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1396-20170126
+2026-03-29 15:58:11.798 | DEBUG    | __main__:<module>:56 - RUN: producing /media/smbshare/srs-9/prl_project/data/sub1396-20170126/lst-ai/space-flair_seg-lst.nii.gz
+OK: produced /media/smbshare/srs-9/prl_project/data/sub1396-20170126/lst-ai/space-flair_seg-lst.nii.gz
+
+2026-03-29 15:58:11.798 | INFO     | __main__:<module>:41 - Starting subject 1529
+2026-03-29 15:58:11.799 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1529-20170119
+2026-03-29 16:00:32.546 | DEBUG    | __main__:<module>:56 - RUN: producing /media/smbshare/srs-9/prl_project/data/sub1529-20170119/lst-ai/space-flair_seg-lst.nii.gz
+OK: produced /media/smbshare/srs-9/prl_project/data/sub1529-20170119/lst-ai/space-flair_seg-lst.nii.gz
+
+2026-03-29 16:00:32.547 | INFO     | __main__:<module>:41 - Starting subject 2026
+2026-03-29 16:00:32.547 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub2026-20160917
+2026-03-29 16:02:51.240 | DEBUG    | __main__:<module>:56 - RUN: producing /media/smbshare/srs-9/prl_project/data/sub2026-20160917/lst-ai/space-flair_seg-lst.nii.gz
+OK: produced /media/smbshare/srs-9/prl_project/data/sub2026-20160917/lst-ai/space-flair_seg-lst.nii.gz
+
+2026-03-29 16:02:51.240 | INFO     | __main__:<module>:41 - Starting subject 2041
+2026-03-29 16:02:51.240 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub2041-20170515
+2026-03-29 16:05:19.514 | DEBUG    | __main__:<module>:56 - RUN: producing /media/smbshare/srs-9/prl_project/data/sub2041-20170515/lst-ai/space-flair_seg-lst.nii.gz
+OK: produced /media/smbshare/srs-9/prl_project/data/sub2041-20170515/lst-ai/space-flair_seg-lst.nii.gz
+
+2026-03-29 16:05:19.515 | INFO     | __main__:<module>:41 - Starting subject 2131
+2026-03-29 16:05:19.515 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub2131-20190117
+2026-03-29 16:07:41.146 | DEBUG    | __main__:<module>:56 - RUN: producing /media/smbshare/srs-9/prl_project/data/sub2131-20190117/lst-ai/space-flair_seg-lst.nii.gz
+OK: produced /media/smbshare/srs-9/prl_project/data/sub2131-20190117/lst-ai/space-flair_seg-lst.nii.gz
+
+2026-03-29 16:14:04.375 | INFO     | __main__:<module>:41 - Starting subject 1033
+2026-03-29 16:14:04.378 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1033-20171117
+2026-03-29 16:14:04.396 | DEBUG    | __main__:<module>:56 - SKIP: /media/smbshare/srs-9/prl_project/data/sub1033-20171117/lst-ai/space-flair_seg-lst.nii.gz exists
+
+2026-03-29 16:14:04.396 | INFO     | __main__:<module>:41 - Starting subject 1038
+2026-03-29 16:14:04.396 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1038-20161031
+2026-03-29 16:14:04.409 | DEBUG    | __main__:<module>:56 - SKIP: /media/smbshare/srs-9/prl_project/data/sub1038-20161031/lst-ai/space-flair_seg-lst.nii.gz exists
+
+2026-03-29 16:14:04.409 | INFO     | __main__:<module>:41 - Starting subject 1044
+2026-03-29 16:14:04.409 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1044-20170317
+2026-03-29 16:14:04.421 | DEBUG    | __main__:<module>:56 - SKIP: /media/smbshare/srs-9/prl_project/data/sub1044-20170317/lst-ai/space-flair_seg-lst.nii.gz exists
+
+2026-03-29 16:14:04.421 | INFO     | __main__:<module>:41 - Starting subject 1050
+2026-03-29 16:14:04.421 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1050-20170624
+2026-03-29 16:14:04.432 | DEBUG    | __main__:<module>:56 - SKIP: /media/smbshare/srs-9/prl_project/data/sub1050-20170624/lst-ai/space-flair_seg-lst.nii.gz exists
+
+2026-03-29 16:14:04.432 | INFO     | __main__:<module>:41 - Starting subject 1074
+2026-03-29 16:14:04.433 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1074-20190518
+2026-03-29 16:14:04.444 | DEBUG    | __main__:<module>:56 - SKIP: /media/smbshare/srs-9/prl_project/data/sub1074-20190518/lst-ai/space-flair_seg-lst.nii.gz exists
+
+2026-03-29 16:14:04.444 | INFO     | __main__:<module>:41 - Starting subject 1076
+2026-03-29 16:14:04.444 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1076-20170912
+2026-03-29 16:14:04.456 | DEBUG    | __main__:<module>:56 - SKIP: /media/smbshare/srs-9/prl_project/data/sub1076-20170912/lst-ai/space-flair_seg-lst.nii.gz exists
+
+2026-03-29 16:14:04.456 | INFO     | __main__:<module>:41 - Starting subject 1078
+2026-03-29 16:14:04.456 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1078-20180412
+2026-03-29 16:14:04.468 | DEBUG    | __main__:<module>:56 - SKIP: /media/smbshare/srs-9/prl_project/data/sub1078-20180412/lst-ai/space-flair_seg-lst.nii.gz exists
+
+2026-03-29 16:14:04.468 | INFO     | __main__:<module>:41 - Starting subject 1080
+2026-03-29 16:14:04.468 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1080-20180416
+2026-03-29 16:14:04.480 | DEBUG    | __main__:<module>:56 - SKIP: /media/smbshare/srs-9/prl_project/data/sub1080-20180416/lst-ai/space-flair_seg-lst.nii.gz exists
+
+2026-03-29 16:14:04.480 | INFO     | __main__:<module>:41 - Starting subject 1124
+2026-03-29 16:14:04.480 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1124-20160929
+2026-03-29 16:14:04.491 | DEBUG    | __main__:<module>:56 - SKIP: /media/smbshare/srs-9/prl_project/data/sub1124-20160929/lst-ai/space-flair_seg-lst.nii.gz exists
+
+2026-03-29 16:14:04.492 | INFO     | __main__:<module>:41 - Starting subject 1125
+2026-03-29 16:14:04.492 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1125-20160919
+2026-03-29 16:14:04.503 | DEBUG    | __main__:<module>:56 - SKIP: /media/smbshare/srs-9/prl_project/data/sub1125-20160919/lst-ai/space-flair_seg-lst.nii.gz exists
+
+2026-03-29 16:14:04.503 | INFO     | __main__:<module>:41 - Starting subject 1131
+2026-03-29 16:14:04.503 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1131-20161209
+2026-03-29 16:14:04.515 | DEBUG    | __main__:<module>:56 - SKIP: /media/smbshare/srs-9/prl_project/data/sub1131-20161209/lst-ai/space-flair_seg-lst.nii.gz exists
+
+2026-03-29 16:14:04.515 | INFO     | __main__:<module>:41 - Starting subject 1136
+2026-03-29 16:14:04.515 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1136-20171109
+2026-03-29 16:14:04.527 | DEBUG    | __main__:<module>:56 - SKIP: /media/smbshare/srs-9/prl_project/data/sub1136-20171109/lst-ai/space-flair_seg-lst.nii.gz exists
+
+2026-03-29 16:14:04.527 | INFO     | __main__:<module>:41 - Starting subject 1215
+2026-03-29 16:14:04.527 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1215-20180429
+2026-03-29 16:14:04.538 | DEBUG    | __main__:<module>:56 - SKIP: /media/smbshare/srs-9/prl_project/data/sub1215-20180429/lst-ai/space-flair_seg-lst.nii.gz exists
+
+2026-03-29 16:14:04.539 | INFO     | __main__:<module>:41 - Starting subject 1293
+2026-03-29 16:14:04.539 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1293-20161129
+2026-03-29 16:14:04.550 | DEBUG    | __main__:<module>:56 - SKIP: /media/smbshare/srs-9/prl_project/data/sub1293-20161129/lst-ai/space-flair_seg-lst.nii.gz exists
+
+2026-03-29 16:14:04.550 | INFO     | __main__:<module>:41 - Starting subject 1298
+2026-03-29 16:14:04.551 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1298-20190506
+2026-03-29 16:14:04.562 | DEBUG    | __main__:<module>:56 - SKIP: /media/smbshare/srs-9/prl_project/data/sub1298-20190506/lst-ai/space-flair_seg-lst.nii.gz exists
+
+2026-03-29 16:14:04.562 | INFO     | __main__:<module>:41 - Starting subject 1348
+2026-03-29 16:14:04.562 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1348-20181009
+2026-03-29 16:14:04.574 | DEBUG    | __main__:<module>:56 - SKIP: /media/smbshare/srs-9/prl_project/data/sub1348-20181009/lst-ai/space-flair_seg-lst.nii.gz exists
+
+2026-03-29 16:14:04.574 | INFO     | __main__:<module>:41 - Starting subject 1358
+2026-03-29 16:14:04.574 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1358-20170311
+2026-03-29 16:14:04.586 | DEBUG    | __main__:<module>:56 - SKIP: /media/smbshare/srs-9/prl_project/data/sub1358-20170311/lst-ai/space-flair_seg-lst.nii.gz exists
+
+2026-03-29 16:14:04.586 | INFO     | __main__:<module>:41 - Starting subject 1396
+2026-03-29 16:14:04.586 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1396-20170126
+2026-03-29 16:14:04.598 | DEBUG    | __main__:<module>:56 - SKIP: /media/smbshare/srs-9/prl_project/data/sub1396-20170126/lst-ai/space-flair_seg-lst.nii.gz exists
+
+2026-03-29 16:14:04.598 | INFO     | __main__:<module>:41 - Starting subject 1529
+2026-03-29 16:14:04.598 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1529-20170119
+2026-03-29 16:14:04.610 | DEBUG    | __main__:<module>:56 - SKIP: /media/smbshare/srs-9/prl_project/data/sub1529-20170119/lst-ai/space-flair_seg-lst.nii.gz exists
+
+2026-03-29 16:14:04.610 | INFO     | __main__:<module>:41 - Starting subject 2026
+2026-03-29 16:14:04.610 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub2026-20160917
+2026-03-29 16:14:04.622 | DEBUG    | __main__:<module>:56 - SKIP: /media/smbshare/srs-9/prl_project/data/sub2026-20160917/lst-ai/space-flair_seg-lst.nii.gz exists
+
+2026-03-29 16:14:04.622 | INFO     | __main__:<module>:41 - Starting subject 2041
+2026-03-29 16:14:04.623 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub2041-20170515
+2026-03-29 16:14:04.634 | DEBUG    | __main__:<module>:56 - SKIP: /media/smbshare/srs-9/prl_project/data/sub2041-20170515/lst-ai/space-flair_seg-lst.nii.gz exists
+
+2026-03-29 16:14:04.634 | INFO     | __main__:<module>:41 - Starting subject 2131
+2026-03-29 16:14:04.634 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub2131-20190117
+2026-03-29 16:14:04.646 | DEBUG    | __main__:<module>:56 - SKIP: /media/smbshare/srs-9/prl_project/data/sub2131-20190117/lst-ai/space-flair_seg-lst.nii.gz exists
+
+2026-03-29 16:14:13.419 | INFO     | __main__:<module>:41 - Starting subject 1033
+2026-03-29 16:14:13.421 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1033-20171117
+2026-03-29 16:14:13.433 | DEBUG    | __main__:<module>:56 - SKIP: /media/smbshare/srs-9/prl_project/data/sub1033-20171117/lst-ai/space-flair_seg-lst.nii.gz exists
+
+2026-03-29 16:14:13.433 | INFO     | __main__:<module>:41 - Starting subject 1038
+2026-03-29 16:14:13.434 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1038-20161031
+2026-03-29 16:14:13.446 | DEBUG    | __main__:<module>:56 - SKIP: /media/smbshare/srs-9/prl_project/data/sub1038-20161031/lst-ai/space-flair_seg-lst.nii.gz exists
+
+2026-03-29 16:14:13.446 | INFO     | __main__:<module>:41 - Starting subject 1044
+2026-03-29 16:14:13.446 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1044-20170317
+2026-03-29 16:14:13.458 | DEBUG    | __main__:<module>:56 - SKIP: /media/smbshare/srs-9/prl_project/data/sub1044-20170317/lst-ai/space-flair_seg-lst.nii.gz exists
+
+2026-03-29 16:14:13.458 | INFO     | __main__:<module>:41 - Starting subject 1050
+2026-03-29 16:14:13.458 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1050-20170624
+2026-03-29 16:14:13.469 | DEBUG    | __main__:<module>:56 - SKIP: /media/smbshare/srs-9/prl_project/data/sub1050-20170624/lst-ai/space-flair_seg-lst.nii.gz exists
+
+2026-03-29 16:14:13.469 | INFO     | __main__:<module>:41 - Starting subject 1074
+2026-03-29 16:14:13.469 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1074-20190518
+2026-03-29 16:14:13.481 | DEBUG    | __main__:<module>:56 - SKIP: /media/smbshare/srs-9/prl_project/data/sub1074-20190518/lst-ai/space-flair_seg-lst.nii.gz exists
+
+2026-03-29 16:14:13.481 | INFO     | __main__:<module>:41 - Starting subject 1076
+2026-03-29 16:14:13.481 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1076-20170912
+2026-03-29 16:14:13.492 | DEBUG    | __main__:<module>:56 - SKIP: /media/smbshare/srs-9/prl_project/data/sub1076-20170912/lst-ai/space-flair_seg-lst.nii.gz exists
+
+2026-03-29 16:14:13.492 | INFO     | __main__:<module>:41 - Starting subject 1078
+2026-03-29 16:14:13.493 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1078-20180412
+2026-03-29 16:14:13.504 | DEBUG    | __main__:<module>:56 - SKIP: /media/smbshare/srs-9/prl_project/data/sub1078-20180412/lst-ai/space-flair_seg-lst.nii.gz exists
+
+2026-03-29 16:14:13.505 | INFO     | __main__:<module>:41 - Starting subject 1080
+2026-03-29 16:14:13.505 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1080-20180416
+2026-03-29 16:14:13.517 | DEBUG    | __main__:<module>:56 - SKIP: /media/smbshare/srs-9/prl_project/data/sub1080-20180416/lst-ai/space-flair_seg-lst.nii.gz exists
+
+2026-03-29 16:14:13.517 | INFO     | __main__:<module>:41 - Starting subject 1124
+2026-03-29 16:14:13.517 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1124-20160929
+2026-03-29 16:14:13.528 | DEBUG    | __main__:<module>:56 - SKIP: /media/smbshare/srs-9/prl_project/data/sub1124-20160929/lst-ai/space-flair_seg-lst.nii.gz exists
+
+2026-03-29 16:14:13.529 | INFO     | __main__:<module>:41 - Starting subject 1125
+2026-03-29 16:14:13.529 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1125-20160919
+2026-03-29 16:14:13.540 | DEBUG    | __main__:<module>:56 - SKIP: /media/smbshare/srs-9/prl_project/data/sub1125-20160919/lst-ai/space-flair_seg-lst.nii.gz exists
+
+2026-03-29 16:14:13.540 | INFO     | __main__:<module>:41 - Starting subject 1131
+2026-03-29 16:14:13.541 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1131-20161209
+2026-03-29 16:14:13.553 | DEBUG    | __main__:<module>:56 - SKIP: /media/smbshare/srs-9/prl_project/data/sub1131-20161209/lst-ai/space-flair_seg-lst.nii.gz exists
+
+2026-03-29 16:14:13.553 | INFO     | __main__:<module>:41 - Starting subject 1136
+2026-03-29 16:14:13.553 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1136-20171109
+2026-03-29 16:14:13.565 | DEBUG    | __main__:<module>:56 - SKIP: /media/smbshare/srs-9/prl_project/data/sub1136-20171109/lst-ai/space-flair_seg-lst.nii.gz exists
+
+2026-03-29 16:14:13.565 | INFO     | __main__:<module>:41 - Starting subject 1215
+2026-03-29 16:14:13.565 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1215-20180429
+2026-03-29 16:14:13.577 | DEBUG    | __main__:<module>:56 - SKIP: /media/smbshare/srs-9/prl_project/data/sub1215-20180429/lst-ai/space-flair_seg-lst.nii.gz exists
+
+2026-03-29 16:14:13.577 | INFO     | __main__:<module>:41 - Starting subject 1293
+2026-03-29 16:14:13.577 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1293-20161129
+2026-03-29 16:14:13.589 | DEBUG    | __main__:<module>:56 - SKIP: /media/smbshare/srs-9/prl_project/data/sub1293-20161129/lst-ai/space-flair_seg-lst.nii.gz exists
+
+2026-03-29 16:14:13.589 | INFO     | __main__:<module>:41 - Starting subject 1298
+2026-03-29 16:14:13.589 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1298-20190506
+2026-03-29 16:14:13.601 | DEBUG    | __main__:<module>:56 - SKIP: /media/smbshare/srs-9/prl_project/data/sub1298-20190506/lst-ai/space-flair_seg-lst.nii.gz exists
+
+2026-03-29 16:14:13.601 | INFO     | __main__:<module>:41 - Starting subject 1348
+2026-03-29 16:14:13.601 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1348-20181009
+2026-03-29 16:14:13.613 | DEBUG    | __main__:<module>:56 - SKIP: /media/smbshare/srs-9/prl_project/data/sub1348-20181009/lst-ai/space-flair_seg-lst.nii.gz exists
+
+2026-03-29 16:14:13.613 | INFO     | __main__:<module>:41 - Starting subject 1358
+2026-03-29 16:14:13.613 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1358-20170311
+2026-03-29 16:14:13.625 | DEBUG    | __main__:<module>:56 - SKIP: /media/smbshare/srs-9/prl_project/data/sub1358-20170311/lst-ai/space-flair_seg-lst.nii.gz exists
+
+2026-03-29 16:14:13.625 | INFO     | __main__:<module>:41 - Starting subject 1396
+2026-03-29 16:14:13.625 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1396-20170126
+2026-03-29 16:14:13.636 | DEBUG    | __main__:<module>:56 - SKIP: /media/smbshare/srs-9/prl_project/data/sub1396-20170126/lst-ai/space-flair_seg-lst.nii.gz exists
+
+2026-03-29 16:14:13.636 | INFO     | __main__:<module>:41 - Starting subject 1529
+2026-03-29 16:14:13.637 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1529-20170119
+2026-03-29 16:14:13.648 | DEBUG    | __main__:<module>:56 - SKIP: /media/smbshare/srs-9/prl_project/data/sub1529-20170119/lst-ai/space-flair_seg-lst.nii.gz exists
+
+2026-03-29 16:14:13.648 | INFO     | __main__:<module>:41 - Starting subject 2026
+2026-03-29 16:14:13.649 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub2026-20160917
+2026-03-29 16:14:13.660 | DEBUG    | __main__:<module>:56 - SKIP: /media/smbshare/srs-9/prl_project/data/sub2026-20160917/lst-ai/space-flair_seg-lst.nii.gz exists
+
+2026-03-29 16:14:13.660 | INFO     | __main__:<module>:41 - Starting subject 2041
+2026-03-29 16:14:13.661 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub2041-20170515
+2026-03-29 16:14:13.672 | DEBUG    | __main__:<module>:56 - SKIP: /media/smbshare/srs-9/prl_project/data/sub2041-20170515/lst-ai/space-flair_seg-lst.nii.gz exists
+
+2026-03-29 16:14:13.672 | INFO     | __main__:<module>:41 - Starting subject 2131
+2026-03-29 16:14:13.672 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub2131-20190117
+2026-03-29 16:14:13.684 | DEBUG    | __main__:<module>:56 - SKIP: /media/smbshare/srs-9/prl_project/data/sub2131-20190117/lst-ai/space-flair_seg-lst.nii.gz exists
+
+2026-03-29 16:14:55.973 | INFO     | __main__:<module>:41 - Starting subject 1118
+2026-03-29 16:14:55.975 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub1118-20181217
+2026-03-29 16:15:47.069 | INFO     | __main__:<module>:41 - Starting subject 1118
+2026-03-29 16:15:47.072 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub1118-20181217
+2026-03-29 16:18:15.021 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 16:18:15.021 | INFO     | __main__:<module>:41 - Starting subject 1126
+2026-03-29 16:18:15.021 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub1126-20170609
+2026-03-29 16:20:46.461 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 16:20:46.461 | INFO     | __main__:<module>:41 - Starting subject 1130
+2026-03-29 16:20:46.461 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub1130-20180902
+2026-03-29 16:23:00.968 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 16:23:00.969 | INFO     | __main__:<module>:41 - Starting subject 1133
+2026-03-29 16:23:00.969 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub1133-20170308
+2026-03-29 16:25:30.830 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 16:25:30.830 | INFO     | __main__:<module>:41 - Starting subject 1152
+2026-03-29 16:25:30.830 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub1152-20170529
+2026-03-29 16:27:54.399 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 16:27:54.399 | INFO     | __main__:<module>:41 - Starting subject 1156
+2026-03-29 16:27:54.400 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub1156-20170404
+2026-03-29 16:30:29.937 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 16:30:29.937 | INFO     | __main__:<module>:41 - Starting subject 1164
+2026-03-29 16:30:29.937 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub1164-20190709
+2026-03-29 16:33:02.517 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 16:33:02.518 | INFO     | __main__:<module>:41 - Starting subject 1165
+2026-03-29 16:33:02.518 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub1165-20160910
+2026-03-29 16:35:14.326 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 16:35:14.327 | INFO     | __main__:<module>:41 - Starting subject 1177
+2026-03-29 16:35:14.327 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub1177-20180813
+2026-03-29 16:37:32.892 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 16:37:32.892 | INFO     | __main__:<module>:41 - Starting subject 1178
+2026-03-29 16:37:32.893 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub1178-20191023
+2026-03-29 16:40:15.348 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 16:40:15.348 | INFO     | __main__:<module>:41 - Starting subject 1183
+2026-03-29 16:40:15.349 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub1183-20170328
+2026-03-29 16:42:46.477 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 16:42:46.477 | INFO     | __main__:<module>:41 - Starting subject 1186
+2026-03-29 16:42:46.477 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub1186-20170517
+2026-03-29 16:45:14.826 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 16:45:14.827 | INFO     | __main__:<module>:41 - Starting subject 1201
+2026-03-29 16:45:14.827 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub1201-20161021
+2026-03-29 16:47:38.281 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 16:47:38.281 | INFO     | __main__:<module>:41 - Starting subject 1209
+2026-03-29 16:47:38.281 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub1209-20170711
+2026-03-29 16:50:03.255 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 16:50:03.256 | INFO     | __main__:<module>:41 - Starting subject 1234
+2026-03-29 16:50:03.256 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub1234-20180214
+2026-03-29 16:52:27.958 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 16:52:27.959 | INFO     | __main__:<module>:41 - Starting subject 1239
+2026-03-29 16:52:27.959 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub1239-20170113
+2026-03-29 16:55:49.527 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 16:55:49.527 | INFO     | __main__:<module>:41 - Starting subject 1248
+2026-03-29 16:55:49.528 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub1248-20160922
+2026-03-29 16:58:15.681 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 16:58:15.681 | INFO     | __main__:<module>:41 - Starting subject 1252
+2026-03-29 16:58:15.682 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub1252-20180920
+2026-03-29 17:00:44.129 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 17:00:44.130 | INFO     | __main__:<module>:41 - Starting subject 1257
+2026-03-29 17:00:44.130 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub1257-20161208
+2026-03-29 17:03:10.300 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 17:03:10.300 | INFO     | __main__:<module>:41 - Starting subject 1262
+2026-03-29 17:03:10.301 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub1262-20170402
+2026-03-29 17:05:26.707 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 17:05:26.708 | INFO     | __main__:<module>:41 - Starting subject 1265
+2026-03-29 17:05:26.708 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub1265-20180127
+2026-03-29 17:08:11.503 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 17:08:11.503 | INFO     | __main__:<module>:41 - Starting subject 1274
+2026-03-29 17:08:11.504 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub1274-20180504
+2026-03-29 17:10:45.019 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 17:10:45.019 | INFO     | __main__:<module>:41 - Starting subject 1281
+2026-03-29 17:10:45.019 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub1281-20180705
+2026-03-29 17:13:29.168 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 17:13:29.169 | INFO     | __main__:<module>:41 - Starting subject 1282
+2026-03-29 17:13:29.169 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub1282-20161113
+2026-03-29 17:15:57.914 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 17:15:57.915 | INFO     | __main__:<module>:41 - Starting subject 1292
+2026-03-29 17:15:57.915 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub1292-20170509
+2026-03-29 17:18:25.932 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 17:18:25.932 | INFO     | __main__:<module>:41 - Starting subject 1296
+2026-03-29 17:18:25.932 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub1296-20180427
+2026-03-29 17:20:52.966 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 17:20:52.966 | INFO     | __main__:<module>:41 - Starting subject 1316
+2026-03-29 17:20:52.966 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub1316-20180810
+2026-03-29 17:23:29.626 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 17:23:29.626 | INFO     | __main__:<module>:41 - Starting subject 1327
+2026-03-29 17:23:29.626 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub1327-20170426
+2026-03-29 17:26:04.671 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 17:26:04.671 | INFO     | __main__:<module>:41 - Starting subject 1353
+2026-03-29 17:26:04.672 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub1353-20170518
+2026-03-29 17:28:29.710 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 17:28:29.710 | INFO     | __main__:<module>:41 - Starting subject 1376
+2026-03-29 17:28:29.710 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub1376-20161214
+2026-03-29 17:30:47.670 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 17:30:47.671 | INFO     | __main__:<module>:41 - Starting subject 1395
+2026-03-29 17:30:47.671 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub1395-20180810
+2026-03-29 17:33:16.054 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 17:33:16.054 | INFO     | __main__:<module>:41 - Starting subject 1453
+2026-03-29 17:33:16.054 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub1453-20160916
+2026-03-29 17:35:56.791 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 17:35:56.792 | INFO     | __main__:<module>:41 - Starting subject 1497
+2026-03-29 17:35:56.792 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub1497-20170831
+2026-03-29 17:38:21.486 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 17:38:21.486 | INFO     | __main__:<module>:41 - Starting subject 1508
+2026-03-29 17:38:21.486 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub1508-20170719
+2026-03-29 17:40:46.793 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 17:40:46.794 | INFO     | __main__:<module>:41 - Starting subject 1523
+2026-03-29 17:40:46.794 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub1523-20170422
+2026-03-29 17:43:08.523 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 17:43:08.523 | INFO     | __main__:<module>:41 - Starting subject 1537
+2026-03-29 17:43:08.523 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub1537-20161203
+2026-03-29 17:45:31.585 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 17:45:31.585 | INFO     | __main__:<module>:41 - Starting subject 1546
+2026-03-29 17:45:31.585 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub1546-20180205
+2026-03-29 17:47:52.979 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 17:47:52.979 | INFO     | __main__:<module>:41 - Starting subject 2003
+2026-03-29 17:47:52.980 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub2003-20170221
+2026-03-29 17:50:18.111 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 17:50:18.112 | INFO     | __main__:<module>:41 - Starting subject 2011
+2026-03-29 17:50:18.112 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub2011-20160926
+2026-03-29 17:52:38.865 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 17:52:38.865 | INFO     | __main__:<module>:41 - Starting subject 2017
+2026-03-29 17:52:38.865 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub2017-20170118
+2026-03-29 17:55:20.696 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 17:55:20.697 | INFO     | __main__:<module>:41 - Starting subject 2060
+2026-03-29 17:55:20.697 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub2060-20170608
+2026-03-29 17:57:46.226 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 17:57:46.226 | INFO     | __main__:<module>:41 - Starting subject 2086
+2026-03-29 17:57:46.226 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub2086-20180630
+2026-03-29 18:00:28.861 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 18:00:28.861 | INFO     | __main__:<module>:41 - Starting subject 2087
+2026-03-29 18:00:28.862 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub2087-20171027
+2026-03-29 18:02:48.302 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 18:02:48.303 | INFO     | __main__:<module>:41 - Starting subject 2095
+2026-03-29 18:02:48.303 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub2095-20171207
+2026-03-29 18:05:16.735 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 18:05:16.735 | INFO     | __main__:<module>:41 - Starting subject 2098
+2026-03-29 18:05:16.735 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub2098-20180515
+2026-03-29 18:07:42.102 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 18:07:42.103 | INFO     | __main__:<module>:41 - Starting subject 2115
+2026-03-29 18:07:42.103 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub2115-20180530
+2026-03-29 18:10:09.923 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 18:10:09.923 | INFO     | __main__:<module>:41 - Starting subject 2122
+2026-03-29 18:10:09.923 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub2122-20181103
+2026-03-29 18:12:29.248 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 18:12:29.248 | INFO     | __main__:<module>:41 - Starting subject 2135
+2026-03-29 18:12:29.249 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub2135-20180113
+2026-03-29 18:14:42.535 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 18:14:42.535 | INFO     | __main__:<module>:41 - Starting subject 2168
+2026-03-29 18:14:42.536 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub2168-20180530
+2026-03-29 18:17:12.367 | DEBUG    | __main__:<module>:56 - None
+2026-03-29 18:17:12.368 | INFO     | __main__:<module>:41 - Starting subject 2207
+2026-03-29 18:17:12.368 | INFO     | __main__:<module>:48 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/inference_data/sub2207-20180717
+2026-03-29 18:19:31.771 | DEBUG    | __main__:<module>:56 - None
+2026-03-30 10:33:29.120 | INFO     | __main__:<module>:42 - Starting subject 1010
+2026-03-30 10:33:29.122 | INFO     | __main__:<module>:49 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1010-20180208
+2026-03-30 10:33:35.034 | DEBUG    | __main__:<module>:57 - None
+2026-03-30 10:33:35.034 | INFO     | __main__:<module>:42 - Starting subject 1011
+2026-03-30 10:33:35.035 | INFO     | __main__:<module>:49 - bash /home/srs-9/Projects/prl_project/src/scripts/lst_ai.sh /media/smbshare/srs-9/prl_project/data/sub1011-20180911

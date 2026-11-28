@@ -90,7 +90,7 @@ Change `"crop_ratio": null` to `"crop_ratios": null`.
 
 ### Step 2: Handle `null` values in `generate_experiments.py`
 
-**File**: `src/scripts/generate_experiments.py`
+**File**: `src/prl/scripts/generate_experiments.py`
 
 When grid value is `None`, delete the key from the config so the key is absent from `train_param` entirely. Already handled by `delete_nested_key()`.
 
@@ -120,13 +120,13 @@ Delete `$TRAIN_ROOT/roi_train2/run5/` which has corrupted `hyper_parameters.yaml
 
 ```bash
 cd training/roi_train2
-PYTHONPATH=$PRL_PROJECT_ROOT/src:$PYTHONPATH python -m scripts.generate_experiments experiment_config.json --dry-run
+python -m prl.scripts.generate_experiments experiment_config.json --dry-run
 # Verify 9 runs with correct param combinations
 ```
 
 Then generate for real:
 ```bash
-PYTHONPATH=$PRL_PROJECT_ROOT/src:$PYTHONPATH python -m scripts.generate_experiments experiment_config.json
+python -m prl.scripts.generate_experiments experiment_config.json
 ```
 
 ### Step 6: Verify param flow locally (single run)
@@ -137,24 +137,24 @@ Run one experiment locally (e.g., run5 = `crop_ratios=[1,1,4]`, `lr=0.0002`) to 
 - Stop after a few epochs once confirmed
 
 ```bash
-PYTHONPATH=$PRL_PROJECT_ROOT/src:$PYTHONPATH python -m scripts.launch_experiments experiment_config.json --run-key run5
+python -m prl.scripts.launch_experiments experiment_config.json --run-key run5
 # Ctrl+C after confirming training starts
 ```
 
 ### Step 7: Launch full grid on HPC
 
 ```bash
-PYTHONPATH=$PRL_PROJECT_ROOT/src:$PYTHONPATH python -m scripts.launch_experiments experiment_config.json --hpc --dry-run
+python -m prl.scripts.launch_experiments experiment_config.json --hpc --dry-run
 # Review generated submit_array.sh
-PYTHONPATH=$PRL_PROJECT_ROOT/src:$PYTHONPATH python -m scripts.launch_experiments experiment_config.json --hpc
+python -m prl.scripts.launch_experiments experiment_config.json --hpc
 ```
 
 ### Step 8: Post-experiment analysis
 
 For each completed run:
 ```bash
-python src/scripts/generate_fold_predictions.py <run_dir>
-python src/scripts/compute_performance_metrics.py <run_dir>
+python -m prl.scripts.generate_fold_predictions <run_dir>
+python -m prl.scripts.compute_performance_metrics <run_dir>
 ```
 
 Compare `performance_metrics.csv` across all 9 runs, focusing on rim F1 and sensitivity.
@@ -165,10 +165,10 @@ Compare `performance_metrics.csv` across all 9 runs, focusing on rim F1 and sens
 |------|--------|
 | `training/roi_train2/monai_config.jsonc` | Fix `crop_ratio` → `crop_ratios` |
 | `training/roi_train2/train.py` | List-valued params moved to `input_dict` |
-| `src/scripts/generate_experiments.py` | Handles `null` grid values via key deletion |
-| `src/scripts/launch_experiments.py` | LSF job array + `--run-key` support |
+| `src/prl/scripts/generate_experiments.py` | Handles `null` grid values via key deletion |
+| `src/prl/scripts/launch_experiments.py` | LSF job array + `--run-key` support |
 | `training/roi_train2/experiment_config.json` | New — grid search config |
-| `src/helpers/paths.py` | JSONC support |
+| `src/prl/helpers/paths.py` | JSONC support |
 | `hpc/setup_env_hpc.sh` | UMass cluster env setup |
 
 ## Verification

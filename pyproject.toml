@@ -6,21 +6,80 @@ build-backend = "setuptools.build_meta"
 name = "prl-pipeline"
 version = "0.1.0"
 description = "PRL (Perilesional Rim Lesion) detection pipeline"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 dependencies = [
+    # General
     "attrs",
     "click",
     "loguru",
-    "nibabel",
-    "numpy",
-    "pandas",
-    "pyyaml",
+    "rich>=15.0.0",
     "tqdm",
+
+    # Scientific computing
+    "imbalanced-learn",
+    "numpy",
+    "scipy",
+    "pandas",
+    "scikit-learn",
+    "statsmodels",
+
+    # Visualization
+    "matplotlib",
+    "plotly",
+    "nbformat>=4.2.0",
+    "tabulate",
+
+    # Medical imaging
+    "nibabel",
+    "simpleitk",
+    "scikit-image",
+    "pillow",
+    "tifffile",
+
+    # Deep learning
+    "torch>=2.8",
+    "torchvision",
+    "monai>=1.6",
+    "einops",
+    "pytorch-ignite",
+    "tensorboard",
+    "fire",
+
+    # Utilities
+    "pyyaml",
+    "h5py",
+    "psutil",
 ]
 
 [project.scripts]
-prl = "cli:cli"
+prl = "prl.cli:cli"
 
-[tool.setuptools]
-packages = ["core", "helpers", "preprocessing", "scripts"]
-package-dir = {"" = "src"}
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["prl", "prl.*"]
+namespaces = false
+
+[tool.setuptools.package-data]
+"prl.preprocessing" = ["concatImages.sh", "define_bounding_boxes.sh"]
+"prl.scripts" = ["lst_ai.sh"]
+
+[dependency-groups]
+dev = [
+    "ipykernel>=7.4.0",
+    "ipympl>=0.10.0",
+    "ipython>=9.18.1",
+    "ipywidgets>=8.1.9",
+    "objsize>=0.8.0",
+    "pytest>=9.2.0",
+    "ruff>=0.17.5",
+    "pyperclip"
+]
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu128" }
+torchvision = { index = "pytorch-cu128" }
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true

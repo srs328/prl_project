@@ -7,7 +7,7 @@ import pandas as pd
 from pathlib import Path
 import re
 from math import floor
-from helpers.paths import load_config
+from prl.helpers.paths import load_config
     
     
 def make_argument_parser(argv):

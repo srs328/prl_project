@@ -1,0 +1,15 @@
+# ROI extraction parameters for PRL lesion crops
+expand_xy: 20                # Voxels to expand bounding box in X/Y plane
+expand_z: 2                  # Voxels to expand bounding box in Z axis
+images: [flair, phase]       # Image channels to include
+save_intermediates: true     # Write per-ROI NIfTI files for debugging/testing
+
+# Expected filenames in each subject directory
+lesion_index_name: lstai_lesion_index.nii.gz
+lesion_mask_name: space-flair_seg-lst.nii.gz
+reference_image: flair.nii.gz  # Used for full-brain shape/affine in uncropping
+
+# Integration point for future in-pipeline label construction
+# offline: labels are pre-constructed (prl_label files already exist)
+# inline: (not yet implemented) construct labels from lesion + ring masks in pipeline
+label_construction: offline

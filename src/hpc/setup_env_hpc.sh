@@ -15,10 +15,9 @@ ml cuda
 export PRL_PROJECT_ROOT="${PRL_PROJECT_ROOT:-/home/shridhar.singh9-umw/prl_project/prl_project}"
 export PRL_DATA_ROOT="${PRL_DATA_ROOT:-/home/shridhar.singh9-umw/prl_project/data}"
 export PRL_TRAIN_ROOT="${PRL_TRAIN_ROOT:-/home/shridhar.singh9-umw/prl_project/training}"
-source $PRL_PROJECT_ROOT/.venv/bin/activate
 
-# Ensure Python can import the project
-export PYTHONPATH="${PRL_PROJECT_ROOT}/src:${PYTHONPATH}"
+# Install this checkout with python -m pip install -e . in the environment once.
+source "${PRL_PROJECT_ROOT}/.venv/bin/activate"
 
 echo "HPC environment configured:"
 echo "  PRL_PROJECT_ROOT=$PRL_PROJECT_ROOT"

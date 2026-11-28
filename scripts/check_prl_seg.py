@@ -5,14 +5,14 @@ import subprocess
 import sys
 import pandas as pd
 
-sys.path.append("/home/srs-9/Projects/prl_project/helpers")
-from shell_interface import open_itksnap_workspace_cmd
+from prl.helpers.shell_interface import open_itksnap_workspace_cmd
+from prl.helpers.paths import RESOURCES_DIR
 
-label_ref = pd.read_csv("/home/srs-9/Projects/prl_project/src/resources/PRL_spreadsheet-lstai_update_label_reference.csv",
+label_ref = pd.read_csv(RESOURCES_DIR / "PRL_spreadsheet-lstai_update_label_reference.csv",
                         index_col="subid")
 
-# dataroot = Path("/media/smbshare/srs-9/prl_project/data")
-dataroot = Path(os.environ['PRL_DATA_ROOT'])
+dataroot = Path("/media/smbshare/srs-9/prl_project/inference_data")
+# dataroot = Path(os.environ['PRL_DATA_ROOT'])
 subid = int(sys.argv[1])
 sesid = label_ref.loc[subid, "date_mri"]
 
@@ -21,6 +21,10 @@ prl_labels = [
     "prl_mask_def_prob_SRS.nii.gz",
     "prl_mask_def_prob_LR.nii.gz",
     "prl_mask_def_prob_SRS_CH.nii.gz",
+    "lst-ai/split_lesions_sigma2mm.nii.gz",
+    "lst-ai/hessian_intermediates"
+    "lst-ai/space-flair_seg-lst.nii.gz",
+    "lst-ai/lstai_lesion_index.nii.gz"
 ]
 images = ["flair.nii.gz", "phase.nii.gz"]
 
@@ -45,10 +49,10 @@ for i in range(20):
 image_paths = [subject_root / im for im in images]
 label_paths = [subject_root / lab for lab in prl_labels+["lstai_lesion_index.nii.gz"]]
 
-rename_root=("/mnt/z", "Z:/")
-# rename_root = None
+# rename_root=("/mnt/z", "Z:/")
+rename_root = None
 cmd = open_itksnap_workspace_cmd(image_paths, labels=label_paths, rename_root=rename_root)
 # cmd = open_itksnap_workspace_cmd(image_paths, labels=label_paths)
 print(cmd)
 pyperclip.copy(cmd)
-# subprocess.run(cmd, shell=True)
+subprocess.run(cmd, shell=True)

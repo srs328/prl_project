@@ -34,8 +34,8 @@ def main():
     )
     args = parser.parse_args()
 
-    from core.dataset import Dataset
-    from core.experiment import Experiment
+    from prl.core.dataset import Dataset
+    from prl.core.experiment import Experiment
 
     ds = Dataset(args.dataset)
 

@@ -10,21 +10,51 @@ PRL (Perilesional Rim Lesion) detection pipeline for 3D medical image segmentati
 
 ```bash
 source setup_env.sh  # Sets PRL_PROJECT_ROOT, PRL_DATA_ROOT, PRL_TRAIN_ROOT
-pip install -e .     # Installs `prl` CLI entry point
+python -m pip install -e .  # Installs the prl package and CLI
 ```
 
 Python environment: `~/.virtualenvs/monai/bin/python`
 
 Key dependencies: MONAI (Auto3DSeg), nibabel, pandas, MLflow, numpy, PyYAML, attrs, click, loguru. External tools: FSL (fslroi, fslmaths, fslstats), C3D.
 
-## Architecture
+## Architecture of bundles/prlsegresnet
 
-### Core Classes (`src/core/`)
+Standalone MONAI bundle wrapping the segresnet Auto3DSeg template with custom preprocessing (fan-out) and postprocessing (fan-in) for per-lesion ROI extraction. Lives at `training/bundles/prlsegresnet/`. Does not import from `src/`.
 
-- **`Dataset`** (`dataset.py`) — Represents a named dataset (e.g., "roi_train2"). Owns subject lists, fold assignments, and `create_datalist()`. Loads from `training/{name}/dataset.yaml`. Does **not** own preprocessing — that's per-experiment.
-- **`Experiment`** (`experiment.py`) — A single training run. Owns ROI creation (`create_rois`), data preparation (`prepare_data`), setup, training, prediction, and evaluation. Has `datalist` (dict), `cases` (flat list with split/case_type/inference paths), and `_resolve_inference_path` for finding prediction outputs.
+### How it works
+
+The existing segresnet template trains on pre-cropped per-lesion NIfTI ROIs. This bundle replaces the FSL-based offline preprocessing (fslstats, fslroi, fslmerge) with pure Python using MONAI's `generate_spatial_bounding_box()` for bbox computation and numpy-based cropping with zero-padding. The segresnet training/inference scripts are copied verbatim and run unchanged — they see the same per-ROI datalist they always have.
+
+**Pipeline flow**: `preprocess_subjects()` → segresnet `train.py` / `infer.py` → `uncrop_predictions()`
+
+### Key files
+
+- **`scripts/preprocess.py`** — Fan-out: full-brain images → per-lesion ROI crops.
+  - `compute_lesion_bboxes(lesion_index, expand_xy, expand_z)` — MONAI-based bbox computation, exact match with FSL's fslstats output.
+  - `crop_volume(volume, bbox)` — Deterministic crop with zero-padding for out-of-bounds (matches fslroi behavior).
+  - `crop_lesion_rois(subject_data, bboxes, image_keys)` — Batch crop all channels + labels per lesion.
+  - `preprocess_subject()` / `preprocess_subjects()` — Orchestrators. The batch version writes per-ROI NIfTIs and generates a segresnet-compatible datalist JSON.
+  - `save_bboxes()` / `load_bboxes()` — Read/write the existing `lstai_bounding_boxes_xy{X}_z{Z}.txt` format for backward compat.
+- **`scripts/postprocess.py`** — Fan-in: per-ROI predictions → full-brain volume. Ported from `src/prl/core/inference.py::uncrop_predictions()`. Uses `np.maximum` for overlapping ROIs. Has both file-based (`uncrop_predictions()`) and in-memory (`uncrop_from_arrays()`) versions.
+- **`scripts/{segmenter,train,infer,algo,utils,validate}.py`** — Copied verbatim from `training/algorithm_templates/segresnet/scripts/`.
+- **`configs/preprocessing.yaml`** — ROI extraction params (expand_xy, expand_z, images, etc.).
+- **`configs/hyper_parameters.yaml`** — Copied from segresnet template.
+- **`experiments/stratified_folds.py`** — Standalone fold assignment experiment (separate from bundle pipeline). Per-subject stratification with PRL balancing. Includes `make_dummy_subjects()` for testing with realistic distributions.
+
+### What's deferred
+
+In-pipeline label construction (currently offline with c3d), PersistentDataset caching, MonaiLabel metadata, integration with `src/prl/core/` Experiment/Dataset classes.
+
+## Architecture of src/prl/
+
+Inside `src/prl/` is the pipeline code with my custom "core" library which prepares data for Auto3dSeg's auto_runner, handles parameter configs for auto_runner, and then my custom postprocessing.
+
+### Core Classes (`src/prl/core/`)
+
+- **`Dataset`** (`dataset.py`) — Represents a named dataset (e.g., "roi_train2"). Owns subject lists, fold assignments, `create_datalist()`, and a `cases` DataFrame with fully resolved paths. Accepts optional `preprocess` parameter for path resolution (defaults to dataset.yaml defaults). Has `Subject` helper class for per-subject data access.
+- **`Experiment`** (`experiment.py`) — A single training run. Owns ROI creation (`create_rois`), data preparation (`prepare_data`), setup, training, and prediction. `cases` property delegates to `Dataset.cases` and adds an `inference` column with model prediction paths.
 - **`ExperimentGrid`** (`grid.py`) — HPO management. Generates Cartesian product of parameters, creates run directories, launches locally or on HPC. Routes preprocessing through temporary Experiment instances.
-- **`PreprocessingConfig`** / **`TrainingConfig`** (`configs.py`) — Attrs dataclasses for pipeline configuration. `PreprocessingConfig` is frozen/hashable, includes `images` (tuple), `image_prefix`, `suffix`, and `datalist_suffix` properties. Use `attrs.evolve()` to create variants.
+- **`PreprocessingConfig`** / **`AlgoConfig`** (`configs.py`) — Attrs dataclasses for pipeline configuration. `PreprocessingConfig` is frozen/hashable. `AlgoConfig` covers the full `hyper_parameters.yaml` with subclasses `SegResNetConfig`, `SwinUNETRConfig`, `DiNTSConfig` registered in `_ALGO_REGISTRY`. Use `attrs.evolve()` to create variants, `AlgoConfig.from_dict()` for deserialization, `AlgoConfig.from_template()` for algorithm defaults.
 
 ### Configuration System
 
@@ -69,9 +99,9 @@ Scripts take a single positional `run_dir` (or dataset name) argument and derive
 
 ## Key Helpers
 
-- `src/helpers/paths.py` — `load_config()`, centralized path constants
-- `src/helpers/shell_interface.py` — `command()`, `run_if_missing()` for shell execution with dry-run support
-- `src/helpers/parallel.py` — `BetterPool` for graceful multiprocessing
+- `src/prl/helpers/paths.py` — `load_config()`, centralized path constants
+- `src/prl/helpers/shell_interface.py` — `command()`, `run_if_missing()` for shell execution with dry-run support
+- `src/prl/helpers/parallel.py` — `BetterPool` for graceful multiprocessing
 - `my_python_utils` — User's personal utility package (located at ~/python/my_python_utils.py; it's on my PYTHONPATH)
 
 ## Data Layout
@@ -96,15 +126,17 @@ $TRAIN_ROOT/roi_train2/run2/
 
 ```
 src/
-├── cli.py                    # Click CLI entry point
-├── core/
-│   ├── configs.py            # PreprocessingConfig, TrainingConfig (attrs)
-│   ├── dataset.py            # Dataset class
-│   ├── experiment.py         # Experiment class
-│   └── grid.py               # ExperimentGrid class
-├── helpers/                  # paths.py, shell_interface.py, parallel.py, utils.py
-├── preprocessing/            # create_rois.py, create_datalist.py, prepare_training_data.py
-└── scripts/                  # Analysis: compute_performance_metrics, generate_fold_predictions, etc.
+└── prl/
+    ├── cli.py                # Click CLI entry point
+    ├── core/                 # Datasets, experiments, grids, inference
+    ├── helpers/              # Path and shell utilities
+    ├── preprocessing/       # ROI extraction and training datalists
+    ├── scripts/             # Supporting command-line modules
+    ├── analysis/
+    │   └── metrics/
+    └── classification/      # Lesion analysis, geometry, and plotting
+
+resources/                    # Workspace data and run registry
 
 training/roi_train2/
 ├── dataset.yaml              # Single source of truth for dataset config
@@ -113,9 +145,13 @@ training/roi_train2/
 └── train.py                  # Thin wrapper → Experiment.train()
 ```
 
+## Data Analysis
+
+`prl.analysis` package
+
 ## HPO
 
-`ExperimentGrid` in `src/core/grid.py` handles HPO. Define an experiment YAML:
+`ExperimentGrid` in `src/prl/core/grid.py` handles HPO. Define an experiment YAML:
 
 ```yaml
 dataset: roi_train2
@@ -131,46 +167,4 @@ param_grid:
 ```
 
 Then: `prl grid roi_train2 experiment.yaml --launch`
-
-## New Predictions
-
-The next step: use the trained model to infer on completely new subjects that aren't in the train or test data. What I envision this to entail:
-
-1. First I decide on which run to use to infer
-2. A fresh subject will just have a flair.nii.gz and a phase.nii.gz (for now; t1.nii.gz later, so the "images" key from the selected run will be used to determine), and also the lstai_lesion_index.nii.gz and the space-flair_seg-lst.nii (see "notes/Pipeline Notes.md for a refresher if needed).
-3. Preprocessing needs to be run on this subject: I think just create_rois.py for this subject with the bounding box parameters pulled from the selected run should do the trick. These subjects will not have any prl_mask_def_prob_ files btw, so "suffixes" referring to the rater's initials are not applicable. Worth double checking that create_rois.py will work properly and not do any unnecessary work for the task. If itd do unnecessary work or fail too badly, could consider a separate function? But itd be nice to have one function thatd work for both purposes (training pipeline and new inference pipeline).
-4. A mock datalist (lets call it "inference_datalist.json" which lives inside the subject's folder) will have to be created so that each of this subject's ROI's is seen by the model as a case to segment. So the current "create_datalist.py" will not work, but perhaps a new function can be added to it like "create_inference_datalist.py" for this purpose. It will essentially create one datalist for one subject. The paths should be relative. This whole process should default to the regular dataroot, but be able to get an override passsed. I will definitely be overriding it for this (ill figure out some spot for inference data that can be my inference dataroot)
-5. At some point image stacks will have to be created. I wonder if `prepare_training_data.py` should be renamed to `prepare_data.py`, and it should have a new function called `prepare_inference_data()` or something to handle the inference_datalist.
-6. Model inference should be run on this datalist with the output of ensemble prediction set to the same subject folder and the outputs having the suffix "infer" postpended. I know MONAI lets you specify these things
-  - Found it, here's their code, all the parameters it takes are in there: /home/srs-9/.virtualenvs/monai/lib/python3.13/site-packages/monai/apps/auto3dseg/ensemble_builder.py.
-  - At the very least we'll need to use data_root_dir, output_dir, and output_postfix. The ensembling that autorunner does right after training saves output with the same file structure as the input labels. That's what I want for this too, and we should verify whether it will default to the same or not. ensemble_builder.py has on line 508 "separate_folder": kwargs.pop("separate_folder", False)", so we should definitely make sure
-  - Awhile back I tried creating a library for auto3dseg training for myself (full brain tasks, so very different and less complicated than now). It's located at "/home/srs-9/Projects/ms_mri/src/monai_training". It has its flaws because I wrote it myself instead of with any help from AI agents, but the file inference.py is how I did it in the past. We could probably do it better now, but it could be a reference if needed.
-7. By this point, every lesion folder for the subject should have a file like `lesion_{expand_params}_infer.nii.gz` (in addition to the original `lesion_{expand_params}.nii.gz` and the cropped image files). The final step is to uncrop each of the inference segmentation ROIs. Sonnet couldn't find a super straightforward way and suggested the following approach which I confirmed does work (for one ROI)
-
-```
-python -c "
-import nibabel as nib, numpy as np
-orig = nib.load('./flair.nii.gz')
-out = np.zeros(orig.shape, dtype=np.uint8)
-crop = nib.load('./1/rim.nii.gz').get_fdata().astype(np.uint8)
-xmin,xsize,ymin,ysize,zmin,zsize = <pull these from the right bounding box file>
-out[xmin:xmin+xsize, ymin:ymin+ysize, zmin:zmin+zsize] = crop
-nib.save(nib.Nifti1Image(out, orig.affine, orig.header), './rim.nii.gz')
-"
-```
-
-But what I ultimately want is for all the inferred ROI labels for the subject to end up on the same file. See what would be the most resource and time efficient way to accomplish something like this. In the end, the final output should be at the top of the subjects folder (where the flair and phase and other images live) called "prl_inference_{some identifier for the run used to make it}"
-- Run identifiers is something worth talking about. Right now we identify them based on their subpath inside of the dataset dir (e.g. roi_train2 has runs like run1, run2, but also stage1_crop_lr_sweep/run1 is an identifier). This is fine for now, we could name an inference "prl_inference_stage1_crop_lr_sweep_run1.nii.gz"
-
-## Cleaning up and refactoring the train params workflow
-
-Right now the way that train params are handled is really messy and hard to follow. Its exacerbated by the fact that segresnet does its own post processing in some cases. Like how the pipeline looks to see a particular dataset's default config (fine for the PreprocessingConfig, bad for TrainingConfig). Then it looks for overrides for a particular train run. Then it has to evolve the TrainingConfig and try to incorporate it with segresnet.
-
-But there's an obvious fix. I just realized: TrainingConfig should just be an attrs representation of the entire hyper_parameters.yaml from the algorithm_templates (I saved this folder in ./training for our reference). The defaults will just be the template defaults. Then it's easy and predictable to evolve them. 
-
-What I'm envisioning is a parameters base class so that I could easily try out swinunetr or dints later. The configs for those two networks is a bit more complicated because they don't have just one .yaml file in `configs/`. I cloned the auto3dseg tutorial from github into /home/srs-9/monai/tutorials/auto3dseg so you can analyze the idiomatic use of auto3dseg models to inform your plan. 
-
-Can you come up with a plan for reworking the handling of training params like this. I'm aiming for predicability and ease of use; no more looking in several locations to follow the flow of parameters. 
-
-Also just for fun, after you've analyzed, tell me if python abstractbaseclasses are useful here or if it's overkill. I dont have a good working understanding of how they work and when you'd want those over a straightforward base class and inheritance, so itd be cool to learn.
 

@@ -1,0 +1,62 @@
+# This is an example of a parameters file with all shape features enabled, including those marked as redundant/deprecated:
+# - Compactness1
+# - Compactness2
+# - Spherical Disproportion
+
+setting:
+  label: 2
+  interpolator: 'sitkBSpline' # This is an enumerated value, here None is not allowed
+  resampledPixelSpacing: # This disables resampling, as it is interpreted as None, to enable it, specify spacing in x, y, z as [x, y , z]
+  geometryTolerance: 0.001
+  normalize: true
+  normalizeScale: 100  # This allows you to use more or less the same bin width.
+
+# "imageType" category is omitted, which will result in default values: only the "Original" (unfiltered) image is used, without additional custom settings
+
+# Featureclasses, from which features must be calculated. If a featureclass is not mentioned, no features are calculated
+# for that class. Otherwise, the specified features are calculated, or, if none are specified, all are calculated (excluding redundant/deprecated features).
+featureClass:
+  shape:  # disable redundant Compactness 1 and Compactness 2 features by specifying all other shape features
+    - VoxelVolume
+    - MeshVolume
+    - SurfaceArea
+    - SurfaceVolumeRatio
+    - Compactness1
+    - Compactness2
+    - Sphericity
+    - SphericalDisproportion
+    - Maximum3DDiameter
+    - Maximum2DDiameterSlice
+    - Maximum2DDiameterColumn
+    - Maximum2DDiameterRow
+    - MajorAxisLength
+    - MinorAxisLength
+    - LeastAxisLength
+    - Elongation
+    - Flatness
+  glcm:  # Disable SumAverage by specifying all other GLCM features available
+    - 'Autocorrelation'
+    - 'JointAverage'
+    - 'ClusterProminence'
+    - 'ClusterShade'
+    - 'ClusterTendency'
+    - 'Contrast'
+    - 'Correlation'
+    - 'DifferenceAverage'
+    - 'DifferenceEntropy'
+    - 'DifferenceVariance'
+    - 'JointEnergy'
+    - 'JointEntropy'
+    - 'Imc1'
+    - 'Imc2'
+    - 'Idm'
+    - 'Idmn'
+    - 'Id'
+    - 'Idn'
+    - 'InverseVariance'
+    - 'MaximumProbability'
+    - 'SumEntropy'
+    - 'SumSquares'
+  glrlm: # for lists none values are allowed, in this case, all features are enabled
+  glszm:
+  gldm:

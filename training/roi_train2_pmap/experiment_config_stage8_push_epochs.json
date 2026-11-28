@@ -1,0 +1,30 @@
+{
+  "train_home": "${PROJECT_ROOT}/training",
+  "dataset_name": "roi_train2",
+  "experiment_name": "stage8_push_epochs",
+  "base_label_config": "label_config.jsonc",
+  "base_monai_config": "monai_config.jsonc",
+  "param_grid": {
+    "training": {
+      "auto_scale_allowed": [false],
+      "auto_scale_batch": [false],
+      "batch_size": [1],
+      "num_crops_per_image": [4],
+      "num_epochs": [1000],
+      "learning_rate": [0.0002, 0.0001],
+      "loss": [
+        {
+          "_target_": "DiceCELoss",
+          "include_background": true,
+          "weight": "$torch.tensor([1.0, 1.0, 10.0]).cuda()",
+          "squared_pred": true,
+          "smooth_nr": 0,
+          "smooth_dr": 1.0e-05,
+          "softmax": "$not @sigmoid",
+          "sigmoid": "$@sigmoid",
+          "to_onehot_y": "$not @sigmoid"
+        }
+      ]
+    }
+  }
+}

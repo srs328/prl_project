@@ -1,0 +1,1 @@
+{"image_path": "/media/smbshare/srs-9/prl_project/inference_data/sub1152-20170529/9/phase_xy20_z2.nii.gz", "mask_path": "/media/smbshare/srs-9/prl_project/inference_data/sub1152-20170529/9/flair.phase_xy20_z2_infer_stage6_sweep_dicece_wts_run1.nii.gz", "params": "/home/srs-9/Projects/prl_project/notebooks/tmp/radiomics_params_rim.yaml"}
