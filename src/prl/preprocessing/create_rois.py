@@ -17,10 +17,10 @@ import argparse
 
 from loguru import logger
 
-from ..helpers.shell_interface import command, run_if_missing
-from ..helpers.parallel import BetterPool
-from ..helpers.paths import PACKAGE_ROOT, load_config
-from .verify_segmentations import verify_prl
+from prl.helpers.shell_interface import command, run_if_missing
+from prl.helpers.parallel import BetterPool
+from prl.helpers.paths import PACKAGE_ROOT, load_config
+from prl.preprocessing.verify_segmentations import verify_prl
 
 curr_dir = Path(__file__).parent
 
@@ -67,12 +67,14 @@ def ensure_ring_seg(subject_root, suffix=None, dry_run=False, output_dir=None):
     if output_dir is None:
         output_dir = subject_root
     ring_seg_path = output_dir / f"prl_rim_def_prob_{suffix}.nii.gz"
-    print(ring_seg_path)
-    if ring_seg_path.exists():
-        print("exists")
-        return ring_seg_path
+    ring_mask_path = output_dir / f"prl_rim_mask_def_prob_{suffix}.nii.gz"
+    
+    if not ring_seg_path.exists():
+        command(f"fslmaths {full_seg_path} -thr 2 -uthr 2 {ring_seg_path}", dry_run=dry_run)
 
-    command(f"fslmaths {full_seg_path} -thr 2 -uthr 2 {ring_seg_path}", dry_run=dry_run)
+    if not ring_seg_path.exists():
+        command(f"fslmaths {full_seg_path} -thr 2 -uthr 2 -bin {ring_mask_path}", dry_run=dry_run)
+
     return ring_seg_path
 
 
@@ -335,25 +337,25 @@ def main(argv=None):
             suffix_to_use[int(subid)] = suffix
 
     #! this is what normally runs for the main pipeline
-    create_rois_for_subjects(
-        subjects=subjects,
-        suffix_to_use=suffix_to_use,
-        prl_df=prl_df,
-        data_root=Path(label_config["dataroot"]),
-        expand_xy=label_config["expand_xy"],
-        expand_z=label_config["expand_z"],
-        processes=args.processes,
-        dry_run=args.dry_run,
-    )
-    #! just quickly wanted to produce full PRL segmentations
-    # create_full_prls_for_subjects(
+    # create_rois_for_subjects(
     #     subjects=subjects,
     #     suffix_to_use=suffix_to_use,
     #     prl_df=prl_df,
     #     data_root=Path(label_config["dataroot"]),
+    #     expand_xy=label_config["expand_xy"],
+    #     expand_z=label_config["expand_z"],
     #     processes=args.processes,
     #     dry_run=args.dry_run,
     # )
+    #! just quickly wanted to produce full PRL segmentations
+    create_full_prls_for_subjects(
+        subjects=subjects,
+        suffix_to_use=suffix_to_use,
+        prl_df=prl_df,
+        data_root=Path(label_config["dataroot"]),
+        processes=args.processes,
+        dry_run=args.dry_run,
+    )
     #! just trying to do this quick and dirty, clean up later
     # stack_images_for_subjects(
     #     subjects=subjects,
